@@ -216,12 +216,14 @@ final class QuadrilateralView: UIView {
                              y: cornerView.frame.origin.y - (highlightedCornerViewSize.height - cornerViewSize.height) / 2.0)
         cornerView.frame = CGRect(origin: origin, size: highlightedCornerViewSize)
         print(image)
+        showCornerView.isHidden = false
         showCornerView.highlightWithImage(image)
         cornerView.highlightWithImage(image)
     }
     
     func resetHighlightedCornerViews() {
         isHighlighted = false
+        showCornerView.isHidden = true
         resetHighlightedCornerViews(cornerViews: [topLeftCornerView, topRightCornerView, bottomLeftCornerView, bottomRightCornerView])
     }
     
@@ -269,7 +271,7 @@ final class QuadrilateralView: UIView {
     // MARK: - Convenience
     
     private func cornerViews(hidden: Bool) {
-        showCornerView.isHidden = hidden
+        showCornerView.isHidden = true //default is hidden 
         topLeftCornerView.isHidden = hidden
         topRightCornerView.isHidden = hidden
         bottomRightCornerView.isHidden = hidden
