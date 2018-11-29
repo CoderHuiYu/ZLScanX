@@ -15,6 +15,7 @@ final class EditScanCornerView: UIView {
     
     /// The image to display when the corner view is highlighted.
     private var image: UIImage?
+    
     private(set) var isHighlighted = false
     
     lazy private var circleLayer: CAShapeLayer = {
@@ -44,17 +45,18 @@ final class EditScanCornerView: UIView {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        
+        //Draw a curve based on the inscribed circle of the rectangle ·
         let bezierPath = UIBezierPath(ovalIn: rect.insetBy(dx: circleLayer.lineWidth, dy: circleLayer.lineWidth))
         circleLayer.frame = rect
         circleLayer.path = bezierPath.cgPath
-        
+        print("rect \(rect),self\(self)")
         image?.draw(in: rect)
     }
     
     func highlightWithImage(_ image: UIImage) {
         isHighlighted = true
         self.image = image
+        print("highlight")
         self.setNeedsDisplay()
     }
     

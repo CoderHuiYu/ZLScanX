@@ -22,14 +22,14 @@ final class QuadrilateralView: UIView {
     
     private let quadLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.strokeColor = UIColor.white.cgColor
+        layer.strokeColor = UIColor.red.cgColor
         layer.lineWidth = 1.0
         layer.opacity = 1.0
         layer.isHidden = true
         
         return layer
     }()
-    
+
     /// We want the corner views to be displayed under the outline of the quadrilateral.
     /// Because of that, we need the quadrilateral to be drawn on a UIView above them.
     private let quadView: UIView = {
@@ -44,6 +44,7 @@ final class QuadrilateralView: UIView {
     
     public var editable = false {
         didSet {
+            print("editavle \(editable)")
             cornerViews(hidden: !editable)
             quadLayer.fillColor = editable ? UIColor(white: 0.0, alpha: 0.6).cgColor : UIColor(white: 1.0, alpha: 0.5).cgColor
             guard let quad = quad else {
@@ -63,6 +64,10 @@ final class QuadrilateralView: UIView {
             isHighlighted ? bringSubviewToFront(quadView) : sendSubviewToBack(quadView)
         }
     }
+    
+    lazy private var showCornerView: EditScanCornerView = {
+        return EditScanCornerView(frame: CGRect(origin: CGPoint.init(x: (UIScreen.main.bounds.size.width - 75)/2, y: 20), size: CGSize.init(width: 75, height: 75)), position: .topLeft)
+    }()
     
     lazy private var topLeftCornerView: EditScanCornerView = {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .topLeft)
@@ -113,6 +118,7 @@ final class QuadrilateralView: UIView {
     }
     
     private func setupCornerViews() {
+        addSubview(showCornerView)
         addSubview(topLeftCornerView)
         addSubview(topRightCornerView)
         addSubview(bottomRightCornerView)
@@ -150,7 +156,7 @@ final class QuadrilateralView: UIView {
         var path = quad.path
         
         if editable {
-            path = path.reversing()
+        path = path.reversing()
             let rectPath = UIBezierPath(rect: bounds)
             path.append(rectPath)
         }
@@ -202,12 +208,15 @@ final class QuadrilateralView: UIView {
         let cornerView = cornerViewForCornerPosition(position: position)
         guard cornerView.isHighlighted == false else {
             cornerView.highlightWithImage(image)
+            showCornerView.highlightWithImage(image)
             return
         }
 
         let origin = CGPoint(x: cornerView.frame.origin.x - (highlightedCornerViewSize.width - cornerViewSize.width) / 2.0,
                              y: cornerView.frame.origin.y - (highlightedCornerViewSize.height - cornerViewSize.height) / 2.0)
         cornerView.frame = CGRect(origin: origin, size: highlightedCornerViewSize)
+        print(image)
+        showCornerView.highlightWithImage(image)
         cornerView.highlightWithImage(image)
     }
     

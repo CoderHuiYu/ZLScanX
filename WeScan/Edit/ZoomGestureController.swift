@@ -9,6 +9,7 @@
 import Foundation
 import AVFoundation
 
+//this is helper ,to help find the closest cornerView .it hadle the logic
 final class ZoomGestureController {
     
     private let image: UIImage
@@ -50,10 +51,10 @@ final class ZoomGestureController {
         
         let scale = image.size.width / quadView.bounds.size.width
         let scaledDraggedCornerViewCenter = CGPoint(x: draggedCornerViewCenter.x * scale, y: draggedCornerViewCenter.y * scale)
+        //get the zoomimage,so i can show it on the view
         guard let zoomedImage = image.scaledImage(atPoint: scaledDraggedCornerViewCenter, scaleFactor: 2.5, targetSize: quadView.bounds.size) else {
             return
         }
-        
         quadView.highlightCornerAtPosition(position: closestCorner, with: zoomedImage)
     }
     
