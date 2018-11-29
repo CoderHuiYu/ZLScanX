@@ -269,6 +269,7 @@ final class QuadrilateralView: UIView {
     // MARK: - Convenience
     
     private func cornerViews(hidden: Bool) {
+        showCornerView.isHidden = hidden
         topLeftCornerView.isHidden = hidden
         topRightCornerView.isHidden = hidden
         bottomRightCornerView.isHidden = hidden
