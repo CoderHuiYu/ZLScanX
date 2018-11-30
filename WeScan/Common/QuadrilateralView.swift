@@ -22,7 +22,8 @@ final class QuadrilateralView: UIView {
     
     private let quadLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.strokeColor = UIColor.red.cgColor
+        layer.strokeColor = UIColor.white.cgColor
+//        layer.strokeColor = UIColor.init(displayP3Red: 82/255.0, green: 157/255.0, blue: 186/255.0, alpha: 1).cgColor
         layer.lineWidth = 1.0
         layer.opacity = 1.0
         layer.isHidden = true
@@ -271,7 +272,8 @@ final class QuadrilateralView: UIView {
     // MARK: - Convenience
     
     private func cornerViews(hidden: Bool) {
-        showCornerView.isHidden = true //default is hidden 
+        showCornerView.isHidden = true //default is hidden
+        showCornerView.dotImageView.isHidden = true 
         topLeftCornerView.isHidden = hidden
         topRightCornerView.isHidden = hidden
         bottomRightCornerView.isHidden = hidden
