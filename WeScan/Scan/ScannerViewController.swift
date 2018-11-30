@@ -343,7 +343,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             uiImage = UIImage(ciImage: filteredImage, scale: 1.0, orientation: .up)
         }
         
-        let results = ImageScannerResults(originalImage: image, scannedImage: uiImage, enhancedImage: nil, doesUserPreferEnhancedImage: false, detectedRectangle: quad)
+//        let results = ImageScannerResults(originalImage: image, scannedImage: uiImage, enhancedImage: nil, doesUserPreferEnhancedImage: false, detectedRectangle: quad)
 //        let reviewViewController = ReviewViewController(results: results ,quad : quad)
 //        if navigationController?.viewControllers.last == self {
 //            navigationController?.pushViewController(reviewViewController, animated: true)
@@ -355,6 +355,11 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         guard let pngData = uiImage.pngData() else { return }
         let photoModel = ZLPhotoModel.init(imageData: pngData, imageSize: uiImage.size)
         photoCollectionView.addPhotoModel(photoModel)
+        
+        // continue to capture
+        CaptureSession.current.isEditing = false
+        quadView.removeQuadrilateral()
+        captureSessionManager.start()
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didDetectQuad quad: Quadrilateral?, _ imageSize: CGSize) {

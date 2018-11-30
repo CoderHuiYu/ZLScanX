@@ -24,7 +24,6 @@
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="balloon" translatesAutoresizingMaskIntoConstraints="NO" id="kKu-or-19o">
                         <rect key="frame" x="50" y="-60" width="50" height="50"/>
-                        <color key="backgroundColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="50" id="6Sf-hF-3RS"/>
                             <constraint firstAttribute="height" constant="50" id="j2l-GC-VoF"/>
