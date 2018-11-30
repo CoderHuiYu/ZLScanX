@@ -70,7 +70,7 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.size.width, height: collectionView.bounds.size.height)
+        return CGSize(width: collectionView.bounds.size.width - 40, height: collectionView.bounds.size.height)
     }
     
 }
