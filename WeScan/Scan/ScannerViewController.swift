@@ -126,6 +126,13 @@ final class ScannerViewController: UIViewController {
         return scanningNoticeView
     }()
     
+    lazy private var previewImageView: UIImageView  = {
+        let previewImageView = UIImageView()
+        previewImageView.contentMode = .scaleAspectFill
+        return previewImageView
+    }()
+    
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -180,6 +187,7 @@ final class ScannerViewController: UIViewController {
         view.addSubview(toolbar)
         view.addSubview(scanningNoticeView)
         view.addSubview(photoCollectionView)
+        view.addSubview(previewImageView)
     }
     
     private func setupToolbar() {
@@ -353,12 +361,30 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         // MARK: - mason test code
         let photoModel = ZLPhotoModel.init(image: uiImage, imageSize: uiImage.size)
-        photoCollectionView.addPhotoModel(photoModel)
         
-        // continue to capture
-        CaptureSession.current.isEditing = false
-        quadView.removeQuadrilateral()
-        captureSessionManager.start()
+        previewImageView.image = uiImage
+        previewImageView.frame = CGRect(x: 0, y: 0, width: uiImage.size.width/UIScreen.main.scale/1.3, height: uiImage.size.height/UIScreen.main.scale/1.3)
+        previewImageView.center = view.center
+        
+        print(quadView.quadLayer.frame)
+        UIView.animate(withDuration: 0.5, animations: {
+            self.previewImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }) { (Bool) in
+            UIView.animate(withDuration: 0.5, animations: {
+                self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
+                //                self.previewImageView.image = nil
+                self.photoCollectionView.addPhotoModel(photoModel)
+                
+                // continue to capture
+                CaptureSession.current.isEditing = false
+                self.quadView.removeQuadrilateral()
+                captureSessionManager.start()
+                
+            }) { (finish) in
+                self.previewImageView.image = nil
+                CaptureSession.current.isPreviewing = false
+            }
+        }
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didDetectQuad quad: Quadrilateral?, _ imageSize: CGSize) {
@@ -396,10 +422,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         let transformedQuad = quad.applyTransforms(transforms)
         
         quadView.drawQuadrilateral(quad: transformedQuad, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.21) {
-            self.capturingAnnularProgressView.center = self.quadView.center
-        }
 
+        self.capturingAnnularProgressView.center = self.quadView.center
     }
     
     private static func defaultQuad(forImage image: UIImage) -> Quadrilateral {

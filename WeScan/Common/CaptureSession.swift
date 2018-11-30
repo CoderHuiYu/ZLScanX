@@ -13,6 +13,9 @@ final class CaptureSession {
     
     static let current = CaptureSession()
     
+    /// Whether the preview image is showing
+    var isPreviewing: Bool
+    
     /// Whether the user is past the scanning screen or not (needed to disable auto scan on other screens)
     var isEditing: Bool
     
@@ -23,6 +26,7 @@ final class CaptureSession {
     var editImageOrientation: CGImagePropertyOrientation
     
     private init(autoScanEnabled: Bool = true, editImageOrientation: CGImagePropertyOrientation = .up) {
+        self.isPreviewing = false
         self.isEditing = false
         self.autoScanEnabled = autoScanEnabled
         self.editImageOrientation = editImageOrientation
