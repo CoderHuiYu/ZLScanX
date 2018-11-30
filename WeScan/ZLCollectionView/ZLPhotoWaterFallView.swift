@@ -11,7 +11,7 @@ import UIKit
 private let kCellIdentifier = "ZLPhotoCellIdentifier"
 
 struct ZLPhotoModel {
-    var imageData: Data
+    var image: UIImage
     var imageSize: CGSize
 }
 
