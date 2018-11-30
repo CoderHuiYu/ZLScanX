@@ -72,9 +72,19 @@ final class ScannerViewController: UIViewController {
     }()
     
     fileprivate lazy var photoCollectionView: ZLPhotoWaterFallView = {
-        let height: CGFloat = 150
+        let height: CGFloat = 150 + 44
         let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - height, width: view.frame.width, height: height))
         photoCollectionView.backViewColor = UIColor.gray
+        
+        photoCollectionView.deleteActionCallBack = { [weak self] in
+            
+        }
+        
+        photoCollectionView.selectedItemCallBack = { [weak self] (photoModels, index) in
+            guard let weakSelf = self else { return }
+            let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: weakSelf.classForCoder))
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
         return photoCollectionView
     }()
 

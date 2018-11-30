@@ -8,14 +8,20 @@
 
 import UIKit
 
-private let kCellIdentifier = "ZLPhotoCellIdentifier"
-
 struct ZLPhotoModel {
     var image: UIImage
     var imageSize: CGSize
 }
 
+private let kCellIdentifier = "ZLPhotoCellIdentifier"
+private let kToolBarViewHeight: CGFloat = 44
+
 class ZLPhotoWaterFallView: UIView {
+    
+    // remove all photo call back
+    var deleteActionCallBack: (()->())?
+    // selected item call back(completion: selected all and index is 0)
+    var selectedItemCallBack: ((_ photoModels: [ZLPhotoModel], _ index: Int)->())?
     
     // backColor
     var backViewColor: UIColor? {
@@ -23,19 +29,40 @@ class ZLPhotoWaterFallView: UIView {
             guard let color = backViewColor else {
                 return
             }
-            backgroundColor = color
+//            backgroundColor = color
             collectionView.backgroundColor = color
         }
     }
     
     fileprivate var photoModels = [ZLPhotoModel]()
     
+    fileprivate lazy var toolBarView: UIView = {
+        let toolBarView = UIView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: kToolBarViewHeight))
+        toolBarView.backgroundColor = UIColor.clear
+        return toolBarView
+    }()
+    
+    fileprivate lazy var deleteButton: UIButton = {
+        let deleteButton = UIButton(frame: CGRect(x: completeButton.frame.origin.x - 10 - kToolBarViewHeight, y: 0, width: kToolBarViewHeight, height: kToolBarViewHeight))
+        deleteButton.setImage(UIImage(named: "Delete", in: Bundle.init(for: self.classForCoder), compatibleWith: nil), for: .normal)
+        deleteButton.addTarget(self, action: #selector(deleteButtonAction), for: .touchUpInside)
+        return deleteButton
+    }()
+    
+    fileprivate lazy var completeButton: UIButton = {
+        let completeButton = UIButton(frame: CGRect(x: bounds.width - 10 - kToolBarViewHeight, y: 0, width: kToolBarViewHeight, height: kToolBarViewHeight))
+        completeButton.setImage(UIImage(named: "Check", in: Bundle.init(for: self.classForCoder), compatibleWith: nil), for: .normal)
+        completeButton.addTarget(self, action: #selector(completeButtonAction), for: .touchUpInside)
+        return completeButton
+    }()
+    
     fileprivate lazy var collectionView: UICollectionView = {
         let layout = ZLPhotoWaterFallLayout()
         layout.minimumLineSpacing = 5
         layout.scrollDirection = .horizontal
         layout.dataSource = self
-        let collectionView = UICollectionView(frame: bounds, collectionViewLayout: layout)
+        let height: CGFloat = bounds.height - kToolBarViewHeight
+        let collectionView = UICollectionView(frame: CGRect(x: 0, y: toolBarView.frame.maxY, width: bounds.width, height: height), collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.clipsToBounds = false
@@ -60,12 +87,15 @@ class ZLPhotoWaterFallView: UIView {
 // MARK: - UI
 extension ZLPhotoWaterFallView {
     fileprivate func setupUI() {
+        addSubview(toolBarView)
+        toolBarView.addSubview(deleteButton)
+        toolBarView.addSubview(completeButton)
         addSubview(collectionView)
     }
 }
 
-
-extension ZLPhotoWaterFallView: UICollectionViewDataSource {
+// MARK: - DataSouce And Delegate
+extension ZLPhotoWaterFallView: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -93,14 +123,16 @@ extension ZLPhotoWaterFallView: UICollectionViewDataSource {
         photoModels.remove(at: indexPath.row)
         collectionView.reloadData()
     }
-}
-
-extension ZLPhotoWaterFallView: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        if let callBack = selectedItemCallBack {
+            callBack(photoModels, indexPath.row)
+        }
     }
 }
 
+
+// MARK: - Layout
 extension ZLPhotoWaterFallView: ZLPhotoWaterFallLayoutDataSource {
     func waterFallLayout(_ layout: ZLPhotoWaterFallLayout, indexPath: IndexPath) -> CGFloat {
         let model = photoModels[indexPath.row]
@@ -112,7 +144,6 @@ extension ZLPhotoWaterFallView: ZLPhotoWaterFallLayoutDataSource {
     }
 }
 
-
 // MARK: - 数据操作
 extension ZLPhotoWaterFallView {
     func addPhotoModel(_ model: ZLPhotoModel) {
@@ -121,3 +152,19 @@ extension ZLPhotoWaterFallView {
     }
 }
 
+
+// MARK: - Event
+extension ZLPhotoWaterFallView {
+    
+    // delete All
+    @objc fileprivate func deleteButtonAction() {
+        
+    }
+    
+    // ccompletion
+    @objc fileprivate func completeButtonAction() {
+        if let callBack = selectedItemCallBack {
+            callBack(photoModels, 0)
+        }
+    }
+}
