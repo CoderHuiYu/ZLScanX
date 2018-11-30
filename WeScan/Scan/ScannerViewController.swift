@@ -71,6 +71,54 @@ final class ScannerViewController: UIViewController {
         return activityIndicator
     }()
 
+    lazy var scanningNoticeImageView: UIImageView = {
+        let scanningNoticeImageView = UIImageView()
+        scanningNoticeImageView.frame = CGRect(x: 20, y: 7, width: 30, height: 15)
+        var animationImage = [UIImage]()
+        let imagePrefix = "reading_"
+        let numberOfFrames = 30;
+        for index in 1...numberOfFrames {
+            let imageSuffix = String(format: "%.5d", index)
+            let imageName = imagePrefix+imageSuffix
+            guard let image = UIImage(named: imageName) else {
+                return scanningNoticeImageView
+            }
+            animationImage.append(image)
+        }
+        scanningNoticeImageView.animationImages = animationImage
+        scanningNoticeImageView.startAnimating()
+        return scanningNoticeImageView
+    }()
+    
+    lazy private var capturingAnnularProgressView: UIAnnularProgress = {
+        let annularProgressProperty = ProgressProperty(width: 5, progressEnd: 0, progressColor: UIColor.init(red: 100, green: 100, blue: 100, alpha: 0.7))
+        let capturingAnnularProgressView = UIAnnularProgress(propressProperty: annularProgressProperty, frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+        capturingAnnularProgressView.center = quadView.center
+        return capturingAnnularProgressView
+    }()
+    
+    lazy private var scanningNoticeLabel: UILabel = {
+        let scanningNoticeLabel = UILabel()
+        scanningNoticeLabel.frame = CGRect(x: 50, y: 5, width: 0, height: 0)
+        scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Looking for Document", comment: "scanning notice")
+        scanningNoticeLabel.font = UIFont.systemFont(ofSize: 14)
+        scanningNoticeLabel.textColor = UIColor.white
+        scanningNoticeLabel.sizeToFit()
+        return scanningNoticeLabel
+    }()
+    
+    lazy private var scanningNoticeView: UIView = {
+        let scanningNoticeView = UIView()
+        let width = 20 + scanningNoticeImageView.bounds.width + 10 + scanningNoticeLabel.bounds.width + 20
+        scanningNoticeView.frame = CGRect(x: 0, y: 0, width: width, height: 30)
+        scanningNoticeView.center = view.center
+        scanningNoticeView.backgroundColor = UIColor.init(white: 0.4, alpha: 0.5)
+        scanningNoticeView.layer.cornerRadius = 15;
+        scanningNoticeView.addSubview(scanningNoticeImageView)
+        scanningNoticeView.addSubview(scanningNoticeLabel)
+        return scanningNoticeView
+    }()
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -117,11 +165,13 @@ final class ScannerViewController: UIViewController {
         view.layer.addSublayer(videoPreviewlayer)
         quadView.translatesAutoresizingMaskIntoConstraints = false
         quadView.editable = false
+        quadView.quadLayer.addSublayer(capturingAnnularProgressView.layer)
         view.addSubview(quadView)
         view.addSubview(cancelButton)
         view.addSubview(shutterButton)
         view.addSubview(activityIndicator)
         view.addSubview(toolbar)
+        view.addSubview(scanningNoticeView)
     }
     
     private func setupToolbar() {
@@ -224,22 +274,37 @@ final class ScannerViewController: UIViewController {
 }
 
 extension ScannerViewController: RectangleDetectionDelegateProtocol {
+    func startCapturingLoading(for captureSessionManager: CaptureSessionManager, currentAutoScanPassCounts: Int) {
+        capturingAnnularProgressView.setProgress(progress:CGFloat((currentAutoScanPassCounts - RectangleFeaturesFunnel().startShootLoadingThreshold))/CGFloat(RectangleFeaturesFunnel().autoScanThreshold - RectangleFeaturesFunnel().startShootLoadingThreshold) , time: 0.0, animate: false)
+    }
+    
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didFailWithError error: Error) {
         
         activityIndicator.stopAnimating()
         shutterButton.isUserInteractionEnabled = true
-        
+        UIView.animate(withDuration: 0.2) {
+            self.scanningNoticeView.isHidden = false
+        }
+        capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
         guard let imageScannerController = navigationController as? ImageScannerController else { return }
         imageScannerController.imageScannerDelegate?.imageScannerController(imageScannerController, didFailWithError: error)
     }
     
     func didStartCapturingPicture(for captureSessionManager: CaptureSessionManager) {
-        activityIndicator.startAnimating()
+        scanningNoticeImageView.stopAnimating()
+        UIView.animate(withDuration: 0.2) {
+            self.scanningNoticeView.isHidden = true
+        }
+        //        activityIndicator.startAnimating()
         shutterButton.isUserInteractionEnabled = false
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didCapturePicture picture: UIImage, withQuad quad: Quadrilateral?) {
-        activityIndicator.stopAnimating()
+//        activityIndicator.stopAnimating()
+        scanningNoticeImageView.stopAnimating()
+        UIView.animate(withDuration: 0.2) {
+            self.scanningNoticeView.isHidden = true
+        }
         let image = picture.applyingPortraitOrientation()
         let quad = quad ?? ScannerViewController.defaultQuad(forImage: image)
         
@@ -282,9 +347,21 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         guard let quad = quad else {
             // If no quad has been detected, we remove the currently displayed on on the quadView.
             quadView.removeQuadrilateral()
+            UIView.animate(withDuration: 0.2) {
+                self.scanningNoticeView.isHidden = false
+            }
+
+            scanningNoticeImageView.startAnimating()
+            capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
+ 
             return
         }
         
+        UIView.animate(withDuration: 0.2) {
+            self.scanningNoticeView.isHidden = true
+        }
+        scanningNoticeImageView.stopAnimating()
+
         let portraitImageSize = CGSize(width: imageSize.height, height: imageSize.width)
         
         let scaleTransform = CGAffineTransform.scaleTransform(forSize: portraitImageSize, aspectFillInSize: quadView.bounds.size)
@@ -301,6 +378,10 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         let transformedQuad = quad.applyTransforms(transforms)
         
         quadView.drawQuadrilateral(quad: transformedQuad, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.21) {
+            self.capturingAnnularProgressView.center = self.quadView.center
+        }
+
     }
     
     private static func defaultQuad(forImage image: UIImage) -> Quadrilateral {

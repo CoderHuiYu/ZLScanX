@@ -20,7 +20,7 @@ enum CornerPosition {
 /// The `QuadrilateralView` is a simple `UIView` subclass that can draw a quadrilateral, and optionally edit it.
 final class QuadrilateralView: UIView {
     
-    private let quadLayer: CAShapeLayer = {
+    let quadLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
         layer.strokeColor = UIColor.white.cgColor
 //        layer.strokeColor = UIColor.init(displayP3Red: 82/255.0, green: 157/255.0, blue: 186/255.0, alpha: 1).cgColor
