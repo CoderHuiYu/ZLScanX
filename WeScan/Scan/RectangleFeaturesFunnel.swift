@@ -12,6 +12,7 @@ import AVFoundation
 enum AddResult {
     case showAndAutoScan
     case showOnly
+    case startCaptureLoading
 }
 
 /// `RectangleFeaturesFunnel` is used to improve the confidence of the detected rectangles.
@@ -65,12 +66,16 @@ final class RectangleFeaturesFunnel {
     /// The number of similar rectangles that need to be found to auto scan.
     let autoScanThreshold = 20
     
+    /// The number of similar rectangles that need to be found to start shoot loading.
+    let startShootLoadingThreshold = 3
+
+    
     /// The number of times the rectangle has passed the threshold to be auto-scanned
     var currentAutoScanPassCount = 0
     
     /// The value in pixels used to determine if a rectangle is accurate enough to be auto scanned.
     /// A higher value means the auto scan is quicker, but the rectangle will be less accurate. On the other hand, the lower the value, the longer it'll take for the auto scan, but it'll be way more accurate
-    var autoScanMatchingThreshold: CGFloat = 6.0
+    var autoScanMatchingThreshold: CGFloat = 8.0
     
     /// Add a rectangle to the funnel, and if a new rectangle should be displayed, the completion block will be called.
     /// The algorithm works the following way:
@@ -84,7 +89,7 @@ final class RectangleFeaturesFunnel {
     ///   - rectangleFeature: The rectangle to feed to the funnel.
     ///   - currentRectangle: The currently displayed rectangle. This is used to avoid displaying very close rectangles.
     ///   - completion: The completion block called when a new rectangle should be displayed.
-    func add(_ rectangleFeature: Quadrilateral, currentlyDisplayedRectangle currentRectangle: Quadrilateral?, completion: (AddResult, Quadrilateral) -> Void) {
+    func add(_ rectangleFeature: Quadrilateral, currentlyDisplayedRectangle currentRectangle: Quadrilateral?, completion: (AddResult, Quadrilateral, Int) -> Void) {
         let rectangleMatch = RectangleMatch(rectangleFeature: rectangleFeature)
         rectangles.append(rectangleMatch)
         
@@ -105,12 +110,15 @@ final class RectangleFeaturesFunnel {
         if let previousRectangle = currentRectangle,
             bestRectangle.rectangleFeature.isWithin(autoScanMatchingThreshold, ofRectangleFeature: previousRectangle) {
             currentAutoScanPassCount += 1
+            if currentAutoScanPassCount >= startShootLoadingThreshold && currentAutoScanPassCount <= autoScanThreshold {
+                completion(AddResult.startCaptureLoading, bestRectangle.rectangleFeature, currentAutoScanPassCount)
+            }
             if currentAutoScanPassCount > autoScanThreshold {
                 currentAutoScanPassCount = 0
-                completion(AddResult.showAndAutoScan, bestRectangle.rectangleFeature)
+                completion(AddResult.showAndAutoScan, bestRectangle.rectangleFeature, currentAutoScanPassCount)
             }
         } else {
-            completion(AddResult.showOnly, bestRectangle.rectangleFeature)
+            completion(AddResult.showOnly, bestRectangle.rectangleFeature, currentAutoScanPassCount)
         }
     }
     
