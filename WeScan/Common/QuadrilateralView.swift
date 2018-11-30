@@ -86,7 +86,7 @@ final class QuadrilateralView: UIView {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .bottomLeft)
     }()
     
-    private let highlightedCornerViewSize = CGSize(width: 75.0, height: 75.0)
+    private let highlightedCornerViewSize = CGSize(width: 2.0, height: 2.0)
     private let cornerViewSize = CGSize(width: 20.0, height: 20.0)
     
     // MARK: - Life Cycle
@@ -213,13 +213,13 @@ final class QuadrilateralView: UIView {
             return
         }
 
-//        let origin = CGPoint(x: cornerView.frame.origin.x - (highlightedCornerViewSize.width - cornerViewSize.width) / 2.0,
-//                             y: cornerView.frame.origin.y - (highlightedCornerViewSize.height - cornerViewSize.height) / 2.0)
-//        cornerView.frame = CGRect(origin: origin, size: highlightedCornerViewSize)
+        let origin = CGPoint(x: cornerView.frame.origin.x - (highlightedCornerViewSize.width - cornerViewSize.width) / 2.0,
+                             y: cornerView.frame.origin.y - (highlightedCornerViewSize.height - cornerViewSize.height) / 2.0)
+        cornerView.frame = CGRect(origin: origin, size: highlightedCornerViewSize)
 //        print(image)
         showCornerView.isHidden = false
         showCornerView.highlightWithImage(image)
-//        cornerView.highlightWithImage(image)
+        cornerView.highlightWithImage(image)
     }
     
     func resetHighlightedCornerViews() {
