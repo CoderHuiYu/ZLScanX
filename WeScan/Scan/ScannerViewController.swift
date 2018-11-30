@@ -31,6 +31,9 @@ final class ScannerViewController: UIViewController {
         return true
     }
     
+    let photoCollectionViewHeight: CGFloat = 150 + 44
+
+    
     lazy private var shutterButton: ShutterButton = {
         let button = ShutterButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -72,8 +75,7 @@ final class ScannerViewController: UIViewController {
     }()
     
     fileprivate lazy var photoCollectionView: ZLPhotoWaterFallView = {
-        let height: CGFloat = 150 + 44
-        let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - height, width: view.frame.width, height: height))
+        let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - photoCollectionViewHeight, width: view.frame.width, height: photoCollectionViewHeight))
         photoCollectionView.backViewColor = UIColor.gray
         
         photoCollectionView.deleteActionCallBack = { [weak self] in
@@ -375,7 +377,20 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         let photoModel = ZLPhotoModel.init(image: uiImage, imageSize: uiImage.size)
         
         previewImageView.image = uiImage
-        previewImageView.frame = CGRect(x: 0, y: 0, width: uiImage.size.width/UIScreen.main.scale/1.3, height: uiImage.size.height/UIScreen.main.scale/1.3)
+        var previewImageWidth :CGFloat = 0.0
+        var previewImageHieght :CGFloat = 0.0
+        if uiImage.size.width == 0 || uiImage.size.height == 0 {
+            return
+        }
+        if uiImage.size.width >= uiImage.size.height {
+            previewImageWidth = kScreenWidth - 60.0;
+            previewImageHieght = (uiImage.size.height/uiImage.size.width)*previewImageWidth
+        } else {
+            previewImageHieght = kScreenHeight - 60.0 - photoCollectionViewHeight;
+            previewImageWidth = (uiImage.size.width/uiImage.size.height)*previewImageWidth
+        }
+        previewImageView.frame = CGRect(x: 0, y: 0, width: previewImageWidth, height: previewImageHieght)
+
         previewImageView.center = view.center
         
         print(quadView.quadLayer.frame)
