@@ -28,7 +28,7 @@ class ZLPhotoCell: UICollectionViewCell {
     var photoModel: ZLPhotoModel? {
         didSet {
             guard let model = photoModel else { return }
-            imageView.image = UIImage(data: model.imageData)
+            imageView.image = model.image
             updateToOriginalLayout(false)
         }
     }

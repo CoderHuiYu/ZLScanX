@@ -352,8 +352,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         
         // MARK: - mason test code
-        guard let pngData = uiImage.pngData() else { return }
-        let photoModel = ZLPhotoModel.init(imageData: pngData, imageSize: uiImage.size)
+        let photoModel = ZLPhotoModel.init(image: uiImage, imageSize: uiImage.size)
         photoCollectionView.addPhotoModel(photoModel)
         
         // continue to capture
