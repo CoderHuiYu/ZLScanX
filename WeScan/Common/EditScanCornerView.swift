@@ -10,7 +10,7 @@ import UIKit
 
 /// A UIView used by corners of a quadrilateral that is aware of its position.
 final class EditScanCornerView: UIView {
-    
+
     let position: CornerPosition
     
     /// The image to display when the corner view is highlighted.

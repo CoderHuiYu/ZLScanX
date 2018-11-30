@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-
 		0CEDD06F21B115F500F9050E /* Pill.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CEDD06E21B115F500F9050E /* Pill.xcassets */; };
 		1834C03721B141A900FF6EDB /* ZLPhotoEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1834C03521B141A900FF6EDB /* ZLPhotoEditorController.swift */; };
 		1834C03821B141A900FF6EDB /* ZLPhotoEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1834C03621B141A900FF6EDB /* ZLPhotoEditorController.xib */; };
@@ -77,6 +76,16 @@
 		C31DD8A320C087D80072D439 /* ZoomGestureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31DD8A220C087D80072D439 /* ZoomGestureController.swift */; };
 		C3789C9B20CC69AD001B423F /* QuadrilateralViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3789C9A20CC69AD001B423F /* QuadrilateralViewTests.swift */; };
 		C3E2EB8E20B8970800A42E58 /* UIImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E2EB8D20B8970800A42E58 /* UIImage+Utils.swift */; };
+		FEE6A0C421AFF19400C2CEC3 /* Nebula.png in Resources */ = {isa = PBXBuildFile; fileRef = FEE6A0C321AFF19400C2CEC3 /* Nebula.png */; };
+		FEE6A0C621B0125700C2CEC3 /* SortCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */; };
+		FEE6A0C921B1183D00C2CEC3 /* WeScan-Banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */; };
+		FEECF2A521AFCEE2009B7AC2 /* SortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */; };
+		FEECF2A721AFCEEE009B7AC2 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A621AFCEEE009B7AC2 /* Define.swift */; };
+		FEECF2F521AFD132009B7AC2 /* SortCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */; };
+		FEECF2FA21AFE31E009B7AC2 /* XNormal_18x18_@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEECF2F821AFE31E009B7AC2 /* XNormal_18x18_@3x.png */; };
+		FEECF2FB21AFE31E009B7AC2 /* XNormal_18x18_@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEECF2F921AFE31E009B7AC2 /* XNormal_18x18_@2x.png */; };
+		FEECF2FE21AFE590009B7AC2 /* delete_page_x_44x44_@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEECF2FC21AFE590009B7AC2 /* delete_page_x_44x44_@3x.png */; };
+		FEECF2FF21AFE590009B7AC2 /* delete_page_x_44x44_@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FEECF2FD21AFE590009B7AC2 /* delete_page_x_44x44_@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,7 +155,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-
 		0CEDD06E21B115F500F9050E /* Pill.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Pill.xcassets; sourceTree = "<group>"; };
 		1834C03521B141A900FF6EDB /* ZLPhotoEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZLPhotoEditorController.swift; sourceTree = "<group>"; };
 		1834C03621B141A900FF6EDB /* ZLPhotoEditorController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZLPhotoEditorController.xib; sourceTree = "<group>"; };
@@ -221,6 +229,16 @@
 		C31DD8A220C087D80072D439 /* ZoomGestureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomGestureController.swift; sourceTree = "<group>"; };
 		C3789C9A20CC69AD001B423F /* QuadrilateralViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuadrilateralViewTests.swift; sourceTree = "<group>"; };
 		C3E2EB8D20B8970800A42E58 /* UIImage+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Utils.swift"; sourceTree = "<group>"; };
+		FEE6A0C321AFF19400C2CEC3 /* Nebula.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Nebula.png; sourceTree = "<group>"; };
+		FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortCollectionView.swift; sourceTree = "<group>"; };
+		FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "WeScan-Banner.jpg"; path = "Assets/WeScan-Banner.jpg"; sourceTree = SOURCE_ROOT; };
+		FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewController.swift; sourceTree = "<group>"; };
+		FEECF2A621AFCEEE009B7AC2 /* Define.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
+		FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortCollectionViewCell.swift; sourceTree = "<group>"; };
+		FEECF2F821AFE31E009B7AC2 /* XNormal_18x18_@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "XNormal_18x18_@3x.png"; sourceTree = "<group>"; };
+		FEECF2F921AFE31E009B7AC2 /* XNormal_18x18_@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "XNormal_18x18_@2x.png"; sourceTree = "<group>"; };
+		FEECF2FC21AFE590009B7AC2 /* delete_page_x_44x44_@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete_page_x_44x44_@3x.png"; sourceTree = "<group>"; };
+		FEECF2FD21AFE590009B7AC2 /* delete_page_x_44x44_@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete_page_x_44x44_@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -355,6 +373,7 @@
 			children = (
 				1834C02F21B125DF00FF6EDB /* ZLPhoto */,
 				A1DF909F2031D89D00841A11 /* ImageScannerController.swift */,
+				FEECF2A321AFCED2009B7AC2 /* Sort */,
 				A1DF90E220358C9E00841A11 /* Protocols */,
 				A1F22ECF203199E7001723AD /* Scan */,
 				A1F22ED020319A03001723AD /* Edit */,
@@ -427,6 +446,7 @@
 				A14089B9204D92EA0009530F /* EditScanCornerView.swift */,
 				B92A2C8221578D28002874E5 /* CaptureSession.swift */,
 				69C265F621B0127C00309ADA /* UIAnnularProgress.swift */,
+				FEECF2A621AFCEEE009B7AC2 /* Define.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -486,11 +506,27 @@
 		B983380121A6CA4E00AAE307 /* Enhance */ = {
 			isa = PBXGroup;
 			children = (
+				FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */,
+				FEE6A0C321AFF19400C2CEC3 /* Nebula.png */,
+				FEECF2FD21AFE590009B7AC2 /* delete_page_x_44x44_@2x.png */,
+				FEECF2FC21AFE590009B7AC2 /* delete_page_x_44x44_@3x.png */,
+				FEECF2F921AFE31E009B7AC2 /* XNormal_18x18_@2x.png */,
+				FEECF2F821AFE31E009B7AC2 /* XNormal_18x18_@3x.png */,
 				B940E38921A77192003B3C0B /* enhance.png */,
 				B940E38821A77192003B3C0B /* enhance@2x.png */,
 				B940E38721A77192003B3C0B /* enhance@3x.png */,
 			);
 			name = Enhance;
+			sourceTree = "<group>";
+		};
+		FEECF2A321AFCED2009B7AC2 /* Sort */ = {
+			isa = PBXGroup;
+			children = (
+				FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */,
+				FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */,
+				FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */,
+			);
+			path = Sort;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -664,16 +700,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEECF2FA21AFE31E009B7AC2 /* XNormal_18x18_@3x.png in Resources */,
 				B97B49C9216C6C6800B2235B /* Localizable.strings in Resources */,
 				0CEDD06F21B115F500F9050E /* Pill.xcassets in Resources */,
 				1834C03821B141A900FF6EDB /* ZLPhotoEditorController.xib in Resources */,
 				18EB1C6821B10717001CEA1E /* ZLPhotoAsset.xcassets in Resources */,
 				B94FBBB52178653C001ED1B4 /* flashUnavailable@2x.png in Resources */,
 				18EB1C6221B0EBC5001CEA1E /* ZLPhotoCell.xib in Resources */,
+				FEECF2FF21AFE590009B7AC2 /* delete_page_x_44x44_@2x.png in Resources */,
+				B94FBBB52178653C001ED1B4 /* flashUnavailable@2x.png in Resources */,
+				FEE6A0C921B1183D00C2CEC3 /* WeScan-Banner.jpg in Resources */,
+				FEE6A0C421AFF19400C2CEC3 /* Nebula.png in Resources */,
 				B94FBBAD2178652B001ED1B4 /* flash.png in Resources */,
 				B94FBBAF2178652B001ED1B4 /* flash@2x.png in Resources */,
 				B940E38C21A77192003B3C0B /* enhance.png in Resources */,
 				B94FBBB32178653C001ED1B4 /* flashUnavailable@3x.png in Resources */,
+				FEECF2FE21AFE590009B7AC2 /* delete_page_x_44x44_@3x.png in Resources */,
+				FEECF2FB21AFE31E009B7AC2 /* XNormal_18x18_@2x.png in Resources */,
 				B94FBBAE2178652B001ED1B4 /* flash@3x.png in Resources */,
 				B940E38A21A77192003B3C0B /* enhance@3x.png in Resources */,
 				B940E38B21A77192003B3C0B /* enhance@2x.png in Resources */,
@@ -709,6 +752,7 @@
 			files = (
 				A11C5CDB20495EC9005075FE /* AVCaptureVideoOrientation+Utils.swift in Sources */,
 				A1DF90F22035992A00841A11 /* CGAffineTransform+Utils.swift in Sources */,
+				FEECF2F521AFD132009B7AC2 /* SortCollectionViewCell.swift in Sources */,
 				A1F22EA3202DAA74001723AD /* RectangleFeaturesFunnel.swift in Sources */,
 				A1D4BD0E202C57A400FCDDEC /* CaptureSessionManager.swift in Sources */,
 				A1F22ECE2031937E001723AD /* EditScanViewController.swift in Sources */,
@@ -720,6 +764,8 @@
 				A11C5B9C2046A20C005075FE /* Error.swift in Sources */,
 				A1D4BD15202C6CC000FCDDEC /* Array+Utils.swift in Sources */,
 				69C265F721B0127C00309ADA /* UIAnnularProgress.swift in Sources */,
+				FEECF2A721AFCEEE009B7AC2 /* Define.swift in Sources */,
+				FEECF2A521AFCEE2009B7AC2 /* SortViewController.swift in Sources */,
 				B92A2C8321578D28002874E5 /* CaptureSession.swift in Sources */,
 				C3E2EB8E20B8970800A42E58 /* UIImage+Utils.swift in Sources */,
 				18EB1C6021B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift in Sources */,
@@ -727,6 +773,7 @@
 				B992E831210C36A400C33A21 /* VisionRectangleDetector.swift in Sources */,
 				A1F22EA5202DB3AA001723AD /* CGPoint+Utils.swift in Sources */,
 				A14089BA204D92EA0009530F /* EditScanCornerView.swift in Sources */,
+				FEE6A0C621B0125700C2CEC3 /* SortCollectionView.swift in Sources */,
 				A1DF90A02031D89D00841A11 /* ImageScannerController.swift in Sources */,
 				B9274D3A219B951000F9FCD1 /* CIImage+Utils.swift in Sources */,
 				18EB1C5F21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift in Sources */,
@@ -928,11 +975,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FADF8HSPN5;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = yuhui.com.scanX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -945,11 +992,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FADF8HSPN5;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = yuhui.com.scanX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -968,7 +1015,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = WeScan/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = WeTransfer.WeScan;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -995,7 +1042,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = WeScan/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = WeTransfer.WeScan;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
