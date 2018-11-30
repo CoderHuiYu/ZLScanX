@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18EB1C5F21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EB1C5B21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift */; };
+		18EB1C6021B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EB1C5C21B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift */; };
+		18EB1C6121B0EBC5001CEA1E /* ZLPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EB1C5D21B0EBC5001CEA1E /* ZLPhotoCell.swift */; };
+		18EB1C6221B0EBC5001CEA1E /* ZLPhotoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18EB1C5E21B0EBC5001CEA1E /* ZLPhotoCell.xib */; };
+		18EB1C6821B10717001CEA1E /* ZLPhotoAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18EB1C6721B10717001CEA1E /* ZLPhotoAsset.xcassets */; };
 		74F7D034211ACBD90046AF7E /* CIRectangleDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F7D033211ACBD90046AF7E /* CIRectangleDetectorTests.swift */; };
 		74F7D036211ACBEE0046AF7E /* CaptureSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F7D035211ACBEE0046AF7E /* CaptureSessionTests.swift */; };
 		74F7D038211ACBF90046AF7E /* VisionRectangleDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F7D037211ACBF90046AF7E /* VisionRectangleDetectorTests.swift */; };
@@ -135,6 +140,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		18EB1C5B21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLPhotoWaterFallLayout.swift; sourceTree = "<group>"; };
+		18EB1C5C21B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLPhotoWaterFallView.swift; sourceTree = "<group>"; };
+		18EB1C5D21B0EBC5001CEA1E /* ZLPhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLPhotoCell.swift; sourceTree = "<group>"; };
+		18EB1C5E21B0EBC5001CEA1E /* ZLPhotoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ZLPhotoCell.xib; sourceTree = "<group>"; };
+		18EB1C6721B10717001CEA1E /* ZLPhotoAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ZLPhotoAsset.xcassets; sourceTree = "<group>"; };
 		74E2785B2154528300361812 /* FBSnapshotTestCase.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSnapshotTestCase.xcodeproj; path = "Submodules/ios-snapshot-test-case/FBSnapshotTestCase.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		74F7D033211ACBD90046AF7E /* CIRectangleDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIRectangleDetectorTests.swift; sourceTree = "<group>"; };
 		74F7D035211ACBEE0046AF7E /* CaptureSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSessionTests.swift; sourceTree = "<group>"; };
@@ -228,6 +238,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18EB1C5A21B0EBC5001CEA1E /* ZLCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				18EB1C5B21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift */,
+				18EB1C5C21B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift */,
+				18EB1C5D21B0EBC5001CEA1E /* ZLPhotoCell.swift */,
+				18EB1C5E21B0EBC5001CEA1E /* ZLPhotoCell.xib */,
+				18EB1C6721B10717001CEA1E /* ZLPhotoAsset.xcassets */,
+			);
+			path = ZLCollectionView;
+			sourceTree = "<group>";
+		};
 		74E27857215446C900361812 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -301,6 +323,7 @@
 		A1D4BCEE202C4F4100FCDDEC /* WeScan */ = {
 			isa = PBXGroup;
 			children = (
+				18EB1C5A21B0EBC5001CEA1E /* ZLCollectionView */,
 				A1DF909F2031D89D00841A11 /* ImageScannerController.swift */,
 				A1DF90E220358C9E00841A11 /* Protocols */,
 				A1F22ECF203199E7001723AD /* Scan */,
@@ -608,7 +631,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B97B49C9216C6C6800B2235B /* Localizable.strings in Resources */,
+				18EB1C6821B10717001CEA1E /* ZLPhotoAsset.xcassets in Resources */,
 				B94FBBB52178653C001ED1B4 /* flashUnavailable@2x.png in Resources */,
+				18EB1C6221B0EBC5001CEA1E /* ZLPhotoCell.xib in Resources */,
 				B94FBBAD2178652B001ED1B4 /* flash.png in Resources */,
 				B94FBBAF2178652B001ED1B4 /* flash@2x.png in Resources */,
 				B940E38C21A77192003B3C0B /* enhance.png in Resources */,
@@ -652,18 +677,21 @@
 				A1D4BD0E202C57A400FCDDEC /* CaptureSessionManager.swift in Sources */,
 				A1F22ECE2031937E001723AD /* EditScanViewController.swift in Sources */,
 				A1F22E9F202C8D70001723AD /* Quadrilateral.swift in Sources */,
+				18EB1C6121B0EBC5001CEA1E /* ZLPhotoCell.swift in Sources */,
 				A1DF90E420358CB100841A11 /* Transformable.swift in Sources */,
 				A1D4BD0C202C504F00FCDDEC /* ScannerViewController.swift in Sources */,
 				A11C5B9C2046A20C005075FE /* Error.swift in Sources */,
 				A1D4BD15202C6CC000FCDDEC /* Array+Utils.swift in Sources */,
 				B92A2C8321578D28002874E5 /* CaptureSession.swift in Sources */,
 				C3E2EB8E20B8970800A42E58 /* UIImage+Utils.swift in Sources */,
+				18EB1C6021B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift in Sources */,
 				A165F67E2044741B002D5ED6 /* ShutterButton.swift in Sources */,
 				B992E831210C36A400C33A21 /* VisionRectangleDetector.swift in Sources */,
 				A1F22EA5202DB3AA001723AD /* CGPoint+Utils.swift in Sources */,
 				A14089BA204D92EA0009530F /* EditScanCornerView.swift in Sources */,
 				A1DF90A02031D89D00841A11 /* ImageScannerController.swift in Sources */,
 				B9274D3A219B951000F9FCD1 /* CIImage+Utils.swift in Sources */,
+				18EB1C5F21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift in Sources */,
 				C31DD8A320C087D80072D439 /* ZoomGestureController.swift in Sources */,
 				A1C4DD4E2044ADE600D36684 /* CGRect+Utils.swift in Sources */,
 				A1DF90A420331A0B00841A11 /* CIRectangleDetector.swift in Sources */,
@@ -860,7 +888,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = FADF8HSPN5;
+				DEVELOPMENT_TEAM = 4TJ7K2DH6D;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -877,7 +905,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = FADF8HSPN5;
+				DEVELOPMENT_TEAM = 4TJ7K2DH6D;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

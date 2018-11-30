@@ -70,6 +70,13 @@ final class ScannerViewController: UIViewController {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
+    
+    fileprivate lazy var photoCollectionView: ZLPhotoWaterFallView = {
+        let height: CGFloat = 150
+        let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - height, width: view.frame.width, height: height))
+        photoCollectionView.backViewColor = UIColor.gray
+        return photoCollectionView
+    }()
 
     // MARK: - Life Cycle
     
@@ -122,6 +129,7 @@ final class ScannerViewController: UIViewController {
         view.addSubview(shutterButton)
         view.addSubview(activityIndicator)
         view.addSubview(toolbar)
+        view.addSubview(photoCollectionView)
     }
     
     private func setupToolbar() {
@@ -271,11 +279,17 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         }
         
         let results = ImageScannerResults(originalImage: image, scannedImage: uiImage, enhancedImage: nil, doesUserPreferEnhancedImage: false, detectedRectangle: quad)
-        let reviewViewController = ReviewViewController(results: results ,quad : quad)
-        if navigationController?.viewControllers.last == self {
-            navigationController?.pushViewController(reviewViewController, animated: true)
-            shutterButton.isUserInteractionEnabled = true
-        }
+//        let reviewViewController = ReviewViewController(results: results ,quad : quad)
+//        if navigationController?.viewControllers.last == self {
+//            navigationController?.pushViewController(reviewViewController, animated: true)
+//            shutterButton.isUserInteractionEnabled = true
+//        }
+        
+        
+        // MARK: - mason test code
+        guard let pngData = uiImage.pngData() else { return }
+        let photoModel = ZLPhotoModel.init(imageData: pngData, imageSize: uiImage.size)
+        photoCollectionView.addPhotoModel(photoModel)
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didDetectQuad quad: Quadrilateral?, _ imageSize: CGSize) {
