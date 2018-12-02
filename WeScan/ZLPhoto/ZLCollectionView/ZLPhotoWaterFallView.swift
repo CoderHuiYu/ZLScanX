@@ -115,7 +115,14 @@ extension ZLPhotoWaterFallView: UICollectionViewDataSource, UICollectionViewDele
         return cell
     }
     
-    func removeItem(_ cell: ZLPhotoCell) {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let callBack = selectedItemCallBack {
+            callBack(photoModels, indexPath.row)
+        }
+    }
+    
+    fileprivate func removeItem(_ cell: ZLPhotoCell) {
         
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return
@@ -123,12 +130,6 @@ extension ZLPhotoWaterFallView: UICollectionViewDataSource, UICollectionViewDele
         
         photoModels.remove(at: indexPath.row)
         collectionView.reloadData()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let callBack = selectedItemCallBack {
-            callBack(photoModels, indexPath.row)
-        }
     }
 }
 
