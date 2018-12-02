@@ -390,10 +390,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             previewImageWidth = (uiImage.size.width/uiImage.size.height)*previewImageWidth
         }
         previewImageView.frame = CGRect(x: 0, y: 0, width: previewImageWidth, height: previewImageHieght)
-
         previewImageView.center = view.center
         
-        print(quadView.quadLayer.frame)
         UIView.animate(withDuration: 0.5, animations: {
             self.previewImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         }) { (Bool) in
@@ -401,13 +399,12 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
                 //                self.previewImageView.image = nil
                 self.photoCollectionView.addPhotoModel(photoModel)
-                
-                // continue to capture
-                CaptureSession.current.isEditing = false
                 self.quadView.removeQuadrilateral()
-                captureSessionManager.start()
                 
             }) { (finish) in
+                // continue to capture
+                CaptureSession.current.isEditing = false
+                captureSessionManager.start()
                 self.previewImageView.image = nil
                 CaptureSession.current.isPreviewing = false
             }
