@@ -8,7 +8,7 @@
 
 import UIKit
 
-private let kMinVelocity: CGFloat = -1000
+private let kMinVelocity: CGFloat = -700
 private let kAnimateDuration: TimeInterval = 0.3
 
 private let kDeleteImageViewBottomOriginalCons: CGFloat = 10
@@ -65,7 +65,7 @@ extension ZLPhotoCell: UIGestureRecognizerDelegate {
         
         if ges.state == .ended {
             let v = ges.velocity(in: self)
-            print("vvvvv+++\(v.y)")
+//            print("vvvvv+++\(v.y)")
             if v.y < kMinVelocity {
                 removeItem()
             } else {
@@ -120,12 +120,14 @@ extension ZLPhotoCell {
     }
     
     func removeItem() {
-        imageViewBottomCons.constant = -(UIScreen.main.bounds.size.height)
-        UIView.animate(withDuration: kAnimateDuration) {
+        imageViewBottomCons.constant = UIScreen.main.bounds.size.height
+        UIView.animate(withDuration: kAnimateDuration - 0.15, animations: {
             self.layoutIfNeeded()
+        }) { (_) in
+            if let callBack = self.itemDidRemove {
+                callBack(self)
+            }
         }
-        if let callBack = itemDidRemove {
-            callBack(self)
-        }
+        
     }
 }
