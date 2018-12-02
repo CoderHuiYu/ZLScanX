@@ -37,11 +37,11 @@
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="lbK-Si-0Kc" secondAttribute="bottom" id="2xW-OP-HnU"/>
                 <constraint firstItem="lbK-Si-0Kc" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="4wz-ZZ-3Zs"/>
-                <constraint firstAttribute="trailing" secondItem="h4f-Ca-g2l" secondAttribute="trailing" id="CPM-63-5pv"/>
-                <constraint firstAttribute="bottom" secondItem="h4f-Ca-g2l" secondAttribute="bottom" id="RYE-PH-xD2"/>
+                <constraint firstItem="h4f-Ca-g2l" firstAttribute="trailing" secondItem="lbK-Si-0Kc" secondAttribute="trailing" id="eUT-pL-J14"/>
                 <constraint firstItem="lbK-Si-0Kc" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" id="mxn-3b-AdT"/>
                 <constraint firstItem="kKu-or-19o" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="n71-Ho-JkZ"/>
                 <constraint firstItem="lbK-Si-0Kc" firstAttribute="height" secondItem="gTV-IL-0wX" secondAttribute="height" id="rDt-eB-TB0"/>
+                <constraint firstItem="h4f-Ca-g2l" firstAttribute="bottom" secondItem="lbK-Si-0Kc" secondAttribute="bottom" id="vOw-rM-ltN"/>
                 <constraint firstItem="lbK-Si-0Kc" firstAttribute="top" secondItem="kKu-or-19o" secondAttribute="bottom" constant="10" id="xH8-ps-W1P"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>

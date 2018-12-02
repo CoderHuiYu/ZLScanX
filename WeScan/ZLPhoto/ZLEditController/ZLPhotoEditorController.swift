@@ -15,17 +15,19 @@ class ZLPhotoEditorController: UIViewController {
     var photoModels = [ZLPhotoModel]()
     var currentIndex: NSInteger = 0
     
-    @IBOutlet weak var oneToolBarViewBottomCons: NSLayoutConstraint!
-    @IBOutlet weak var twoToolBarViewBottomCons: NSLayoutConstraint!
-    
-    
     @IBOutlet weak var customNavBar: UIView!
+    
     @IBOutlet weak var titleLabel: UILabel!
     
-    @IBOutlet weak var oneToolBarView: UIView!
-    @IBOutlet weak var twoToolBarView: UIView!
+    @IBOutlet weak var toolBarView: UIView!
     
     @IBOutlet weak var collectionView: UICollectionView!
+    
+    lazy var editingView: ZLPhotoEditingView = {
+        let editingView = Bundle.init(for: self.classForCoder).loadNibNamed("ZLPhotoEditingView", owner: nil, options: nil)?.first as! ZLPhotoEditingView
+        editingView.frame = view.bounds
+        return editingView
+    }()
     
     fileprivate var isEditingStatus: Bool = false
     
@@ -44,8 +46,8 @@ class ZLPhotoEditorController: UIViewController {
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
@@ -54,31 +56,26 @@ class ZLPhotoEditorController: UIViewController {
 // MARK: - UI
 extension ZLPhotoEditorController {
     
-    func setupUI() {
+    fileprivate func setupUI() {
         let layout = ZLPhotoWaterFallLayout()
         layout.minimumLineSpacing = 40
         layout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         layout.dataSource = self
         collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: kCollectionCellIdentifier)
         collectionView.collectionViewLayout = layout
+        
+        view.addSubview(editingView)
     }
     
-    func updateUI(_ isEditing: Bool) {
-        self.isEditing = isEditing
-        if isEditing {
-            oneToolBarViewBottomCons.constant = -kOneToolBarHeight
-            twoToolBarViewBottomCons.constant = 0
-            
-        } else {
-            oneToolBarViewBottomCons.constant = 0
-            twoToolBarViewBottomCons.constant = -kTwoToolBarHeight
-            
-        }
+    fileprivate func setNavBar(isHidden: Bool) {
         
-        UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.25, animations: {
+            self.customNavBar.alpha = isHidden ? 0.1 : 1.0
+        }) { (_) in
+            self.customNavBar.isHidden = isHidden
         }
     }
+    
 }
 
 // MARK: - DataSource And Delegate
@@ -92,17 +89,38 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCollectionCellIdentifier, for: indexPath) as! ZLPhotoCell
         cell.cellType = .edit
         cell.photoModel = photoModels[indexPath.row]
+        cell.itemDidRemove = { [weak self] (theCell) in
+            self?.removeItem(theCell)
+        }
+        cell.itemBeginDrag = { [weak self] (theCell, dragStatus) in
+            self?.setNavBar(isHidden: dragStatus == .begin)
+        }
         return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print(indexPath.row)
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.row)
-        updateUI(!self.isEditing)
+  
+        setNavBar(isHidden: true)
+        
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            let zlCell = cell as! ZLPhotoCell
+            editingView.show(zlCell.imageView)
+            // hide call back
+            editingView.hideCallBack = { [weak self] in
+                self?.setNavBar(isHidden: false)
+            }
+        }
+    }
+    
+    fileprivate func removeItem(_ cell: ZLPhotoCell) {
+        
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            return
+        }
+        
+        photoModels.remove(at: indexPath.row)
+        collectionView.reloadData()
     }
     
 }

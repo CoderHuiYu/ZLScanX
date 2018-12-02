@@ -10,6 +10,8 @@
 		0CEDD06F21B115F500F9050E /* Pill.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CEDD06E21B115F500F9050E /* Pill.xcassets */; };
 		1834C03721B141A900FF6EDB /* ZLPhotoEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1834C03521B141A900FF6EDB /* ZLPhotoEditorController.swift */; };
 		1834C03821B141A900FF6EDB /* ZLPhotoEditorController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1834C03621B141A900FF6EDB /* ZLPhotoEditorController.xib */; };
+		184D5D4A21B3DC09008C393D /* ZLPhotoEditingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184D5D4921B3DC09008C393D /* ZLPhotoEditingView.swift */; };
+		184D5D4C21B3DC88008C393D /* ZLPhotoEditingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 184D5D4B21B3DC88008C393D /* ZLPhotoEditingView.xib */; };
 		18EB1C5F21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EB1C5B21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift */; };
 		18EB1C6021B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EB1C5C21B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift */; };
 		18EB1C6121B0EBC5001CEA1E /* ZLPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EB1C5D21B0EBC5001CEA1E /* ZLPhotoCell.swift */; };
@@ -159,6 +161,8 @@
 		0CEDD06E21B115F500F9050E /* Pill.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Pill.xcassets; sourceTree = "<group>"; };
 		1834C03521B141A900FF6EDB /* ZLPhotoEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZLPhotoEditorController.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1834C03621B141A900FF6EDB /* ZLPhotoEditorController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZLPhotoEditorController.xib; sourceTree = "<group>"; };
+		184D5D4921B3DC09008C393D /* ZLPhotoEditingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZLPhotoEditingView.swift; sourceTree = "<group>"; };
+		184D5D4B21B3DC88008C393D /* ZLPhotoEditingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZLPhotoEditingView.xib; sourceTree = "<group>"; };
 		18EB1C5B21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLPhotoWaterFallLayout.swift; sourceTree = "<group>"; };
 		18EB1C5C21B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLPhotoWaterFallView.swift; sourceTree = "<group>"; };
 		18EB1C5D21B0EBC5001CEA1E /* ZLPhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLPhotoCell.swift; sourceTree = "<group>"; };
@@ -284,6 +288,8 @@
 			children = (
 				1834C03521B141A900FF6EDB /* ZLPhotoEditorController.swift */,
 				1834C03621B141A900FF6EDB /* ZLPhotoEditorController.xib */,
+				184D5D4921B3DC09008C393D /* ZLPhotoEditingView.swift */,
+				184D5D4B21B3DC88008C393D /* ZLPhotoEditingView.xib */,
 			);
 			path = ZLEditController;
 			sourceTree = "<group>";
@@ -727,6 +733,7 @@
 				B94FBBAE2178652B001ED1B4 /* flash@3x.png in Resources */,
 				B940E38A21A77192003B3C0B /* enhance@3x.png in Resources */,
 				B940E38B21A77192003B3C0B /* enhance@2x.png in Resources */,
+				184D5D4C21B3DC88008C393D /* ZLPhotoEditingView.xib in Resources */,
 				B94FBBB42178653C001ED1B4 /* flashUnavailable.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -759,6 +766,7 @@
 			files = (
 				A11C5CDB20495EC9005075FE /* AVCaptureVideoOrientation+Utils.swift in Sources */,
 				A1DF90F22035992A00841A11 /* CGAffineTransform+Utils.swift in Sources */,
+				184D5D4A21B3DC09008C393D /* ZLPhotoEditingView.swift in Sources */,
 				FEECF2F521AFD132009B7AC2 /* SortCollectionViewCell.swift in Sources */,
 				A1F22EA3202DAA74001723AD /* RectangleFeaturesFunnel.swift in Sources */,
 				A1D4BD0E202C57A400FCDDEC /* CaptureSessionManager.swift in Sources */,
