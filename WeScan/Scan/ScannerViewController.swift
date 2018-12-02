@@ -376,18 +376,24 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         if uiImage.size.width == 0 || uiImage.size.height == 0 {
             return
         }
-        if uiImage.size.width >= uiImage.size.height {
-            previewImageWidth = kScreenWidth - 60.0;
-            previewImageHieght = (uiImage.size.height/uiImage.size.width)*previewImageWidth
-        } else {
-            previewImageHieght = kScreenHeight - 60.0 - photoCollectionViewHeight;
-            previewImageWidth = (uiImage.size.width/uiImage.size.height)*previewImageWidth
-        }
-        previewImageView.frame = CGRect(x: 0, y: 0, width: previewImageWidth, height: previewImageHieght)
-        previewImageView.center = view.center
+        
+        let quadRect = CGRect(x: quadView.quadLayer.path?.boundingBox.origin.x ?? 0.0, y: quadView.quadLayer.path?.boundingBox.origin.y ?? 0.0, width: quadView.quadLayer.path?.boundingBox.size.width ?? 0.0, height: quadView.quadLayer.path?.boundingBox.size.height ?? 0.0)
+        previewImageView.frame = quadRect;
+//        let quadCenter = CGPoint(x: quadRect.width/2.0 + quadRect.minX, y: quadRect.height/2.0 + quadRect.minY)
+//
+//        if uiImage.size.width >= uiImage.size.height {
+//            previewImageWidth = kScreenWidth - 60.0;
+//            previewImageHieght = (uiImage.size.height/uiImage.size.width)*previewImageWidth
+//        } else {
+//            previewImageHieght = kScreenHeight - 60.0 - photoCollectionViewHeight;
+//            previewImageWidth = (uiImage.size.width/uiImage.size.height)*previewImageWidth
+//        }
+//        previewImageView.frame = CGRect(x: 0, y: 0, width: previewImageWidth, height: previewImageHieght)
         
         UIView.animate(withDuration: 0.5, animations: {
             self.previewImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            self.previewImageView.center = self.view.center
+
         }) { (Bool) in
             UIView.animate(withDuration: 0.5, animations: {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
