@@ -66,6 +66,13 @@ final class QuadrilateralView: UIView {
         }
     }
     
+    lazy var capturingAnnularProgressView: UIAnnularProgress = {
+        let annularProgressProperty = ProgressProperty(width: 5, progressEnd: 0, progressColor: UIColor.init(red: 100, green: 100, blue: 100, alpha: 0.7))
+        let capturingAnnularProgressView = UIAnnularProgress(propressProperty: annularProgressProperty, frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+        capturingAnnularProgressView.center = quadView.center
+        return capturingAnnularProgressView
+    }()
+    
     lazy private var showCornerView: EditScanCornerView = {
         return EditScanCornerView(frame: CGRect(origin: CGPoint.init(x: (UIScreen.main.bounds.size.width - 100)/2, y: 10), size: CGSize.init(width: 100, height: 100)), position: .topLeft)
     }()
@@ -124,6 +131,7 @@ final class QuadrilateralView: UIView {
         addSubview(topRightCornerView)
         addSubview(bottomRightCornerView)
         addSubview(bottomLeftCornerView)
+        quadLayer.addSublayer(capturingAnnularProgressView.layer)
     }
     
     override public func layoutSubviews() {
@@ -170,6 +178,10 @@ final class QuadrilateralView: UIView {
         
         quadLayer.path = path.cgPath
         quadLayer.isHidden = false
+        
+        let quadRect = CGRect(x: quadLayer.path?.boundingBox.origin.x ?? 0.0, y: quadLayer.path?.boundingBox.origin.y ?? 0.0, width: quadLayer.path?.boundingBox.size.width ?? 0.0, height: quadLayer.path?.boundingBox.size.height ?? 0.0)
+        let quadCenter = CGPoint(x: quadRect.width/2.0 + quadRect.minX, y: quadRect.height/2.0 + quadRect.minY)
+        capturingAnnularProgressView.center = quadCenter
     }
     
     private func layoutCornerViews(forQuad quad: Quadrilateral) {

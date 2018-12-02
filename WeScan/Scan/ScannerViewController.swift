@@ -111,13 +111,6 @@ final class ScannerViewController: UIViewController {
         return scanningNoticeImageView
     }()
     
-    lazy private var capturingAnnularProgressView: UIAnnularProgress = {
-        let annularProgressProperty = ProgressProperty(width: 5, progressEnd: 0, progressColor: UIColor.init(red: 100, green: 100, blue: 100, alpha: 0.7))
-        let capturingAnnularProgressView = UIAnnularProgress(propressProperty: annularProgressProperty, frame: CGRect(x: 0, y: 0, width: 80, height: 80))
-        capturingAnnularProgressView.center = quadView.center
-        return capturingAnnularProgressView
-    }()
-    
     lazy private var scanningNoticeLabel: UILabel = {
         let scanningNoticeLabel = UILabel()
         scanningNoticeLabel.frame = CGRect(x: 50, y: 5, width: 0, height: 0)
@@ -193,7 +186,6 @@ final class ScannerViewController: UIViewController {
         view.layer.addSublayer(videoPreviewlayer)
         quadView.translatesAutoresizingMaskIntoConstraints = false
         quadView.editable = false
-        quadView.quadLayer.addSublayer(capturingAnnularProgressView.layer)
         view.addSubview(quadView)
         view.addSubview(cancelButton)
         view.addSubview(shutterButton)
@@ -307,7 +299,7 @@ final class ScannerViewController: UIViewController {
 
 extension ScannerViewController: RectangleDetectionDelegateProtocol {
     func startCapturingLoading(for captureSessionManager: CaptureSessionManager, currentAutoScanPassCounts: Int) {
-        capturingAnnularProgressView.setProgress(progress:CGFloat((currentAutoScanPassCounts - RectangleFeaturesFunnel().startShootLoadingThreshold))/CGFloat(RectangleFeaturesFunnel().autoScanThreshold - RectangleFeaturesFunnel().startShootLoadingThreshold) , time: 0.0, animate: false)
+        quadView.capturingAnnularProgressView.setProgress(progress:CGFloat((currentAutoScanPassCounts - RectangleFeaturesFunnel().startShootLoadingThreshold))/CGFloat(RectangleFeaturesFunnel().autoScanThreshold - RectangleFeaturesFunnel().startShootLoadingThreshold) , time: 0.0, animate: false)
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didFailWithError error: Error) {
@@ -317,7 +309,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         UIView.animate(withDuration: 0.2) {
             self.scanningNoticeView.isHidden = false
         }
-        capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
+        quadView.capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
         guard let imageScannerController = navigationController as? ImageScannerController else { return }
         imageScannerController.imageScannerDelegate?.imageScannerController(imageScannerController, didFailWithError: error)
     }
@@ -420,10 +412,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             UIView.animate(withDuration: 0.2) {
                 self.scanningNoticeView.isHidden = false
             }
-
             scanningNoticeImageView.startAnimating()
-            capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
- 
+            quadView.capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
             return
         }
         
@@ -449,7 +439,6 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         quadView.drawQuadrilateral(quad: transformedQuad, animated: true)
 
-        self.capturingAnnularProgressView.center = self.quadView.center
     }
     
     private static func defaultQuad(forImage image: UIImage) -> Quadrilateral {
