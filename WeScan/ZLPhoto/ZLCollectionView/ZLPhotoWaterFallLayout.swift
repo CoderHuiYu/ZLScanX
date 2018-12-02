@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol ZLPhotoWaterFallLayoutDataSource {
-    func waterFallLayout(_ layout: ZLPhotoWaterFallLayout, indexPath: IndexPath) -> CGFloat
+    func waterFallLayout(_ layout: ZLPhotoWaterFallLayout, indexPath: IndexPath) -> CGSize
 }
 class ZLPhotoWaterFallLayout: UICollectionViewFlowLayout {
 
@@ -32,7 +32,6 @@ extension ZLPhotoWaterFallLayout {
         }
         
         let itemCount = collectionView.numberOfItems(inSection: 0)
-        let itemHeight = collectionView.bounds.height
         
         var lastItemMaxX: CGFloat = 0
         
@@ -42,11 +41,19 @@ extension ZLPhotoWaterFallLayout {
             
             let attrs = UICollectionViewLayoutAttributes(forCellWith: indexPath)
             
-            guard let itemWidth = dataSource?.waterFallLayout(self, indexPath: indexPath) else {
+            guard let itemSize = dataSource?.waterFallLayout(self, indexPath: indexPath) else {
                 fatalError("please setting dataSource")
             }
             
-            attrs.frame = CGRect(x: sectionInset.left + lastItemMaxX + minimumLineSpacing, y: 0, width: itemWidth, height: itemHeight)
+            let minimumSpace = i == 0 ? 0 : minimumLineSpacing
+            let sectionLeft = i == 0 ? sectionInset.left : 0
+            
+            let attrsW: CGFloat = itemSize.width
+            let attrsH: CGFloat = itemSize.height
+            let attrsX: CGFloat = sectionLeft + lastItemMaxX + minimumSpace
+            let attrsY: CGFloat = (collectionView.bounds.size.height - itemSize.height) * 0.5
+    
+            attrs.frame = CGRect(x: attrsX, y: attrsY, width: attrsW, height: attrsH)
             attributes.append(attrs)
             lastItemMaxX = attrs.frame.maxX
         }
@@ -61,7 +68,7 @@ extension ZLPhotoWaterFallLayout {
         guard let lastAttr = attributes.last else {
             return CGSize.zero
         }
-        return CGSize(width: lastAttr.frame.maxX, height: lastAttr.frame.height)
+        return CGSize(width: lastAttr.frame.maxX + sectionInset.right, height: lastAttr.frame.height)
     }
     
 }

@@ -83,6 +83,8 @@ final class ScannerViewController: UIViewController {
         photoCollectionView.selectedItemCallBack = { [weak self] (photoModels, index) in
             guard let weakSelf = self else { return }
             let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: weakSelf.classForCoder))
+            vc.photoModels = photoModels
+            vc.currentIndex = index
             self?.navigationController?.pushViewController(vc, animated: true)
         }
         return photoCollectionView
