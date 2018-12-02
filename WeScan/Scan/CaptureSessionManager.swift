@@ -19,6 +19,15 @@ protocol RectangleDetectionDelegateProtocol: NSObjectProtocol {
     ///   - captureSessionManager: The `CaptureSessionManager` instance that started capturing a picture.
     func didStartCapturingPicture(for captureSessionManager: CaptureSessionManager)
     
+    
+    /// Called when the capturingLoading start animating
+    ///
+    /// - Parameter
+    ///   - captureSessionManager:
+    ///   - currentAutoScanPassCounts:
+    func startCapturingLoading(for captureSessionManager: CaptureSessionManager, currentAutoScanPassCounts :Int)
+
+    
     /// Called when a quadrilateral has been detected.
     /// - Parameters:
     ///   - captureSessionManager: The `CaptureSessionManager` instance that has detected a quadrilateral.
@@ -211,10 +220,14 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
         if let rectangle = rectangle {
             
             self.noRectangleCount = 0
-            self.rectangleFunnel.add(rectangle, currentlyDisplayedRectangle: self.displayedRectangleResult?.rectangle) { [weak self] (result, rectangle) in
+            self.rectangleFunnel.add(rectangle, currentlyDisplayedRectangle: self.displayedRectangleResult?.rectangle) { [weak self] (result, rectangle, currentAutoScanPassCount) in
                 
                 guard let strongSelf = self else {
                     return
+                }
+                let startShootLoading = (result == .startCaptureLoading)
+                if startShootLoading, CaptureSession.current.autoScanEnabled, !CaptureSession.current.isEditing {
+                    strongSelf.delegate?.startCapturingLoading(for:strongSelf, currentAutoScanPassCounts: currentAutoScanPassCount)
                 }
                 
                 let shouldAutoScan = (result == .showAndAutoScan)

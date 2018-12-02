@@ -40,7 +40,7 @@ extension CGPoint {
     
     /// Returns the distance between two points
     func distanceTo(point: CGPoint) -> CGFloat {
-        return hypot((self.x - point.x), (self.y - point.y))
+        return  hypot((self.x - point.x), (self.y - point.y))
     }
     
     /// Returns the closest corner from the point

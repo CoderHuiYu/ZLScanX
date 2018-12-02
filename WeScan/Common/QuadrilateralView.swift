@@ -20,16 +20,17 @@ enum CornerPosition {
 /// The `QuadrilateralView` is a simple `UIView` subclass that can draw a quadrilateral, and optionally edit it.
 final class QuadrilateralView: UIView {
     
-    private let quadLayer: CAShapeLayer = {
+    let quadLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
         layer.strokeColor = UIColor.white.cgColor
+//        layer.strokeColor = UIColor.init(displayP3Red: 82/255.0, green: 157/255.0, blue: 186/255.0, alpha: 1).cgColor
         layer.lineWidth = 1.0
         layer.opacity = 1.0
         layer.isHidden = true
         
         return layer
     }()
-    
+
     /// We want the corner views to be displayed under the outline of the quadrilateral.
     /// Because of that, we need the quadrilateral to be drawn on a UIView above them.
     private let quadView: UIView = {
@@ -44,6 +45,7 @@ final class QuadrilateralView: UIView {
     
     public var editable = false {
         didSet {
+            print("editavle \(editable)")
             cornerViews(hidden: !editable)
             quadLayer.fillColor = editable ? UIColor(white: 0.0, alpha: 0.6).cgColor : UIColor(white: 1.0, alpha: 0.5).cgColor
             guard let quad = quad else {
@@ -64,6 +66,10 @@ final class QuadrilateralView: UIView {
         }
     }
     
+    lazy private var showCornerView: EditScanCornerView = {
+        return EditScanCornerView(frame: CGRect(origin: CGPoint.init(x: (UIScreen.main.bounds.size.width - 100)/2, y: 10), size: CGSize.init(width: 100, height: 100)), position: .topLeft)
+    }()
+    
     lazy private var topLeftCornerView: EditScanCornerView = {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .topLeft)
     }()
@@ -80,7 +86,7 @@ final class QuadrilateralView: UIView {
         return EditScanCornerView(frame: CGRect(origin: .zero, size: cornerViewSize), position: .bottomLeft)
     }()
     
-    private let highlightedCornerViewSize = CGSize(width: 75.0, height: 75.0)
+    private let highlightedCornerViewSize = CGSize(width: 2.0, height: 2.0)
     private let cornerViewSize = CGSize(width: 20.0, height: 20.0)
     
     // MARK: - Life Cycle
@@ -113,6 +119,7 @@ final class QuadrilateralView: UIView {
     }
     
     private func setupCornerViews() {
+        addSubview(showCornerView)
         addSubview(topLeftCornerView)
         addSubview(topRightCornerView)
         addSubview(bottomRightCornerView)
@@ -150,7 +157,7 @@ final class QuadrilateralView: UIView {
         var path = quad.path
         
         if editable {
-            path = path.reversing()
+        path = path.reversing()
             let rectPath = UIBezierPath(rect: bounds)
             path.append(rectPath)
         }
@@ -202,17 +209,22 @@ final class QuadrilateralView: UIView {
         let cornerView = cornerViewForCornerPosition(position: position)
         guard cornerView.isHighlighted == false else {
             cornerView.highlightWithImage(image)
+            showCornerView.highlightWithImage(image)
             return
         }
 
         let origin = CGPoint(x: cornerView.frame.origin.x - (highlightedCornerViewSize.width - cornerViewSize.width) / 2.0,
                              y: cornerView.frame.origin.y - (highlightedCornerViewSize.height - cornerViewSize.height) / 2.0)
         cornerView.frame = CGRect(origin: origin, size: highlightedCornerViewSize)
+//        print(image)
+        showCornerView.isHidden = false
+        showCornerView.highlightWithImage(image)
         cornerView.highlightWithImage(image)
     }
     
     func resetHighlightedCornerViews() {
         isHighlighted = false
+        showCornerView.isHidden = true
         resetHighlightedCornerViews(cornerViews: [topLeftCornerView, topRightCornerView, bottomLeftCornerView, bottomRightCornerView])
     }
     
@@ -260,6 +272,8 @@ final class QuadrilateralView: UIView {
     // MARK: - Convenience
     
     private func cornerViews(hidden: Bool) {
+        showCornerView.isHidden = true //default is hidden
+        showCornerView.dotImageView.isHidden = true 
         topLeftCornerView.isHidden = hidden
         topRightCornerView.isHidden = hidden
         bottomRightCornerView.isHidden = hidden
