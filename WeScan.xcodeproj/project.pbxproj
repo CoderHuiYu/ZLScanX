@@ -79,6 +79,7 @@
 		FEE6A0C421AFF19400C2CEC3 /* Nebula.png in Resources */ = {isa = PBXBuildFile; fileRef = FEE6A0C321AFF19400C2CEC3 /* Nebula.png */; };
 		FEE6A0C621B0125700C2CEC3 /* SortCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */; };
 		FEE6A0C921B1183D00C2CEC3 /* WeScan-Banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */; };
+		FEE6A0DA21B3BC6900C2CEC3 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0D921B3BC6900C2CEC3 /* ImageViewer.swift */; };
 		FEECF2A521AFCEE2009B7AC2 /* SortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */; };
 		FEECF2A721AFCEEE009B7AC2 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A621AFCEEE009B7AC2 /* Define.swift */; };
 		FEECF2F521AFD132009B7AC2 /* SortCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */; };
@@ -232,6 +233,7 @@
 		FEE6A0C321AFF19400C2CEC3 /* Nebula.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Nebula.png; sourceTree = "<group>"; };
 		FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortCollectionView.swift; sourceTree = "<group>"; };
 		FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "WeScan-Banner.jpg"; path = "Assets/WeScan-Banner.jpg"; sourceTree = SOURCE_ROOT; };
+		FEE6A0D921B3BC6900C2CEC3 /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewController.swift; sourceTree = "<group>"; };
 		FEECF2A621AFCEEE009B7AC2 /* Define.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
 		FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -445,8 +447,6 @@
 				A11C5B9B2046A20C005075FE /* Error.swift */,
 				A14089B9204D92EA0009530F /* EditScanCornerView.swift */,
 				B92A2C8221578D28002874E5 /* CaptureSession.swift */,
-				FEECF2A621AFCEEE009B7AC2 /* Define.swift */,
-				69C265F621B0127C00309ADA /* UIAnnularProgress.swift */,
 				69C265F621B0127C00309ADA /* UIAnnularProgress.swift */,
 				FEECF2A621AFCEEE009B7AC2 /* Define.swift */,
 			);
@@ -527,6 +527,7 @@
 				FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */,
 				FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */,
 				FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */,
+				FEE6A0D921B3BC6900C2CEC3 /* ImageViewer.swift */,
 			);
 			path = Sort;
 			sourceTree = "<group>";
@@ -771,6 +772,7 @@
 				A1D4BD15202C6CC000FCDDEC /* Array+Utils.swift in Sources */,
 				FEECF2A721AFCEEE009B7AC2 /* Define.swift in Sources */,
 				FEECF2A521AFCEE2009B7AC2 /* SortViewController.swift in Sources */,
+				FEE6A0DA21B3BC6900C2CEC3 /* ImageViewer.swift in Sources */,
 				69C265F721B0127C00309ADA /* UIAnnularProgress.swift in Sources */,
 				69C265F721B0127C00309ADA /* UIAnnularProgress.swift in Sources */,
 				FEECF2A721AFCEEE009B7AC2 /* Define.swift in Sources */,

@@ -83,6 +83,7 @@ extension ZLPhotoEditorController {
     }
     
     @objc fileprivate func sortResource() {
-        
+        let vc = SortViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

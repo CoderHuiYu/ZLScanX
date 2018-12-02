@@ -15,7 +15,7 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
     var targetIndexPath: IndexPath?
     var playTimer: Timer?
     var itemNames = ["1","2","3"]
-    var dragCell :UIImageView = UIImageView()
+    var dragCell : UIImageView = UIImageView()
     lazy var imagesMutableArr: [UIImage] = {
         let image: UIImage = UIImage(named: "Nebula", in: Bundle.init(for: SortCollectionView.self), compatibleWith: nil)!
         let image1: UIImage = UIImage(named: "WeScan-Banner.jpg", in: Bundle.init(for: SortCollectionView.self), compatibleWith: nil)!
@@ -158,6 +158,9 @@ extension SortCollectionView: UICollectionViewDelegate,UICollectionViewDataSourc
         cell.configImage(iconImage: imagesMutableArr[indexPath.item])
         cell.delegate = self as SortCollectionViewCellProtocol
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
     }
 }
 extension SortCollectionView: SortCollectionViewCellProtocol{
