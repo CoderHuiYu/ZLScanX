@@ -107,6 +107,7 @@ extension ZLPhotoWaterFallView: UICollectionViewDataSource, UICollectionViewDele
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCellIdentifier, for: indexPath) as! ZLPhotoCell
+        cell.cellType = .normal
         cell.photoModel = photoModels[indexPath.row]
         cell.itemDidRemove = { [weak self] (item) in
             self?.removeItem(item)
@@ -134,9 +135,9 @@ extension ZLPhotoWaterFallView: UICollectionViewDataSource, UICollectionViewDele
 
 // MARK: - Layout
 extension ZLPhotoWaterFallView: ZLPhotoWaterFallLayoutDataSource {
-    func waterFallLayout(_ layout: ZLPhotoWaterFallLayout, indexPath: IndexPath) -> CGFloat {
+    func waterFallLayout(_ layout: ZLPhotoWaterFallLayout, indexPath: IndexPath) -> CGSize {
         let model = photoModels[indexPath.row]
-        return getItemWidth(model.imageSize)
+        return CGSize(width: getItemWidth(model.imageSize), height: collectionView.bounds.height)
     }
     
     fileprivate func getItemWidth(_ imageSize: CGSize) -> CGFloat {

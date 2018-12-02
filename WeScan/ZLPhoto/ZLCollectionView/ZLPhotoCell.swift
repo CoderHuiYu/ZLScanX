@@ -15,15 +15,14 @@ private let kDeleteImageViewBottomOriginalCons: CGFloat = 10
 private let kDeleteImageViewBottomStartAnimateMaxValue: CGFloat = 30
 private let kDeleteImageViewBottomHideMaxValue: CGFloat = 70
 
+enum ZLPhotoCellType {
+    case normal
+    case edit
+}
+
 class ZLPhotoCell: UICollectionViewCell {
 
     var itemDidRemove:((_ cell: ZLPhotoCell)->())?
-    
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var deleteImageView: UIImageView!
-    
-    @IBOutlet weak var deleteImageViewBottomCons: NSLayoutConstraint!
-    @IBOutlet weak var imageViewBottomCons: NSLayoutConstraint!
     
     var photoModel: ZLPhotoModel? {
         didSet {
@@ -32,6 +31,24 @@ class ZLPhotoCell: UICollectionViewCell {
             updateToOriginalLayout(false)
         }
     }
+    
+    var cellType: ZLPhotoCellType = .normal {
+        didSet {
+            if cellType == .edit {
+                editImageView.isHidden = false
+            } else {
+                editImageView.isHidden = true
+            }
+        }
+    }
+    
+    
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var deleteImageView: UIImageView!
+    @IBOutlet weak var editImageView: UIImageView!
+    
+    @IBOutlet weak var deleteImageViewBottomCons: NSLayoutConstraint!
+    @IBOutlet weak var imageViewBottomCons: NSLayoutConstraint!
     
     override func awakeFromNib() {
         super.awakeFromNib()

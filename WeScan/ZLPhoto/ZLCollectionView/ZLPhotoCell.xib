@@ -29,11 +29,16 @@
                             <constraint firstAttribute="height" constant="50" id="j2l-GC-VoF"/>
                         </constraints>
                     </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Edit" translatesAutoresizingMaskIntoConstraints="NO" id="h4f-Ca-g2l">
+                        <rect key="frame" x="116" y="91" width="34" height="34"/>
+                    </imageView>
                 </subviews>
             </view>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="lbK-Si-0Kc" secondAttribute="bottom" id="2xW-OP-HnU"/>
                 <constraint firstItem="lbK-Si-0Kc" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="4wz-ZZ-3Zs"/>
+                <constraint firstAttribute="trailing" secondItem="h4f-Ca-g2l" secondAttribute="trailing" id="CPM-63-5pv"/>
+                <constraint firstAttribute="bottom" secondItem="h4f-Ca-g2l" secondAttribute="bottom" id="RYE-PH-xD2"/>
                 <constraint firstItem="lbK-Si-0Kc" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" id="mxn-3b-AdT"/>
                 <constraint firstItem="kKu-or-19o" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="n71-Ho-JkZ"/>
                 <constraint firstItem="lbK-Si-0Kc" firstAttribute="height" secondItem="gTV-IL-0wX" secondAttribute="height" id="rDt-eB-TB0"/>
@@ -44,6 +49,7 @@
             <connections>
                 <outlet property="deleteImageView" destination="kKu-or-19o" id="CLp-TD-Auj"/>
                 <outlet property="deleteImageViewBottomCons" destination="xH8-ps-W1P" id="QJh-xc-W1a"/>
+                <outlet property="editImageView" destination="h4f-Ca-g2l" id="AAG-oo-NgA"/>
                 <outlet property="imageView" destination="lbK-Si-0Kc" id="A6y-gx-FHi"/>
                 <outlet property="imageViewBottomCons" destination="2xW-OP-HnU" id="90D-3M-Irt"/>
             </connections>
@@ -51,6 +57,7 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="Edit" width="34" height="34"/>
         <image name="balloon" width="200" height="200"/>
     </resources>
 </document>
