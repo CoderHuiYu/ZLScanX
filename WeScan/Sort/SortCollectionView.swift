@@ -14,15 +14,8 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
     var dragingIndexPath: IndexPath?
     var targetIndexPath: IndexPath?
     var playTimer: Timer?
-    var itemNames = ["1","2","3"]
+    var photoModels = [ZLPhotoModel]()
     var dragCell : UIImageView = UIImageView()
-    lazy var imagesMutableArr: [UIImage] = {
-        let image: UIImage = UIImage(named: "Nebula", in: Bundle.init(for: SortCollectionView.self), compatibleWith: nil)!
-        let image1: UIImage = UIImage(named: "WeScan-Banner.jpg", in: Bundle.init(for: SortCollectionView.self), compatibleWith: nil)!
-        let image2: UIImage = UIImage(named: "Nebula", in: Bundle.init(for: SortCollectionView.self), compatibleWith: nil)!
-        let imagesMutableArr = [image,image1,image2]
-        return imagesMutableArr
-    }()
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
         self.backgroundColor = UIColor.white
@@ -68,11 +61,11 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
         self.dragCell.frame = cell.frame
         self.dragCell.isHidden = false
         self.dragCell.center = CGPoint(x: point.x, y: point.y)
-        self.dragCell.image = imagesMutableArr[(self.dragingIndexPath?.row)!]
+        self.dragCell.image = photoModels[(self.dragingIndexPath?.row)!].image
         self.dragCell.transform = CGAffineTransform(scaleX: 1, y: 1)
         self.dragCell.layer.shadowColor = UIColor.black.cgColor
-        self.dragCell.layer.shadowRadius = 10
-        self.dragCell.layer.shadowOpacity = 0.5
+        self.dragCell.layer.shadowRadius = 7
+        self.dragCell.layer.shadowOpacity = 0.3
         playTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countPressTime), userInfo: nil, repeats: true)
     }
     func dragChange(_ point: CGPoint){
@@ -102,15 +95,15 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
         cancelPress()
     }
     func rankImageMutableArr(){
-        let cell = imagesMutableArr[(self.dragingIndexPath?.row)!]
-        imagesMutableArr.remove(at: (self.dragingIndexPath?.row)!)
-        imagesMutableArr.insert(cell, at: (self.targetIndexPath?.row)!)
+        let cell = photoModels[(self.dragingIndexPath?.row)!]
+        photoModels.remove(at: (self.dragingIndexPath?.row)!)
+        photoModels.insert(cell, at: (self.targetIndexPath?.row)!)
     }
     func getDragingIndexPathWithPoint(_ startPoint: CGPoint) -> IndexPath{
         var dragIndex: IndexPath?
         for index in self.indexPathsForVisibleItems{
             if (self.cellForItem(at: index)?.frame)!.contains(startPoint){
-                if index.row == imagesMutableArr.count{
+                if index.row == photoModels.count{
                     return dragIndex!
                 }else{
                     dragIndex = index as IndexPath
@@ -124,7 +117,7 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
         var targeIndex:IndexPath?
         for index in self.indexPathsForVisibleItems{
             if index == self.dragingIndexPath {continue}
-            if (self.cellForItem(at: index)?.frame.contains(movePoint))! && index.row != imagesMutableArr.count{
+            if (self.cellForItem(at: index)?.frame.contains(movePoint))! && index.row != photoModels.count{
                 targeIndex = index as IndexPath
             }
         }
@@ -149,13 +142,13 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
 }
 extension SortCollectionView: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (self.imagesMutableArr.count)
+        return photoModels.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: sortCellID, for: indexPath) as! SortCollectionViewCell
-        cell.title.text = itemNames[indexPath.item]
-        cell.configImage(iconImage: imagesMutableArr[indexPath.item])
+        cell.title.text = String(indexPath.item+1)
+        cell.configImage(iconImage: photoModels[indexPath.item].image)
         cell.delegate = self as SortCollectionViewCellProtocol
         return cell
     }
@@ -166,7 +159,7 @@ extension SortCollectionView: UICollectionViewDelegate,UICollectionViewDataSourc
 extension SortCollectionView: SortCollectionViewCellProtocol{
     func deleteItem(_ currentCell: SortCollectionViewCell) {
         let index = self.indexPath(for: currentCell)
-        imagesMutableArr.remove(at: (index?.item)!)
+        photoModels.remove(at: (index?.item)!)
         self.reloadData()
     }
 }
