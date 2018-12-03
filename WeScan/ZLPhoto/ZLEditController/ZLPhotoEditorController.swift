@@ -7,13 +7,15 @@
 //
 
 import UIKit
+import CoreGraphics
+
 private let kCollectionCellIdentifier = "kCollectionCellIdentifier"
 private let kToolBarHeight: CGFloat = 50
 
 class ZLPhotoEditorController: UIViewController {
     
     var photoModels = [ZLPhotoModel]()
-    var currentIndex: NSInteger = 0
+    var currentIndex: IndexPath?
     
     @IBOutlet weak var customNavBar: UIView!
     
@@ -115,6 +117,7 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
         
         if let cell = collectionView.cellForItem(at: indexPath) {
             let zlCell = cell as! ZLPhotoCell
+            currentIndex = indexPath
             editingView.show(zlCell.imageView)
         }
     }
@@ -166,6 +169,87 @@ extension ZLPhotoEditorController {
     fileprivate func editToolBarItemAction(_ index: Int) {
         print(index)
         // index
+        switch index {
+        case 0:
+            
+            break
+        case 1:
+            
+            break
+        case 2:
+        //裁剪
+//            let imageToEdit = results.originalImage
+//            let editVC = EditScanViewController(image: imageToEdit.applyingPortraitOrientation(), quad: quad)
+//            editVC.didEditResults = { [unowned self] results in self.results = results; self.imageView.image = results.scannedImage; self.originalScannedImage = results.scannedImage }
+//            editVC.didEditQuad = { [unowned self] quad in self.quad = quad }
+//            let navigationController = UINavigationController(rootViewController: editVC)
+//            present(navigationController, animated: true)
+            break
+        case 3:
+        //图片旋转
+            let image = photoModels[(currentIndex?.item)!].image
+            let orientaiton = UIImage.Orientation.right
+
+            let newImage =  rotateImage(image, orientation:orientaiton)
+            photoModels[(currentIndex?.item)!].image = newImage
+            photoModels[(currentIndex?.item)!].imageSize = newImage.size
+            collectionView.reloadData()
+            break
+        default:
+            break
+        }
+    }
+    //Mark: - 翻转 image
+    func rotateImage(_ image: UIImage, orientation: UIImage.Orientation) -> UIImage {
+
+        var rotate:Double = 0.0
+        var rect = CGRect.zero
+        var translateX:Float = 0
+        var translateY:Float = 0
+        var scaleX:Float = 0
+        var scaleY:Float = 0
+        switch (orientation) {
+        case UIImage.Orientation.left:
+            rotate = .pi/2;
+            rect = CGRect(x: 0, y: 0, width: image.size.height, height: image.size.width)
+            translateX = 0;
+            translateY = Float(-rect.size.width);
+            scaleY = Float(rect.size.width/rect.size.height);
+            scaleX = Float(rect.size.height/rect.size.width);
+            break;
+        case UIImage.Orientation.right:
+            rotate = 33 * .pi/2;
+            rect = CGRect(x: 0, y: 0, width: image.size.height, height: image.size.width)
+            translateX = Float(-rect.size.height);
+            translateY = 0;
+            scaleY = Float(rect.size.width/rect.size.height);
+            scaleX = Float(rect.size.height/rect.size.width);
+            break;
+        case UIImage.Orientation.down:
+            rotate = .pi;
+            rect = CGRect(x: 0, y: 0, width: image.size.height, height: image.size.width)
+            translateX = Float(-rect.size.width)
+            translateY = Float(-rect.size.height)
+            break;
+        default:
+            rotate = 0.0;
+            rect = CGRect(x: 0, y: 0, width: image.size.height, height: image.size.width)
+            translateX = 0
+            translateY = 0
+            break;
+        }
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()!
+        context.translateBy(x: 0.0, y: rect.size.height)
+        context.scaleBy(x: 1.0, y: -1.0)
+        context.rotate(by: CGFloat(rotate))
+        context.translateBy(x: CGFloat(translateX), y: CGFloat(translateY))
+        
+        context.scaleBy(x:CGFloat(scaleX), y:CGFloat(scaleY))
+        context.draw(image.cgImage!, in: CGRect(x: 0, y: 0, width: rect.size.width, height: rect.size.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        return newImage!
+       
     }
 }
 // MARK: -SortViewControllerProtocol

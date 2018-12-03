@@ -86,7 +86,7 @@ final class ScannerViewController: UIViewController {
             guard let weakSelf = self else { return }
             let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: weakSelf.classForCoder))
             vc.photoModels = photoModels
-            vc.currentIndex = index
+//            vc.currentIndex = index
             self?.navigationController?.pushViewController(vc, animated: true)
         }
         return photoCollectionView

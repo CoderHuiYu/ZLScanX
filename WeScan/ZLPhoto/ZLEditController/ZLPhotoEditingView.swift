@@ -49,7 +49,7 @@ class ZLPhotoEditingView: UIView {
         }, completion: nil)
     }
     
-    fileprivate func hide() {
+    func hide() {
         
         if let hideCallBack = hideCallBack {
             hideCallBack()
