@@ -14,6 +14,8 @@ class ZLPhotoEditingView: UIView {
     
     var hideCallBack: (()->())?
     
+    var toolBarItemActionCallBack: ((_ index: Int)->())?
+    
     @IBOutlet weak var toolBarView: UIView!
     @IBOutlet weak var toolBarViewBottomCons: NSLayoutConstraint!
     
@@ -60,4 +62,11 @@ class ZLPhotoEditingView: UIView {
             self.isHidden = true
         })
     }
+    
+    @IBAction func toolBarItemAction(_ sender: UIButton) {
+        if let callBack = toolBarItemActionCallBack {
+            callBack(sender.tag)
+        }
+    }
+    
 }

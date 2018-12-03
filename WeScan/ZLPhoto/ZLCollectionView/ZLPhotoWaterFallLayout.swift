@@ -27,6 +27,7 @@ extension ZLPhotoWaterFallLayout {
         super.prepare()
         // clear attributes(avoid crash)
         attributes.removeAll()
+        
         guard let collectionView = collectionView else {
             return
         }
@@ -62,6 +63,25 @@ extension ZLPhotoWaterFallLayout {
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         return attributes
+    }
+    
+    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+        
+        guard let collectionView = collectionView else {
+            return CGPoint.zero
+        }
+        
+        var offsetAdjustment = CGFloat(MAXFLOAT)   //当前处理器能处理的最大浮点数
+        let horizontalCenter = proposedContentOffset.x + (self.collectionView!.bounds.width / 2.0)//collectionView落在屏幕中点的x坐标
+        let targetRect = CGRect(x: proposedContentOffset.x, y: 0.0, width:  self.collectionView!.bounds.size.width, height: self.collectionView!.bounds.size.height)
+        let array = super.layoutAttributesForElements(in: targetRect) //目标区域中包含的cell
+        for layoutAttributes in array!{
+            let itemHorizontalCenter = layoutAttributes.center.x
+            if(abs(itemHorizontalCenter-horizontalCenter) < abs(offsetAdjustment)){   //ABS求绝对值
+                offsetAdjustment = itemHorizontalCenter-horizontalCenter     //比较谁离中心点更近
+            }
+        }
+        return CGPoint(x: proposedContentOffset.x + offsetAdjustment, y: proposedContentOffset.y)  //返回collectionView最终停留的位置
     }
     
     override var collectionViewContentSize: CGSize {

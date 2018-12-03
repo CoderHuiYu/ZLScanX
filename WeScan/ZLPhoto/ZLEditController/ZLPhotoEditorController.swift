@@ -28,6 +28,14 @@ class ZLPhotoEditorController: UIViewController {
     lazy var editingView: ZLPhotoEditingView = {
         let editingView = Bundle.init(for: self.classForCoder).loadNibNamed("ZLPhotoEditingView", owner: nil, options: nil)?.first as! ZLPhotoEditingView
         editingView.frame = view.bounds
+        // hide call back
+        editingView.hideCallBack = { [weak self] in
+            self?.setNavBar(isHidden: false)
+        }
+        //
+        editingView.toolBarItemActionCallBack = { [weak self] (index) in
+            self?.editToolBarItemAction(index)
+        }
         return editingView
     }()
     
@@ -108,10 +116,6 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
         if let cell = collectionView.cellForItem(at: indexPath) {
             let zlCell = cell as! ZLPhotoCell
             editingView.show(zlCell.imageView)
-            // hide call back
-            editingView.hideCallBack = { [weak self] in
-                self?.setNavBar(isHidden: false)
-            }
         }
     }
     
@@ -157,6 +161,11 @@ extension ZLPhotoEditorController {
         sortVC.delegate = self
 //        navigationController?.pushViewController(sortVC, animated: true)
         self.present(sortVC, animated: true, completion: nil)
+    }
+    
+    fileprivate func editToolBarItemAction(_ index: Int) {
+        print(index)
+        // index
     }
 }
 // MARK: -SortViewControllerProtocol
