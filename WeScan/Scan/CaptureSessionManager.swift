@@ -163,12 +163,10 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
         
         if #available(iOS 11.0, *) {
             VisionRectangleDetector.rectangle(forImage: finalImage) { (rectangle) in
-//                self.processRectangle(rectangle: rectangle, imageSize: imageSize, ciImage: finalImage)
                 self.processRectangle(rectangle: rectangle, imageSize: imageSize)
             }
         } else {
             CIRectangleDetector.rectangle(forImage: finalImage) { (rectangle) in
-//                self.processRectangle(rectangle: rectangle, imageSize: imageSize, ciImage: finalImage)
                 self.processRectangle(rectangle: rectangle, imageSize: imageSize)
             }
         }
@@ -218,54 +216,6 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
         return (filter?.outputImage!)!
     }
     
-    private func processRectangle(rectangle: Quadrilateral?, imageSize: CGSize, ciImage: CIImage) {
- 
-        if let rectangle = rectangle {
-            self.noRectangleCount = 0
-            self.rectangleFunnel.add(rectangle, currentlyDisplayedRectangle: self.displayedRectangleResult?.rectangle) { [weak self] (result, rectangle, currentAutoScanPassCount) in
-                
-                guard let strongSelf = self else {
-                    return
-                }
-                let startShootLoading = (result == .startCaptureLoading)
-                if startShootLoading, CaptureSession.current.autoScanEnabled, !CaptureSession.current.isEditing {
-                    strongSelf.delegate?.startCapturingLoading(for:strongSelf, currentAutoScanPassCounts: currentAutoScanPassCount)
-                }
-                
-                let shouldAutoScan = (result == .showAndAutoScan)
-                strongSelf.displayRectangleResult(rectangleResult: RectangleDetectorResult(rectangle: rectangle, imageSize: imageSize))
-                if shouldAutoScan, CaptureSession.current.autoScanEnabled, !CaptureSession.current.isEditing {
-                    let ciContext = CIContext.init()
-                    let cgImage:CGImage = ciContext.createCGImage(ciImage, from: ciImage.extent)!
-                    let image = UIImage(cgImage: cgImage)
-                    guard let imageData = image.pngData() else {
-                        return
-                    }
-                    completeImageCapture(with:imageData)
-                }
-            }
-            
-        } else {
-            
-            DispatchQueue.main.async { [weak self] in
-                guard let strongSelf = self else {
-                    return
-                }
-                strongSelf.noRectangleCount += 1
-                
-                if strongSelf.noRectangleCount > strongSelf.noRectangleThreshold {
-                    // Reset the currentAutoScanPassCount, so the threshold is restarted the next time a rectangle is found
-                    strongSelf.rectangleFunnel.currentAutoScanPassCount = 0
-                    
-                    // Remove the currently displayed rectangle as no rectangles are being found anymore
-                    strongSelf.displayedRectangleResult = nil
-                    strongSelf.delegate?.captureSessionManager(strongSelf, didDetectQuad: nil, imageSize)
-                }
-            }
-            return
-        }
-
-    }
     private func processRectangle(rectangle: Quadrilateral?, imageSize: CGSize) {
         if CaptureSession.current.isPreviewing {
             return
