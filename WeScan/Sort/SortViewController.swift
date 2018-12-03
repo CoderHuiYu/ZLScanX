@@ -46,7 +46,8 @@ class SortViewController: UIViewController {
         titleLabel.text = "Sort"
         titleLabel.textColor = UIColor.black
         titleLabel.backgroundColor = UIColor.clear
-        titleLabel.frame = CGRect(x: 0, y: kNavHeight - 44, width: kScreenWidth, height: 20)
+        titleLabel.frame = CGRect(x: 0, y: kNavHeight - 44, width: kScreenWidth, height: 44)
+        titleLabel.textAlignment = .center
         toolView.addSubview(titleLabel)
         
         let leftBtn = UIButton()
