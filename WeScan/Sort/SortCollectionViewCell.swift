@@ -13,9 +13,10 @@ protocol SortCollectionViewCellProtocol: NSObjectProtocol  {
 }
 class SortCollectionViewCell: UICollectionViewCell {
     weak var delegate: SortCollectionViewCellProtocol?
+    
     lazy var iconimageView: UIImageView = {
         let iconimageView = UIImageView()
-        iconimageView.contentMode = .scaleAspectFill
+        iconimageView.contentMode = .scaleToFill
         iconimageView.isUserInteractionEnabled = true
         return iconimageView
     }()
@@ -31,12 +32,12 @@ class SortCollectionViewCell: UICollectionViewCell {
     }()
     lazy var delBtn: UIButton = {
         let delBtn = UIButton()
-        let delImage = UIImage(named: "XNormal_18x18_", in: Bundle(for: SortCollectionViewCell.self), compatibleWith: nil)
+        let delImage = UIImage(named: "cancel", in: Bundle(for: self.classForCoder), compatibleWith: nil)
         delBtn.setImage(delImage, for: .normal)
         delBtn.layer.cornerRadius = 11
-        delBtn.layer.borderWidth = 1
-        delBtn.layer.borderColor = RGBColor(r: 80, g: 165, b: 195).cgColor
-        delBtn.layer.masksToBounds = true
+//        delBtn.layer.borderWidth = 1
+//        delBtn.layer.borderColor = RGBColor(r: 80, g: 165, b: 195).cgColor
+//        delBtn.layer.masksToBounds = true
         delBtn.backgroundColor = UIColor.white
         delBtn.addTarget(self, action: #selector(delBtnClicked(_ :)), for: .touchUpInside)
         return delBtn
@@ -76,26 +77,21 @@ class SortCollectionViewCell: UICollectionViewCell {
         addImaginaryLine(self.iconimageView.frame)
     }
     @objc func tapCell(_ ges: UITapGestureRecognizer){
-        let imgView = ges.view as! UIImageView
-        imageViewer.contentImages = [imgView.image!]
-        let frame = UIView.getCorrectFrameFromOriginView(originView: imgView)
-        imageViewer.originFrame = frame
-        imageViewer.show()
-//        UIView.animate(withDuration: 0.5, animations: {
-//            self.delBtn.alpha = 0.3
-//            self.iconimageView.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-//            self.iconimageView.layer.shadowColor = UIColor.black.cgColor
-//            self.iconimageView.layer.shadowRadius = 5
-//            self.iconimageView.layer.shadowOpacity = 0.5
-//        }) { (isFinished) in
-//            UIView.animate(withDuration: 0.5, animations: {
-//                self.iconimageView.transform = CGAffineTransform.identity
-//                self.delBtn.alpha = 1
-//                self.iconimageView.layer.shadowColor = UIColor.clear.cgColor
-//                self.iconimageView.layer.shadowRadius = 0
-//                self.iconimageView.layer.shadowOpacity = 0
-//            }, completion: nil)
-//        }
+        UIView.animate(withDuration: 0.5, animations: {
+            self.delBtn.alpha = 0.3
+            self.iconimageView.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+            self.iconimageView.layer.shadowColor = UIColor.black.cgColor
+            self.iconimageView.layer.shadowRadius = 5
+            self.iconimageView.layer.shadowOpacity = 0.5
+        }) { (isFinished) in
+            UIView.animate(withDuration: 0.5, animations: {
+                self.iconimageView.transform = CGAffineTransform.identity
+                self.delBtn.alpha = 1
+                self.iconimageView.layer.shadowColor = UIColor.clear.cgColor
+                self.iconimageView.layer.shadowRadius = 0
+                self.iconimageView.layer.shadowOpacity = 0
+            }, completion: nil)
+        }
     }
     @objc func delBtnClicked(_ btn: UIButton){
         if self.delegate != nil{

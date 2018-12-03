@@ -44,8 +44,8 @@ class ZLPhotoEditorController: UIViewController {
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
@@ -132,7 +132,18 @@ extension ZLPhotoEditorController {
     }
     
     @IBAction func rightButtonAction(_ sender: Any) {
-        
+        let sortVC = SortViewController()
+        sortVC.photoModels = photoModels
+        sortVC.delegate = self
+//        navigationController?.pushViewController(sortVC, animated: true)
+        self.present(sortVC, animated: true, completion: nil)
+    }
+}
+// MARK: -SortViewControllerProtocol
+extension ZLPhotoEditorController: SortViewControllerProtocol{
+    func sortDidFinished(_ photoModels: [ZLPhotoModel]) {
+        self.photoModels = photoModels
+        self.collectionView.reloadData()
     }
 }
 

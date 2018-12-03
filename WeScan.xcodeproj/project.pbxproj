@@ -157,7 +157,7 @@
 
 /* Begin PBXFileReference section */
 		0CEDD06E21B115F500F9050E /* Pill.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Pill.xcassets; sourceTree = "<group>"; };
-		1834C03521B141A900FF6EDB /* ZLPhotoEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZLPhotoEditorController.swift; sourceTree = "<group>"; wrapsLines = 0; };
+		1834C03521B141A900FF6EDB /* ZLPhotoEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZLPhotoEditorController.swift; sourceTree = "<group>"; };
 		1834C03621B141A900FF6EDB /* ZLPhotoEditorController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ZLPhotoEditorController.xib; sourceTree = "<group>"; };
 		18EB1C5B21B0EBC5001CEA1E /* ZLPhotoWaterFallLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLPhotoWaterFallLayout.swift; sourceTree = "<group>"; };
 		18EB1C5C21B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZLPhotoWaterFallView.swift; sourceTree = "<group>"; };
@@ -984,7 +984,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4TJ7K2DH6D;
+				DEVELOPMENT_TEAM = A5X7BL9CZV;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1001,7 +1001,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4TJ7K2DH6D;
+				DEVELOPMENT_TEAM = A5X7BL9CZV;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
