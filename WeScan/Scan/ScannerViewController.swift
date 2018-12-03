@@ -359,7 +359,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             uiImage = UIImage(ciImage: filteredImage, scale: 1.0, orientation: .up)
         }
         
-//        let results = ImageScannerResults(originalImage: image, scannedImage: uiImage, enhancedImage: nil, doesUserPreferEnhancedImage: false, detectedRectangle: quad)
+        let results = ImageScannerResults(originalImage: image, scannedImage: uiImage, enhancedImage: nil, doesUserPreferEnhancedImage: false, detectedRectangle: quad)
 //        let reviewViewController = ReviewViewController(results: results ,quad : quad)
 //        if navigationController?.viewControllers.last == self {
 //            navigationController?.pushViewController(reviewViewController, animated: true)
@@ -368,7 +368,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         
         // MARK: - mason test code
-        let photoModel = ZLPhotoModel.init(image: uiImage, imageSize: uiImage.size)
+        let photoModel = ZLPhotoModel.init(image: uiImage, results: results, imageSize: uiImage.size)
         
         previewImageView.image = uiImage
         if uiImage.size.width == 0 || uiImage.size.height == 0 {
