@@ -35,9 +35,6 @@ class SortCollectionViewCell: UICollectionViewCell {
         let delImage = UIImage(named: "cancel", in: Bundle(for: self.classForCoder), compatibleWith: nil)
         delBtn.setImage(delImage, for: .normal)
         delBtn.layer.cornerRadius = 11
-//        delBtn.layer.borderWidth = 1
-//        delBtn.layer.borderColor = RGBColor(r: 80, g: 165, b: 195).cgColor
-//        delBtn.layer.masksToBounds = true
         delBtn.backgroundColor = UIColor.white
         delBtn.addTarget(self, action: #selector(delBtnClicked(_ :)), for: .touchUpInside)
         return delBtn

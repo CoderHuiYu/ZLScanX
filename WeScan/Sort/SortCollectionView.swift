@@ -75,6 +75,10 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
         if self.dragingIndexPath != nil && self.targetIndexPath != nil{
             rankImageMutableArr()
             self.moveItem(at: self.dragingIndexPath! as IndexPath, to: self.targetIndexPath! as IndexPath)
+            let cell = self.cellForItem(at: self.dragingIndexPath! as IndexPath) as! SortCollectionViewCell
+            cell.title.text = String((self.dragingIndexPath?.row)! + 1)
+            let changedCell = self.cellForItem(at: self.targetIndexPath! as IndexPath) as! SortCollectionViewCell
+            changedCell.title.text = String((self.targetIndexPath?.row)! + 1)
             self.dragingIndexPath = self.targetIndexPath
         }
     }
@@ -82,7 +86,7 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
         if self.dragingIndexPath == nil{return}
         NotificationCenter.default.post(name: NSNotification.Name(rawValue:"EndDrag"), object: nil)
         var endFrame = self.cellForItem(at: self.dragingIndexPath! as IndexPath)!.frame
-        endFrame.origin.y = self.contentOffset.y - endFrame.origin.y
+        endFrame.origin.y = endFrame.origin.y - self.contentOffset.y-30
         self.dragCell.transform = CGAffineTransform(scaleX: 1, y: 1)
         let cell = self.cellForItem(at: self.dragingIndexPath! as IndexPath) as! SortCollectionViewCell
         UIView.animate(withDuration: 0.3, animations: {
@@ -91,6 +95,7 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
             self.dragCell.isHidden = true
             cell.iconimageView.isHidden = false
             cell.delBtn.isHidden = false
+
         }
         cancelPress()
     }
