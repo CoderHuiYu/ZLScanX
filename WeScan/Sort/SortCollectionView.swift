@@ -16,11 +16,11 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
     var playTimer: Timer?
     var photoModels = [ZLPhotoModel]()
     var dragCell : UIImageView = UIImageView()
+    
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
         self.backgroundColor = UIColor.white
         self.showsHorizontalScrollIndicator = false
-        self.isScrollEnabled = false
         self.register(SortCollectionViewCell.self, forCellWithReuseIdentifier: sortCellID)
         self.delegate = self
         self.dataSource = self
@@ -72,6 +72,17 @@ class SortCollectionView: UICollectionView ,UIGestureRecognizerDelegate{
         if self.dragingIndexPath == nil{return}
         self.dragCell.center = CGPoint(x: point.x, y: point.y)
         self.targetIndexPath = getTargetIndexPathWithPoint(point)
+        print(point)
+        if point.y <= self.contentOffset.y {
+            UIView.animate(withDuration: 0.5) {
+                self.contentOffset = CGPoint(x: self.contentOffset.x, y: 0)
+            }
+        }
+        if point.y > 650 {
+            UIView.animate(withDuration: 0.5) {
+                self.contentOffset = CGPoint(x: self.contentOffset.x, y: self.contentSize.height-kScreenHeight+kNavHeight+20)
+            }
+        }
         if self.dragingIndexPath != nil && self.targetIndexPath != nil{
             rankImageMutableArr()
             self.moveItem(at: self.dragingIndexPath! as IndexPath, to: self.targetIndexPath! as IndexPath)
@@ -149,7 +160,6 @@ extension SortCollectionView: UICollectionViewDelegate,UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photoModels.count
     }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: sortCellID, for: indexPath) as! SortCollectionViewCell
         cell.title.text = String(indexPath.item+1)

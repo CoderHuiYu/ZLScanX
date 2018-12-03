@@ -16,8 +16,9 @@ class SortCollectionViewCell: UICollectionViewCell {
     
     lazy var iconimageView: UIImageView = {
         let iconimageView = UIImageView()
-        iconimageView.contentMode = .scaleToFill
+        iconimageView.contentMode = .scaleAspectFill
         iconimageView.isUserInteractionEnabled = true
+        iconimageView.clipsToBounds = true
         return iconimageView
     }()
     lazy var imaginaryLine: UIImageView = {
@@ -61,8 +62,9 @@ class SortCollectionViewCell: UICollectionViewCell {
         self.title.frame = CGRect(x: 0, y: self.frame.height-10, width: self.frame.width, height: 22)
     }
     func configImage(iconImage: UIImage){
+        let itemWidth = (kScreenWidth - 60) / 3
         let size = iconImage.size
-        var heigh = self.frame.width * size.height / size.width
+        var heigh = itemWidth * size.height / size.width
         if heigh > self.frame.height - 40 {
             heigh = self.frame.height - 40
         }

@@ -14,16 +14,16 @@ protocol SortViewControllerProtocol:NSObjectProtocol{
 
 class SortViewController: UIViewController {
     weak var delegate: SortViewControllerProtocol?
-
     var photoModels = [ZLPhotoModel]()
     
     var collectionView: SortCollectionView = {
+        let itemWidth = (kScreenWidth - 60) / 3
         let layout = UICollectionViewFlowLayout.init()
-        layout.itemSize = CGSize(width: (kScreenWidth - 50) / 3, height: kScreenWidth/3)
+        layout.itemSize = CGSize(width: itemWidth, height: 200 )
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 10
         let collectionView = SortCollectionView(frame: CGRect(x: 0, y: kNavHeight, width: kScreenWidth, height: kScreenHeight), collectionViewLayout: layout)
-        collectionView.contentInset = UIEdgeInsets(top: 30, left: 10, bottom: 0, right: 10)
+        collectionView.contentInset = UIEdgeInsets(top: 20, left: 10, bottom: 70, right: 10)
         return collectionView
     }()
     override func viewDidLoad() {
