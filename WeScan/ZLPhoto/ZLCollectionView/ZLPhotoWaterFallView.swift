@@ -61,8 +61,8 @@ class ZLPhotoWaterFallView: UIView {
         layout.minimumLineSpacing = 5
         layout.scrollDirection = .horizontal
         layout.dataSource = self
-        let height: CGFloat = bounds.height - kToolBarViewHeight
-        let collectionView = UICollectionView(frame: CGRect(x: 0, y: toolBarView.frame.maxY, width: bounds.width, height: height), collectionViewLayout: layout)
+        let height: CGFloat = bounds.height - kToolBarViewHeight - 10
+        let collectionView = UICollectionView(frame: CGRect(x: 0, y: toolBarView.frame.maxY + 10, width: bounds.width, height: height), collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.clipsToBounds = false

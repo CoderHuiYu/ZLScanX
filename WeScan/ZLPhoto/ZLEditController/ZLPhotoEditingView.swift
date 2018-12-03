@@ -27,6 +27,7 @@ class ZLPhotoEditingView: UIView {
         super.awakeFromNib()
         addSubview(imageView)
         isHidden = true
+        toolBarViewBottomCons.constant = -kToolBarHeight
     }
     
     @IBAction fileprivate func touchAction(_ sender: Any) {

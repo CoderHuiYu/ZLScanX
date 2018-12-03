@@ -8,8 +8,8 @@
 
 import UIKit
 private let kCollectionCellIdentifier = "kCollectionCellIdentifier"
-private let kOneToolBarHeight: CGFloat = 50
-private let kTwoToolBarHeight: CGFloat = 150
+private let kToolBarHeight: CGFloat = 50
+
 class ZLPhotoEditorController: UIViewController {
     
     var photoModels = [ZLPhotoModel]()
@@ -20,6 +20,8 @@ class ZLPhotoEditorController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var toolBarView: UIView!
+    
+    @IBOutlet weak var toolBarViewBottomCons: NSLayoutConstraint!
     
     @IBOutlet weak var collectionView: UICollectionView!
     
