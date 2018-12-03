@@ -73,7 +73,7 @@ extension ZLPhotoEditorController {
         layout.dataSource = self
         collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: kCollectionCellIdentifier)
         collectionView.collectionViewLayout = layout
-        
+        collectionView.isPagingEnabled = true
         view.addSubview(editingView)
     }
     

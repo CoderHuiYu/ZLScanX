@@ -10,6 +10,7 @@ import UIKit
 
 struct ZLPhotoModel {
     var image: UIImage
+    var results: ImageScannerResults
     var imageSize: CGSize
 }
 
@@ -160,7 +161,8 @@ extension ZLPhotoWaterFallView {
     
     // delete All
     @objc fileprivate func deleteButtonAction() {
-        
+        photoModels.removeAll()
+        collectionView.reloadData()
     }
     
     // ccompletion
