@@ -16,6 +16,7 @@
                 <outlet property="customNavBar" destination="thW-bb-CKN" id="TEW-Id-WHq"/>
                 <outlet property="titleLabel" destination="JnT-xO-sIi" id="vyv-aa-DlO"/>
                 <outlet property="toolBarView" destination="ofm-Wg-uGs" id="BeM-1C-m99"/>
+                <outlet property="toolBarViewBottomCons" destination="kEg-za-j2E" id="tdC-Wj-Ofl"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
