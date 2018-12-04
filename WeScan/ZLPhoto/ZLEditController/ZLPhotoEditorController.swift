@@ -46,9 +46,11 @@ class ZLPhotoEditorController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
         view.backgroundColor = UIColor.white
-        titleLabel.text = "1/11"
+        if let currentIndex = currentIndex {
+            titleLabel.text = "\(currentIndex.row)/\(photoModels.count)"
+        }
+        
         setupUI()
     }
 
@@ -69,13 +71,25 @@ class ZLPhotoEditorController: UIViewController {
 extension ZLPhotoEditorController {
     
     fileprivate func setupUI() {
+        
+        view.clipsToBounds = true
+        
         let layout = ZLPhotoWaterFallLayout()
-        layout.minimumLineSpacing = 40
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        layout.minimumLineSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 40)
         layout.dataSource = self
         collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: kCollectionCellIdentifier)
         collectionView.collectionViewLayout = layout
         view.addSubview(editingView)
+        
+        guard let currentIndex = currentIndex else {
+            return
+        }
+        
+        if currentIndex.row > 0 {
+            collectionView.layoutIfNeeded()
+            collectionView.scrollToItem(at: currentIndex, at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
+        }
     }
     
     fileprivate func setNavBar(isHidden: Bool) {
@@ -110,15 +124,24 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.row)
-  
-        setNavBar(isHidden: true)
         
-        if let cell = collectionView.cellForItem(at: indexPath) {
+        print("visibleCellsCount: \(collectionView.visibleCells.count))")
+
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            return
+        }
+        
+        let center = collectionView.convert(cell.center, to: view)
+        
+        if center.x == view.center.x {
+            
+            setNavBar(isHidden: true)
+            
             let zlCell = cell as! ZLPhotoCell
             currentIndex = indexPath
             editingView.show(zlCell.imageView)
         }
+        
     }
     
     fileprivate func removeItem(_ cell: ZLPhotoCell) {
@@ -137,7 +160,7 @@ extension ZLPhotoEditorController: ZLPhotoWaterFallLayoutDataSource {
     
     func waterFallLayout(_ layout: ZLPhotoWaterFallLayout, indexPath: IndexPath) -> CGSize {
         let model = photoModels[indexPath.row]
-        let itemWidth = collectionView.bounds.size.width - 160
+        let itemWidth = collectionView.bounds.size.width - 80
         let itemHeight = getItemHeight(model.imageSize, itemWidth)
         let maxHeight = collectionView.bounds.size.height
         return CGSize(width: itemWidth, height: itemHeight > maxHeight ? maxHeight : itemHeight)

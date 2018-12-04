@@ -64,12 +64,40 @@ class ZLPhotoManager {
     }
     
     
-    /// remove image with path
+    /// remove local photo
     ///
     /// - Parameters:
-    ///   - path: path
-    ///   - handle: callback
-    class func removeImage(_ path: String, handle:((_ isSuccess: Bool)->())) {
+    ///   - model: photo model
+    ///   - handle: callBack
+    class func removeImage(_ model: ZLPhotoModel, handle:((_ isSuccess: Bool)->())) {
+        
+        let originalPath = kPhotoFileDataPath + "/\(model.originalImagePath)"
+        let scannedPath = kPhotoFileDataPath + "/\(model.scannedImagePath)"
+        let enhancedPath = kPhotoFileDataPath + "/\(model.enhancedImagePath)"
+        ZLPhotoManager.removefile(originalPath) { (isSuccess) in
+            if isSuccess {
+                ZLPhotoManager.removefile(scannedPath, handle: { (isSuccess) in
+                    if isSuccess {
+                        ZLPhotoManager.removefile(enhancedPath, handle: { (isSuccess) in
+                            if isSuccess {
+                                print("remove image model success")
+                                handle(true)
+                            } else {
+                                handle(false)
+                            }
+                        })
+                    } else {
+                        handle(false)
+                    }
+                })
+            } else {
+                handle(false)
+            }
+        }
+    }
+    
+    
+    class func removefile(_ path: String, handle:((_ isSuccess: Bool)->())) {
         let manager = FileManager.default
         if manager.fileExists(atPath: path) {
             do {
@@ -105,9 +133,9 @@ class ZLPhotoManager {
 
     class func getRectDict(_ model: Quadrilateral) -> [String:[String:Double]] {
         let rectDict: [String: [String: Double]] = ["topLeft":["x":Double(model.topLeft.x),"y":Double(model.topRight.y)],
-                                       "topRight":["x":Double(model.topRight.x),"y":Double(model.topRight.x)],
-                                       "bottomRight":["x":Double(model.bottomRight.x),"y":Double(model.bottomRight.x)],
-                                       "bottomLeft":["x":Double(model.bottomLeft.x),"y":Double(model.bottomLeft.x)]]
+                                       "topRight":["x":Double(model.topRight.x),"y":Double(model.topRight.y)],
+                                       "bottomRight":["x":Double(model.bottomRight.x),"y":Double(model.bottomRight.y)],
+                                       "bottomLeft":["x":Double(model.bottomLeft.x),"y":Double(model.bottomLeft.y)]]
         return rectDict
     }
 }
