@@ -12,6 +12,7 @@ protocol SortCollectionViewCellProtocol: NSObjectProtocol  {
     func deleteItem(_ currentCell: SortCollectionViewCell)
 }
 class SortCollectionViewCell: UICollectionViewCell {
+    static let SortCollectionViewCellID = "SortCollectionViewCellID"
     weak var delegate: SortCollectionViewCellProtocol?
     
     lazy var iconimageView: UIImageView = {
@@ -19,6 +20,8 @@ class SortCollectionViewCell: UICollectionViewCell {
         iconimageView.contentMode = .scaleAspectFill
         iconimageView.isUserInteractionEnabled = true
         iconimageView.clipsToBounds = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapCell(_:)))
+        iconimageView.addGestureRecognizer(tap)
         return iconimageView
     }()
     lazy var imaginaryLine: UIImageView = {
@@ -29,6 +32,7 @@ class SortCollectionViewCell: UICollectionViewCell {
         let title = UILabel()
         title.textColor = RGBColor(r: 80, g: 165, b: 195)
         title.textAlignment = .center
+        title.font = UIFont.boldSystemFont(ofSize: 16)
         return title
     }()
     lazy var delBtn: UIButton = {
@@ -40,17 +44,11 @@ class SortCollectionViewCell: UICollectionViewCell {
         delBtn.addTarget(self, action: #selector(delBtnClicked(_ :)), for: .touchUpInside)
         return delBtn
     }()
-    lazy var imageViewer: ImageViewer = {
-        let imgViewer = ImageViewer.init()
-        return imgViewer
-    }()
     override init(frame: CGRect) {
         super.init(frame: frame)
         NotificationCenter.default.addObserver(self, selector: #selector(dragBegin), name: NSNotification.Name(rawValue:"BeginDrag"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(endDrag), name: NSNotification.Name(rawValue:"EndDrag"), object: nil)
         setupView()
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapCell(_:)))
-        iconimageView.addGestureRecognizer(tap)
     }
     func setupView(){
         self.contentView.backgroundColor = UIColor.clear
@@ -59,20 +57,20 @@ class SortCollectionViewCell: UICollectionViewCell {
         self.contentView.addSubview(self.iconimageView)
         self.contentView.addSubview(self.title)
         self.contentView.addSubview(self.delBtn)
-        self.title.frame = CGRect(x: 0, y: self.frame.height-10, width: self.frame.width, height: 22)
+        self.title.frame = CGRect(x: 0, y: self.frame.height - 16, width: self.frame.width, height: 16)
     }
     func configImage(iconImage: UIImage){
-        let itemWidth = (kScreenWidth - 60) / 3
+        let itemWidth = self.frame.width - 40
         let size = iconImage.size
         var heigh = itemWidth * size.height / size.width
-        if heigh > self.frame.height - 40 {
-            heigh = self.frame.height - 40
+        if heigh > self.frame.height - 46 {
+            heigh = self.frame.height - 46
         }
-        let yyy = (self.frame.height - 25 - heigh)/2
-        self.iconimageView.frame = CGRect(x: 12, y: yyy+12, width: self.frame.width-12, height:heigh)
+        let yyy = (self.frame.height - 16 - heigh)/2 - 10
+        self.iconimageView.frame = CGRect(x: 20, y: yyy, width: itemWidth, height:heigh)
         self.iconimageView.image = iconImage
-        self.imaginaryLine.frame = CGRect(x: 12, y: yyy+12, width: self.frame.width-12, height: heigh)
-        self.delBtn.frame = CGRect(x: 0, y: yyy, width: 22, height: 22)
+        self.imaginaryLine.frame = CGRect(x: 20, y: yyy, width: itemWidth, height: heigh)
+        self.delBtn.frame = CGRect(x: 10, y: yyy-10, width: 22, height: 22)
         addImaginaryLine(self.iconimageView.frame)
     }
     @objc func tapCell(_ ges: UITapGestureRecognizer){
