@@ -8,11 +8,6 @@
 
 import UIKit
 
-struct ZLPhotoModel {
-    var image: UIImage
-    var results: ImageScannerResults
-    var imageSize: CGSize
-}
 
 private let kCellIdentifier = "ZLPhotoCellIdentifier"
 private let kToolBarViewHeight: CGFloat = 44
@@ -74,6 +69,7 @@ class ZLPhotoWaterFallView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        getData()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -82,6 +78,16 @@ class ZLPhotoWaterFallView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+    }
+    
+    func getData() {
+        ZLPhotoModel.getAllModel(handle: { (isSuccess, models) in
+            if isSuccess {
+                guard let models = models else { return }
+                photoModels = models
+                collectionView.reloadData()
+            }
+        })
     }
 }
 
@@ -149,9 +155,26 @@ extension ZLPhotoWaterFallView: ZLPhotoWaterFallLayoutDataSource {
 
 // MARK: - 数据操作
 extension ZLPhotoWaterFallView {
-    func addPhotoModel(_ model: ZLPhotoModel) {
-        photoModels.append(model)
-        collectionView.reloadData()
+    func addPhoto(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, _ detectedRectangle: Quadrilateral) {
+        
+        ZLPhotoManager.saveImage(originalImage) { [weak self] (oriPath) in
+            ZLPhotoManager.saveImage(scannedImage, handle: { [weak self] (scanPath) in
+                ZLPhotoManager.saveImage(enhancedImage, handle: { [weak self] (enhanPath) in
+                    if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
+                        let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, ZLPhotoManager.getRectDict(detectedRectangle))
+                        photoModel.save(handle: { (isSuccess) in
+                            if isSuccess {
+                                guard let weakSelf = self else { return }
+                                weakSelf.photoModels.append(photoModel)
+                                weakSelf.collectionView.reloadData()
+                            }
+                        })
+                        
+                    }
+                })
+            })
+        }
+        
     }
 }
 
@@ -161,8 +184,10 @@ extension ZLPhotoWaterFallView {
     
     // delete All
     @objc fileprivate func deleteButtonAction() {
-        photoModels.removeAll()
-        collectionView.reloadData()
+        ZLPhotoModel.removeAllModel { (isSuccess) in
+            photoModels.removeAll()
+            collectionView.reloadData()
+        }
     }
     
     // ccompletion

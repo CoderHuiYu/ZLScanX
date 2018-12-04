@@ -65,48 +65,19 @@ extension ZLPhotoWaterFallLayout {
         return attributes
     }
     
-    /*
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
-
-        guard let collectionView = collectionView else {
-            return CGPoint.zero
-        }
-        
-        var lastRect: CGRect = CGRect.zero
-        lastRect.origin = proposedContentOffset
-        lastRect.size = collectionView.frame.size
-        
-        let array = layoutAttributesForElements(in: lastRect)
-        
-        let startX = proposedContentOffset.x
-        
-        let
-        //获取可视区域
-        let targetRect = CGRect(x: visibleX, y: visibleY, width: visibleW, height: visibleH)
-        
-        //中心点的值
-        let centerX = proposedContentOffset.x + (collectionView.bounds.size.width)/2
-        
-        //获取可视区域内的attributes对象
-        guard let attrArr = super.layoutAttributesForElements(in: targetRect), attrArr.count > 0 else {
-            return CGPoint.zero
-        }
-        
-        //如果第0个属性距离最小
-        var min_attr = attrArr[0]
-        for attributes in attrArr {
-            if (abs(attributes.center.x-centerX) < abs(min_attr.center.x-centerX)) {
-                min_attr = attributes
+        guard let collectionView = collectionView else { return CGPoint.zero }
+        var offsetAdjustment = CGFloat(MAXFLOAT)
+        let horizontalCenter = proposedContentOffset.x + (collectionView.bounds.width / 2.0)
+        for layoutAttributes in attributes{
+            let itemHorizontalCenter = layoutAttributes.center.x
+            if(abs(itemHorizontalCenter-horizontalCenter) < abs(offsetAdjustment)) {
+                offsetAdjustment = itemHorizontalCenter-horizontalCenter
             }
         }
-        //计算出距离中心点 最小的那个cell 和整体中心点的偏移
-        let ofsetX = min_attr.center.x - centerX
-        return CGPoint(x: proposedContentOffset.x+ofsetX, y: proposedContentOffset.y)
-
+        return CGPoint(x: proposedContentOffset.x + offsetAdjustment, y: proposedContentOffset.y)
     }
-    */
     
-    //
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return true
     }

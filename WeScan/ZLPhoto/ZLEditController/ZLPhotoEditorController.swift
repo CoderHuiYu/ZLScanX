@@ -75,7 +75,6 @@ extension ZLPhotoEditorController {
         layout.dataSource = self
         collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: kCollectionCellIdentifier)
         collectionView.collectionViewLayout = layout
-        collectionView.isPagingEnabled = true
         view.addSubview(editingView)
     }
     
@@ -138,7 +137,7 @@ extension ZLPhotoEditorController: ZLPhotoWaterFallLayoutDataSource {
     
     func waterFallLayout(_ layout: ZLPhotoWaterFallLayout, indexPath: IndexPath) -> CGSize {
         let model = photoModels[indexPath.row]
-        let itemWidth = collectionView.bounds.size.width - 40
+        let itemWidth = collectionView.bounds.size.width - 160
         let itemHeight = getItemHeight(model.imageSize, itemWidth)
         let maxHeight = collectionView.bounds.size.height
         return CGSize(width: itemWidth, height: itemHeight > maxHeight ? maxHeight : itemHeight)
