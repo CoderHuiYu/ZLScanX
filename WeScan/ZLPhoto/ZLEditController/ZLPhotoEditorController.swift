@@ -12,7 +12,7 @@ import CoreGraphics
 private let kCollectionCellIdentifier = "kCollectionCellIdentifier"
 private let kToolBarHeight: CGFloat = 50
 
-class ZLPhotoEditorController: UIViewController {
+class ZLPhotoEditorController: UIViewController,emitterable {
     
     var photoModels = [ZLPhotoModel]()
     var currentIndex: IndexPath?
@@ -40,7 +40,13 @@ class ZLPhotoEditorController: UIViewController {
         }
         return editingView
     }()
-    
+    lazy var coverView: UIView = {
+        let coverView = UIView()
+        coverView.backgroundColor = UIColor.white
+        coverView.alpha =  0.5
+        coverView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight-160)
+        return coverView
+    }()
     fileprivate var isEditingStatus: Bool = false
     
     override func viewDidLoad() {
@@ -173,26 +179,37 @@ extension ZLPhotoEditorController {
             
             break
         case 1:
-            
-            break
-        case 2:
-        //裁剪
-//            let imageToEdit = results.originalImage
-//            let editVC = EditScanViewController(image: imageToEdit.applyingPortraitOrientation(), quad: quad)
-//            editVC.didEditResults = { [unowned self] results in self.results = results; self.imageView.image = results.scannedImage; self.originalScannedImage = results.scannedImage }
-//            editVC.didEditQuad = { [unowned self] quad in self.quad = quad }
-//            let navigationController = UINavigationController(rootViewController: editVC)
-//            present(navigationController, animated: true)
-            break
-        case 3:
-        //图片旋转
+            //图片旋转
             let image = photoModels[(currentIndex?.item)!].image
+//            let image = UIImage(named: "WeScan-Banner.jpg", in: Bundle.init(for: self.classForCoder), compatibleWith: nil)
             let orientaiton = UIImage.Orientation.right
-
+            
             let newImage =  rotateImage(image, orientation:orientaiton)
             photoModels[(currentIndex?.item)!].image = newImage
             photoModels[(currentIndex?.item)!].imageSize = newImage.size
             collectionView.reloadData()
+            
+            break
+        case 2:
+        //裁剪
+            let model = photoModels[(currentIndex?.item)!]
+            guard let imageToEdit =  UIImage(contentsOfFile: kPhotoFileDataPath + "/\(model.originalImagePath)") else {return}
+            
+            let editVC = EditScanViewController(image: imageToEdit.applyingPortraitOrientation(), quad: model.detectedRectangle)
+//            editVC.didEditResults = { [unowned self] results in self.results = results;
+//                self.imageView.image = results.scannedImage; self.originalScannedImage = results.scannedImage }
+//            editVC.didEditQuad = { [unowned self] quad in self.quad = quad }
+            let navigationController = UINavigationController(rootViewController: editVC)
+            present(navigationController, animated: true)
+            break
+        case 3:
+            self.view.addSubview(self.coverView)
+            start(CGPoint.init(x: coverView.center.x, y: coverView.frame.height))
+            
+            DispatchQueue.main.asyncAfter(deadline: .now()+5) {
+                self.stop()
+                self.coverView.removeFromSuperview()
+            }
             break
         default:
             break
@@ -209,29 +226,29 @@ extension ZLPhotoEditorController {
         var scaleY:Float = 0
         switch (orientation) {
         case UIImage.Orientation.left:
-            rotate = .pi/2;
+            rotate = .pi/2
             rect = CGRect(x: 0, y: 0, width: image.size.height, height: image.size.width)
-            translateX = 0;
-            translateY = Float(-rect.size.width);
-            scaleY = Float(rect.size.width/rect.size.height);
-            scaleX = Float(rect.size.height/rect.size.width);
+            translateX = 0
+            translateY = Float(-rect.size.width)
+            scaleY = Float(rect.size.width/rect.size.height)
+            scaleX = Float(rect.size.height/rect.size.width)
             break;
         case UIImage.Orientation.right:
-            rotate = 33 * .pi/2;
+            rotate = 3 * .pi/2
             rect = CGRect(x: 0, y: 0, width: image.size.height, height: image.size.width)
-            translateX = Float(-rect.size.height);
-            translateY = 0;
-            scaleY = Float(rect.size.width/rect.size.height);
-            scaleX = Float(rect.size.height/rect.size.width);
+            translateX = Float(-rect.size.height)
+            translateY = 0
+            scaleY = Float(rect.size.width/rect.size.height)
+            scaleX = Float(rect.size.height/rect.size.width)
             break;
         case UIImage.Orientation.down:
-            rotate = .pi;
+            rotate = .pi
             rect = CGRect(x: 0, y: 0, width: image.size.height, height: image.size.width)
             translateX = Float(-rect.size.width)
             translateY = Float(-rect.size.height)
             break;
         default:
-            rotate = 0.0;
+            rotate = 0.0
             rect = CGRect(x: 0, y: 0, width: image.size.height, height: image.size.width)
             translateX = 0
             translateY = 0

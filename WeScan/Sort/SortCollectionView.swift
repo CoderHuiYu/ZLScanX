@@ -13,7 +13,7 @@ class SortCollectionView: UICollectionView{
     var targetIndexPath: IndexPath?
     var playTimer: Timer?
     var photoModels = [ZLPhotoModel]()
-    var dragCell : UIImageView {
+    lazy var dragCell : UIImageView = {
         let dragCell = UIImageView()
         dragCell.contentMode = .scaleAspectFill
         dragCell.backgroundColor = UIColor.clear
@@ -22,7 +22,7 @@ class SortCollectionView: UICollectionView{
         dragCell.layer.shadowRadius = 7
         dragCell.layer.shadowOpacity = 0.3
         return dragCell
-    }
+    }()
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
@@ -77,28 +77,32 @@ extension SortCollectionView : UIGestureRecognizerDelegate{
         self.dragCell.center = CGPoint(x: point.x, y: point.y)
         self.targetIndexPath = getTargetIndexPathWithPoint(point)
         print(point)
-        if point.y <= self.contentOffset.y {
-            UIView.animate(withDuration: 0.5) {
-                self.contentOffset = CGPoint(x: self.contentOffset.x, y: 0)
-            }
-        }
-        if point.y > 650 {
-            UIView.animate(withDuration: 0.5) {
-                self.contentOffset = CGPoint(x: self.contentOffset.x, y: self.contentSize.height-kScreenHeight+kNavHeight+20)
-            }
-        }
+//        if point.y - self.contentOffset.y  <= 0{
+//            UIView.animate(withDuration: 0.5) {
+//                self.contentOffset = CGPoint(x: self.contentOffset.x, y: 0)
+//            }
+//        }
+//        if point.y - self.contentOffset.y > kScreenHeight - kNavHeight - 44{
+//            UIView.animate(withDuration: 0.5) {
+//                self.contentOffset = CGPoint(x: self.contentOffset.x, y: self.contentSize.height-kScreenHeight+kNavHeight+20)
+//            }
+//        }
         if self.dragingIndexPath != nil && self.targetIndexPath != nil{
             rankImageMutableArr()
             self.moveItem(at: self.dragingIndexPath! as IndexPath, to: self.targetIndexPath! as IndexPath)
             self.dragingIndexPath = self.targetIndexPath
+            //update cell's title text
+//            for i in 0 ..< self.visibleCells.count{
+//                let cell = self.visibleCells[i] as! SortCollectionViewCell
+//                cell.title.text = String( i + 1)
+//            }
         }
     }
     func dragEnd(_ point: CGPoint){
         if self.dragingIndexPath == nil{return}
         NotificationCenter.default.post(name: NSNotification.Name(rawValue:"EndDrag"), object: nil)
         let cell = self.cellForItem(at: self.dragingIndexPath! as IndexPath) as! SortCollectionViewCell
-        var endFrame = cell.frame
-        endFrame.origin.y = cell.frame.origin.y - self.contentOffset.y
+        let endFrame = cell.frame
         self.dragCell.transform = CGAffineTransform.identity
         UIView.animate(withDuration: 0.3, animations: {
             self.dragCell.frame = CGRect(x: endFrame.origin.x+10, y: endFrame.origin.y, width: cell.iconimageView.frame.width, height: cell.iconimageView.frame.height)
@@ -115,11 +119,6 @@ extension SortCollectionView : UIGestureRecognizerDelegate{
         let cell = photoModels[(self.dragingIndexPath?.row)!]
         photoModels.remove(at: (self.dragingIndexPath?.row)!)
         photoModels.insert(cell, at: (self.targetIndexPath?.row)!)
-        //update cell's title text
-        for i in 0 ..< self.visibleCells.count{
-            let cell = self.visibleCells[i] as! SortCollectionViewCell
-            cell.title.text = String( i + 1)
-        }
     }
     //return draging indexPath
     func getDragingIndexPathWithPoint(_ startPoint: CGPoint) -> IndexPath{
@@ -170,7 +169,7 @@ extension SortCollectionView: UICollectionViewDelegate,UICollectionViewDataSourc
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SortCollectionViewCell.SortCollectionViewCellID, for: indexPath) as! SortCollectionViewCell
-        cell.title.text = String(indexPath.item + 1)
+//        cell.title.text = String(indexPath.item + 1)
         cell.configImage(iconImage: photoModels[indexPath.item].image)
         cell.delegate = self as SortCollectionViewCellProtocol
         return cell
