@@ -41,7 +41,6 @@ struct ZLPhotoModel {
         self.enhancedImagePath = enhancedImagePath
         self.rectangle = rectangle
         
-        
         self.scannedImage = UIImage(contentsOfFile: kPhotoFileDataPath + "/\(scannedImagePath)") ?? UIImage()
         self.enhancedImage = UIImage(contentsOfFile: kPhotoFileDataPath + "/\(enhancedImagePath)") ?? UIImage()
         
@@ -77,22 +76,19 @@ extension ZLPhotoModel {
     
     func save(handle:((_ isSuccess: Bool)->())) {
         
-        let rectDict: [String: Any] = ["topLeft":["x":detectedRectangle.topLeft.x,"y":detectedRectangle.topRight.y],
-                                       "topRight":["x":detectedRectangle.topRight.x,"y":detectedRectangle.topRight.x],
-                                       "bottomRight":["x":detectedRectangle.bottomRight.x,"y":detectedRectangle.bottomRight.x],
-                                       "bottomLeft":["x":detectedRectangle.bottomLeft.x,"y":detectedRectangle.bottomLeft.x]]
+        let rectDict: [String: Any] = rectangle
         let dict: [String : Any] = ["originalImagePath":originalImagePath,
                                     "scannedImagePath":scannedImagePath,
                                     "enhancedImagePath":enhancedImagePath,
                                     "rectangle":rectDict]
         
-        if let array = NSArray(contentsOfFile: kPhotoModelDataPath) {
-            let tempArray = array.adding(dict) as NSArray
-            let isSuccess = tempArray.write(toFile: kPhotoModelDataPath, atomically: true)
+        if let array = NSMutableArray(contentsOfFile: kPhotoModelDataPath) {
+            array.add(dict)
+            let isSuccess = array.write(toFile: kPhotoModelDataPath, atomically: true)
             handle(isSuccess)
         } else {
-            let array = NSArray()
-            array.adding(dict)
+            let array = NSMutableArray()
+            array.add(dict)
             let isSuccess = array.write(toFile: kPhotoModelDataPath, atomically: true)
             handle(isSuccess)
         }
@@ -115,9 +111,17 @@ extension ZLPhotoModel {
                 }
                 index += 1
             }
-            array.remove(index)
-            let isSuccess = array.write(toFile: kPhotoModelDataPath, atomically: true)
-            handle(isSuccess)
+            
+            ZLPhotoManager.removeImage(self) { (isSuccess) in
+                if isSuccess {
+                    array.removeObject(at: index)
+                    let isSuccess = array.write(toFile: kPhotoModelDataPath, atomically: true)
+                    handle(isSuccess)
+                } else {
+                    handle(false)
+                }
+            }
+            
         } else {
             handle(false)
         }
@@ -142,10 +146,7 @@ extension ZLPhotoModel {
             }
             array.remove(index)
             
-            let rectDict: [String: Any] = ["topLeft":["x":model.detectedRectangle.topLeft.x,"y":model.detectedRectangle.topRight.y],
-                                           "topRight":["x":model.detectedRectangle.topRight.x,"y":model.detectedRectangle.topRight.x],
-                                           "bottomRight":["x":model.detectedRectangle.bottomRight.x,"y":model.detectedRectangle.bottomRight.x],
-                                           "bottomLeft":["x":model.detectedRectangle.bottomLeft.x,"y":model.detectedRectangle.bottomLeft.x]]
+            let rectDict: [String: Any] = rectangle
             let dict: [String : Any] = ["originalImagePath":model.originalImagePath,
                                         "scannedImagePath":model.scannedImagePath,
                                         "enhancedImagePath":model.enhancedImagePath,
@@ -167,6 +168,7 @@ extension ZLPhotoModel {
         var models = [ZLPhotoModel]()
         for dict in array {
             guard let tempDict = dict as? [String: Any] else {
+                handle(false, nil)
                 return
             }
             guard let originalImagePath = tempDict["originalImagePath"] as? String else {

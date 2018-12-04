@@ -15,7 +15,7 @@ class ZLPhotoWaterFallLayout: UICollectionViewFlowLayout {
 
     weak var dataSource: ZLPhotoWaterFallLayoutDataSource?
 
-    fileprivate lazy var attributes = [UICollectionViewLayoutAttributes]()
+    lazy var attributes = [UICollectionViewLayoutAttributes]()
     
 }
 

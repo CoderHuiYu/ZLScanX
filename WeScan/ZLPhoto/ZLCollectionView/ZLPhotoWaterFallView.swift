@@ -99,6 +99,11 @@ extension ZLPhotoWaterFallView {
         toolBarView.addSubview(completeButton)
         addSubview(collectionView)
     }
+    
+    fileprivate func scrollToBottom() {
+        let contentOffset = collectionView.contentSize.width - collectionView.bounds.width
+        collectionView.setContentOffset(CGPoint(x: contentOffset, y: 0), animated: true)
+    }
 }
 
 // MARK: - DataSouce And Delegate
@@ -129,15 +134,6 @@ extension ZLPhotoWaterFallView: UICollectionViewDataSource, UICollectionViewDele
         }
     }
     
-    fileprivate func removeItem(_ cell: ZLPhotoCell) {
-        
-        guard let indexPath = collectionView.indexPath(for: cell) else {
-            return
-        }
-        
-        photoModels.remove(at: indexPath.row)
-        collectionView.reloadData()
-    }
 }
 
 
@@ -149,12 +145,16 @@ extension ZLPhotoWaterFallView: ZLPhotoWaterFallLayoutDataSource {
     }
     
     fileprivate func getItemWidth(_ imageSize: CGSize) -> CGFloat {
+        if imageSize.height == 0 {
+            return 0
+        }
         return imageSize.width * collectionView.bounds.height / imageSize.height
     }
 }
 
-// MARK: - 数据操作
+// MARK: - Data Operation
 extension ZLPhotoWaterFallView {
+    
     func addPhoto(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, _ detectedRectangle: Quadrilateral) {
         
         ZLPhotoManager.saveImage(originalImage) { [weak self] (oriPath) in
@@ -167,6 +167,10 @@ extension ZLPhotoWaterFallView {
                                 guard let weakSelf = self else { return }
                                 weakSelf.photoModels.append(photoModel)
                                 weakSelf.collectionView.reloadData()
+                                weakSelf.collectionView.layoutIfNeeded()
+                                // scroll to bottom
+                                weakSelf.scrollToBottom()
+                                
                             }
                         })
                         
@@ -175,6 +179,19 @@ extension ZLPhotoWaterFallView {
             })
         }
         
+    }
+    
+    fileprivate func removeItem(_ cell: ZLPhotoCell) {
+        
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            return
+        }
+        photoModels[indexPath.row].remove { (isSuccess) in
+            if isSuccess {
+                photoModels.remove(at: indexPath.row)
+                collectionView.reloadData()
+            }
+        }
     }
 }
 
