@@ -68,7 +68,7 @@ extension SortCollectionView : UIGestureRecognizerDelegate{
         self.dragCell.frame = cell.iconimageView.frame
         self.dragCell.isHidden = false
         self.dragCell.center = CGPoint(x: point.x, y: point.y)
-        self.dragCell.image = photoModels[(self.dragingIndexPath?.row)!].image
+        self.dragCell.image = photoModels[(self.dragingIndexPath?.row)!].enhancedImage
         self.dragCell.transform = CGAffineTransform.identity
         playTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countPressTime), userInfo: nil, repeats: true)
     }
@@ -170,7 +170,7 @@ extension SortCollectionView: UICollectionViewDelegate,UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SortCollectionViewCell.SortCollectionViewCellID, for: indexPath) as! SortCollectionViewCell
 //        cell.title.text = String(indexPath.item + 1)
-        cell.configImage(iconImage: photoModels[indexPath.item].image)
+        cell.configImage(iconImage: photoModels[indexPath.item].enhancedImage)
         cell.delegate = self as SortCollectionViewCellProtocol
         return cell
     }

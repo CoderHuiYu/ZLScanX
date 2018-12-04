@@ -132,10 +132,11 @@ class ZLPhotoManager {
     }
 
     class func getRectDict(_ model: Quadrilateral) -> [String:[String:Double]] {
-        let rectDict: [String: [String: Double]] = ["topLeft":["x":Double(model.topLeft.x),"y":Double(model.topRight.y)],
+        let rectDict: [String: [String: Double]] = ["topLeft":["x":Double(model.topLeft.x),"y":Double(model.topLeft.y)],
                                        "topRight":["x":Double(model.topRight.x),"y":Double(model.topRight.y)],
                                        "bottomRight":["x":Double(model.bottomRight.x),"y":Double(model.bottomRight.y)],
                                        "bottomLeft":["x":Double(model.bottomLeft.x),"y":Double(model.bottomLeft.y)]]
         return rectDict
     }
 }
+

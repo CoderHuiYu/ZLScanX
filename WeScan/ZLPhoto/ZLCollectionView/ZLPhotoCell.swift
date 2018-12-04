@@ -35,7 +35,7 @@ class ZLPhotoCell: UICollectionViewCell {
     var photoModel: ZLPhotoModel? {
         didSet {
             guard let model = photoModel else { return }
-            imageView.image = model.image
+            imageView.image = model.enhancedImage
             updateToOriginalLayout(false)
         }
     }

@@ -17,6 +17,8 @@ class ZLPhotoEditorController: UIViewController,emitterable {
     var photoModels = [ZLPhotoModel]()
     var currentIndex: IndexPath?
     
+    var updataCallBack:(()->())?
+    
     @IBOutlet weak var customNavBar: UIView!
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -54,7 +56,7 @@ class ZLPhotoEditorController: UIViewController,emitterable {
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor.white
         if let currentIndex = currentIndex {
-            titleLabel.text = "\(currentIndex.row)/\(photoModels.count)"
+            titleLabel.text = "\(currentIndex.row + 1)/\(photoModels.count)"
         }
         
         setupUI()
@@ -63,12 +65,12 @@ class ZLPhotoEditorController: UIViewController,emitterable {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: true)
+//        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: true)
+//        navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
 }
@@ -143,21 +145,32 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
             
             setNavBar(isHidden: true)
             
-            let zlCell = cell as! ZLPhotoCell
+            let photoCell = cell as! ZLPhotoCell
             currentIndex = indexPath
-            editingView.show(zlCell.imageView)
+            editingView.show(photoCell.imageView)
         }
         
     }
     
-    fileprivate func removeItem(_ cell: ZLPhotoCell) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updateTitle()
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        updateTitle()
+    }
+    
+    fileprivate func updateTitle() {
+        let cells = collectionView.visibleCells
+        let centerCells = cells.filter({
+            let cellCenter = collectionView.convert($0.center, to: view)
+            return cellCenter.x == view.center.x
+        })
         
-        guard let indexPath = collectionView.indexPath(for: cell) else {
-            return
-        }
+        guard let centerCell = centerCells.first else { return }
+        guard let indexPath = collectionView.indexPath(for: centerCell) else { return }
         
-        photoModels.remove(at: indexPath.row)
-        collectionView.reloadData()
+        titleLabel.text = "\(indexPath.row + 1)/\(photoModels.count)"
     }
     
 }
@@ -181,12 +194,26 @@ extension ZLPhotoEditorController: ZLPhotoWaterFallLayoutDataSource {
 // MARK: - Event
 extension ZLPhotoEditorController {
     
-    @IBAction func leftButtonAction(_ sender: Any) {
+    fileprivate func removeItem(_ cell: ZLPhotoCell) {
+        
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            return
+        }
+        
+        photoModels[indexPath.row].remove { (isSuccess) in
+            if isSuccess {
+                photoModels.remove(at: indexPath.row)
+                collectionView.reloadData()
+            }
+        }
+    }
+    
+    @IBAction fileprivate func leftButtonAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
 
     }
     
-    @IBAction func rightButtonAction(_ sender: Any) {
+    @IBAction fileprivate func rightButtonAction(_ sender: Any) {
         let sortVC = SortViewController()
         sortVC.photoModels = photoModels
         sortVC.delegate = self
@@ -198,48 +225,175 @@ extension ZLPhotoEditorController {
         print(index)
         // index
         switch index {
+            // delete
         case 0:
+            guard let index = currentIndex else { return }
+            photoModels[index.row].remove { (isSuccess) in
+                if isSuccess {
+                    photoModels.remove(at: index.row)
+                    collectionView.reloadData()
+                    
+                    if let callBack = updataCallBack {
+                        callBack()
+                    }
+                    
+                    editingView.hide()
+                }
+            }
             
             break
         case 1:
-            //图片旋转
-            let image = photoModels[(currentIndex?.item)!].image
-//            let image = UIImage(named: "WeScan-Banner.jpg", in: Bundle.init(for: self.classForCoder), compatibleWith: nil)
+            // image rotate
+            guard let index = currentIndex else { return }
+            
+            let lastModel = photoModels[index.item]
+            let originalImage = UIImage(contentsOfFile: kPhotoFileDataPath + "/\(lastModel.originalImagePath)") ?? lastModel.scannedImage
+            let scannedImage = lastModel.scannedImage
+            let enhancedImage = lastModel.enhancedImage
+            
+            
             let orientaiton = UIImage.Orientation.right
             
-            let newImage =  rotateImage(image, orientation:orientaiton)
-            photoModels[(currentIndex?.item)!].image = newImage
-            photoModels[(currentIndex?.item)!].imageSize = newImage.size
-            collectionView.reloadData()
+            let newOriginalImage = rotateImage(originalImage, orientation:orientaiton)
+            let newScannedImage = rotateImage(scannedImage, orientation:orientaiton)
+            let newEnhancedImage = rotateImage(enhancedImage, orientation:orientaiton)
             
+            let newRect = rotateRect(lastModel.detectedRectangle)
+            
+            lastModel.replace(newOriginalImage, newScannedImage, newEnhancedImage, lastModel.isEnhanced, newRect) { [weak self] (isSuccess, model) in
+                if isSuccess {
+                    
+                    guard let model = model else { return }
+                    guard let weakSelf = self else { return }
+                    
+                    weakSelf.photoModels[index.item] = model
+                    weakSelf.collectionView.reloadData()
+                    
+                    if let callBack = weakSelf.updataCallBack {
+                        callBack()
+                    }
+                    
+                    weakSelf.collectionView.layoutIfNeeded()
+                    guard let cell = weakSelf.collectionView.cellForItem(at: index) else {
+                        return
+                    }
+                    let photoCell = cell as! ZLPhotoCell
+                    weakSelf.editingView.update(photoCell.imageView)
+                }
+            }
             break
         case 2:
-        //裁剪
-            let model = photoModels[(currentIndex?.item)!]
-            guard let imageToEdit =  UIImage(contentsOfFile: kPhotoFileDataPath + "/\(model.originalImagePath)") else {return}
+        // cut
+            guard let currentIndex = currentIndex else { return }
+            let lastModel = photoModels[currentIndex.item]
             
-            let editVC = EditScanViewController(image: imageToEdit.applyingPortraitOrientation(), quad: model.detectedRectangle)
-//            editVC.didEditResults = { [unowned self] results in self.results = results;
-//                self.imageView.image = results.scannedImage; self.originalScannedImage = results.scannedImage }
-//            editVC.didEditQuad = { [unowned self] quad in self.quad = quad }
+            guard let imageToEdit =  UIImage(contentsOfFile: kPhotoFileDataPath + "/\(lastModel.originalImagePath)") else {return}
+            
+            let editVC = EditScanViewController(image: imageToEdit.applyingPortraitOrientation(), quad: lastModel.detectedRectangle)
+            editVC.editCompletion = { [weak self] (result, rect) in
+                lastModel.replace(result.originalImage, result.scannedImage, result.scannedImage, lastModel.isEnhanced, rect, handle: { (isSuccess, model) in
+                    if isSuccess {
+                        guard let model = model else { return }
+                        guard let weakSelf = self else { return }
+                        
+                        weakSelf.updateEditView(currentIndex, model: model)
+                    }
+                })
+            }
             let navigationController = UINavigationController(rootViewController: editVC)
             present(navigationController, animated: true)
+            
             break
         case 3:
+            
+            guard let currentIndex = currentIndex else { return }
+            
             self.view.addSubview(self.coverView)
             start(CGPoint.init(x: coverView.center.x, y: coverView.frame.height))
             
-            DispatchQueue.main.asyncAfter(deadline: .now()+5) {
-                self.stop()
-                self.coverView.removeFromSuperview()
+            let lastModel = photoModels[currentIndex.item]
+            let originalImage = UIImage(contentsOfFile: kPhotoFileDataPath + "/\(lastModel.originalImagePath)") ?? lastModel.scannedImage
+            let isEnhanced = lastModel.isEnhanced
+            
+            if isEnhanced {
+                // need review - this pic don't changed
+                lastModel.replace(originalImage, lastModel.scannedImage, lastModel.scannedImage, false, lastModel.detectedRectangle, handle: { (isSuccess, model) in
+                    if isSuccess {
+                        
+                        guard let model = model else { return }
+                        
+                        self.updateEditView(currentIndex, model: model)
+                        
+                        self.stop()
+                        self.coverView.removeFromSuperview()
+                    } else {
+                        self.stop()
+                        self.coverView.removeFromSuperview()
+                    }
+                })
+            } else {
+                // need review - this pic don't changed
+                let enhancedImage = lastModel.enhancedImage.filter(name: "CIColorControls", parameters: ["inputContrast":1.35])
+                
+                lastModel.replace(originalImage, lastModel.scannedImage, enhancedImage ?? lastModel.scannedImage, true, lastModel.detectedRectangle, handle: { (isSuccess, model) in
+                    if isSuccess {
+                        
+                        guard let model = model else { return }
+                        
+                        self.updateEditView(currentIndex, model: model)
+                        
+                        self.stop()
+                        self.coverView.removeFromSuperview()
+                    } else {
+                        self.stop()
+                        self.coverView.removeFromSuperview()
+                    }
+                })
             }
+            
             break
         default:
             break
         }
     }
-    //Mark: - 翻转 image
-    func rotateImage(_ image: UIImage, orientation: UIImage.Orientation) -> UIImage {
+    
+    fileprivate func updateEditView(_ index: IndexPath, model: ZLPhotoModel) {
+        
+        self.photoModels[index.row] = model
+        self.collectionView.reloadData()
+        
+        if let callBack = self.updataCallBack {
+            callBack()
+        }
+        
+        self.collectionView.layoutIfNeeded()
+        guard let cell = self.collectionView.cellForItem(at: index) else {
+            return
+        }
+        let photoCell = cell as! ZLPhotoCell
+        self.editingView.update(photoCell.imageView)
+    }
+    
+    fileprivate func rotateRect(_ rect: Quadrilateral) -> Quadrilateral {
+        
+        let topLeft = rect.topLeft
+        let topRight = rect.topRight
+        let bottomRight = rect.bottomRight
+        let bottomLeft = rect.bottomLeft
+        
+        let rTopLeft = bottomLeft
+        let rTopRight = topLeft
+        let rBottomRight = topRight
+        let rBottomLeft = bottomRight
+        
+        let rRect = Quadrilateral(topLeft: rTopLeft, topRight: rTopRight, bottomRight: rBottomRight, bottomLeft: rBottomLeft)
+        
+        return rRect
+        
+    }
+    
+    // Mark: - 翻转 image
+    fileprivate func rotateImage(_ image: UIImage, orientation: UIImage.Orientation) -> UIImage {
 
         var rotate:Double = 0.0
         var rect = CGRect.zero
@@ -294,8 +448,12 @@ extension ZLPhotoEditorController {
 // MARK: -SortViewControllerProtocol
 extension ZLPhotoEditorController: SortViewControllerProtocol{
     func sortDidFinished(_ photoModels: [ZLPhotoModel]) {
-        self.photoModels = photoModels
-        self.collectionView.reloadData()
+        ZLPhotoModel.sortAllModel(photoModels) { (isSuccess) in
+            if isSuccess {
+                self.photoModels = photoModels
+                self.collectionView.reloadData()
+            }
+        }
     }
 }
 
