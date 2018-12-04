@@ -49,6 +49,15 @@ class ZLPhotoEditingView: UIView {
         }, completion: nil)
     }
     
+    func update(_ photoView: UIImageView) {
+        
+        let frame = photoView.convert(photoView.frame, to: self)
+        print(frame)
+        imageView.frame = frame
+        imageView.image = photoView.image
+        
+    }
+    
     func hide() {
         
         if let hideCallBack = hideCallBack {

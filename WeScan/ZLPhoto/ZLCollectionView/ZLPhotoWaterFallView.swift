@@ -101,8 +101,11 @@ extension ZLPhotoWaterFallView {
     }
     
     fileprivate func scrollToBottom() {
+        
         let contentOffset = collectionView.contentSize.width - collectionView.bounds.width
-        collectionView.setContentOffset(CGPoint(x: contentOffset, y: 0), animated: true)
+        if contentOffset > 0 {
+            collectionView.setContentOffset(CGPoint(x: contentOffset, y: 0), animated: true)
+        }
     }
 }
 
@@ -155,13 +158,13 @@ extension ZLPhotoWaterFallView: ZLPhotoWaterFallLayoutDataSource {
 // MARK: - Data Operation
 extension ZLPhotoWaterFallView {
     
-    func addPhoto(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, _ detectedRectangle: Quadrilateral) {
+    func addPhoto(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, _ isEnhanced: Bool, _ detectedRectangle: Quadrilateral) {
         
         ZLPhotoManager.saveImage(originalImage) { [weak self] (oriPath) in
             ZLPhotoManager.saveImage(scannedImage, handle: { [weak self] (scanPath) in
                 ZLPhotoManager.saveImage(enhancedImage, handle: { [weak self] (enhanPath) in
                     if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
-                        let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, ZLPhotoManager.getRectDict(detectedRectangle))
+                        let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRectangle))
                         photoModel.save(handle: { (isSuccess) in
                             if isSuccess {
                                 guard let weakSelf = self else { return }
