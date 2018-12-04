@@ -14,16 +14,16 @@ protocol SortViewControllerProtocol:NSObjectProtocol{
 
 class SortViewController: UIViewController {
     weak var delegate: SortViewControllerProtocol?
-    var photoModels = [ZLPhotoModel]()
+    var photoModels: [ZLPhotoModel] = []
     
     var collectionView: SortCollectionView = {
-        let itemWidth = (kScreenWidth - 60) / 3
+        let itemWidth = (kScreenWidth-30) / 3
+        let itemHeith = itemWidth * 1.3
         let layout = UICollectionViewFlowLayout.init()
-        layout.itemSize = CGSize(width: itemWidth, height: 200 )
-        layout.minimumInteritemSpacing = 10
+        layout.itemSize = CGSize(width: itemWidth, height: itemHeith )
         layout.minimumLineSpacing = 10
-        let collectionView = SortCollectionView(frame: CGRect(x: 0, y: kNavHeight, width: kScreenWidth, height: kScreenHeight), collectionViewLayout: layout)
-        collectionView.contentInset = UIEdgeInsets(top: 20, left: 10, bottom: 70, right: 10)
+        let collectionView = SortCollectionView(frame: CGRect(x: 0, y: kNavHeight, width: kScreenWidth, height: kScreenHeight - kNavHeight), collectionViewLayout: layout)
+        collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
         return collectionView
     }()
     override func viewDidLoad() {
@@ -45,20 +45,21 @@ class SortViewController: UIViewController {
         let titleLabel = UILabel()
         titleLabel.text = "Sort"
         titleLabel.textColor = UIColor.black
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 15)
         titleLabel.backgroundColor = UIColor.clear
         titleLabel.frame = CGRect(x: 0, y: kNavHeight - 44, width: kScreenWidth, height: 44)
         titleLabel.textAlignment = .center
         toolView.addSubview(titleLabel)
         
         let leftBtn = UIButton()
-        leftBtn.setTitle("cancle", for: .normal)
+        leftBtn.setTitle("back", for: .normal)
         leftBtn.setTitleColor(RGBColor(r: 80, g: 165, b: 195), for: .normal)
-        leftBtn.frame = CGRect(x: 10, y: kNavHeight-44, width: 54, height: 44)
+        leftBtn.frame = CGRect(x: 10, y: kNavHeight-44, width: 44, height: 44)
         leftBtn.addTarget(self, action: #selector(leftBtnClick), for: .touchUpInside)
         toolView.addSubview(leftBtn)
         
         let rightBtn = UIButton()
-        rightBtn.setTitle("Done", for: .normal)
+        rightBtn.setTitle("done", for: .normal)
         rightBtn.setTitleColor(RGBColor(r: 80, g: 165, b: 195), for: .normal)
         rightBtn.frame = CGRect(x: kScreenWidth-54, y: kNavHeight-44, width: 44, height: 44)
         rightBtn.addTarget(self, action: #selector(rightBtnClick), for: .touchUpInside)
