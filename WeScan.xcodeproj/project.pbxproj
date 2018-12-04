@@ -84,8 +84,7 @@
 		FEE6A0C621B0125700C2CEC3 /* SortCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */; };
 		FEE6A0C921B1183D00C2CEC3 /* WeScan-Banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */; };
 		FEE6A0DA21B3BC6900C2CEC3 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0D921B3BC6900C2CEC3 /* ImageViewer.swift */; };
-		FEE6A0E021B6683800C2CEC3 /* StarAnimateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0DF21B6683800C2CEC3 /* StarAnimateView.swift */; };
-		FEE6A0E221B66ED900C2CEC3 /* emitterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0E121B66ED900C2CEC3 /* emitterable.swift */; };
+		FEE6A0E421B67BE500C2CEC3 /* EmitterAnimate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0E321B67BE500C2CEC3 /* EmitterAnimate.swift */; };
 		FEECF2A521AFCEE2009B7AC2 /* SortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */; };
 		FEECF2A721AFCEEE009B7AC2 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A621AFCEEE009B7AC2 /* Define.swift */; };
 		FEECF2F521AFD132009B7AC2 /* SortCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */; };
@@ -244,8 +243,7 @@
 		FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortCollectionView.swift; sourceTree = "<group>"; };
 		FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "WeScan-Banner.jpg"; path = "Assets/WeScan-Banner.jpg"; sourceTree = SOURCE_ROOT; };
 		FEE6A0D921B3BC6900C2CEC3 /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
-		FEE6A0DF21B6683800C2CEC3 /* StarAnimateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarAnimateView.swift; sourceTree = "<group>"; };
-		FEE6A0E121B66ED900C2CEC3 /* emitterable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = emitterable.swift; sourceTree = "<group>"; };
+		FEE6A0E321B67BE500C2CEC3 /* EmitterAnimate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitterAnimate.swift; sourceTree = "<group>"; };
 		FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewController.swift; sourceTree = "<group>"; };
 		FEECF2A621AFCEEE009B7AC2 /* Define.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
 		FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -544,8 +542,7 @@
 				FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */,
 				FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */,
 				FEE6A0D921B3BC6900C2CEC3 /* ImageViewer.swift */,
-				FEE6A0DF21B6683800C2CEC3 /* StarAnimateView.swift */,
-				FEE6A0E121B66ED900C2CEC3 /* emitterable.swift */,
+				FEE6A0E321B67BE500C2CEC3 /* EmitterAnimate.swift */,
 			);
 			path = Sort;
 			sourceTree = "<group>";
@@ -788,6 +785,7 @@
 				18EB1C6121B0EBC5001CEA1E /* ZLPhotoCell.swift in Sources */,
 				1834C03721B141A900FF6EDB /* ZLPhotoEditorController.swift in Sources */,
 				A1DF90E420358CB100841A11 /* Transformable.swift in Sources */,
+				FEE6A0E421B67BE500C2CEC3 /* EmitterAnimate.swift in Sources */,
 				A1D4BD0C202C504F00FCDDEC /* ScannerViewController.swift in Sources */,
 				A11C5B9C2046A20C005075FE /* Error.swift in Sources */,
 				18C33F6A21B640C10034C819 /* ZLPhotoModel.swift in Sources */,
@@ -796,7 +794,6 @@
 				FEECF2A521AFCEE2009B7AC2 /* SortViewController.swift in Sources */,
 				FEE6A0DA21B3BC6900C2CEC3 /* ImageViewer.swift in Sources */,
 				69C265F721B0127C00309ADA /* UIAnnularProgress.swift in Sources */,
-				FEE6A0E221B66ED900C2CEC3 /* emitterable.swift in Sources */,
 				69C265F721B0127C00309ADA /* UIAnnularProgress.swift in Sources */,
 				FEECF2A721AFCEEE009B7AC2 /* Define.swift in Sources */,
 				FEECF2A521AFCEE2009B7AC2 /* SortViewController.swift in Sources */,
@@ -804,7 +801,6 @@
 				C3E2EB8E20B8970800A42E58 /* UIImage+Utils.swift in Sources */,
 				18EB1C6021B0EBC5001CEA1E /* ZLPhotoWaterFallView.swift in Sources */,
 				A165F67E2044741B002D5ED6 /* ShutterButton.swift in Sources */,
-				FEE6A0E021B6683800C2CEC3 /* StarAnimateView.swift in Sources */,
 				B992E831210C36A400C33A21 /* VisionRectangleDetector.swift in Sources */,
 				A1F22EA5202DB3AA001723AD /* CGPoint+Utils.swift in Sources */,
 				A14089BA204D92EA0009530F /* EditScanCornerView.swift in Sources */,

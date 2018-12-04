@@ -12,10 +12,11 @@ import CoreGraphics
 private let kCollectionCellIdentifier = "kCollectionCellIdentifier"
 private let kToolBarHeight: CGFloat = 50
 
-class ZLPhotoEditorController: UIViewController,emitterable {
+class ZLPhotoEditorController: UIViewController,EmitterAnimate {
     
     var photoModels = [ZLPhotoModel]()
     var currentIndex: IndexPath?
+    var isFilter: Bool = false
     
     @IBOutlet weak var customNavBar: UIView!
     
@@ -46,6 +47,15 @@ class ZLPhotoEditorController: UIViewController,emitterable {
         coverView.alpha =  0.5
         coverView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight-160)
         return coverView
+    }()
+    lazy var proLabel: UILabel = {
+        let proLabel = UILabel()
+        proLabel.text = "Restore ..."
+        proLabel.textColor = COLORFROMHEX(0x50a5c3)
+        proLabel.textAlignment = .center
+        proLabel.font = UIFont.boldSystemFont(ofSize: 23)
+        proLabel.frame = CGRect(x: 0, y: self.view.center.y-80, width: kScreenWidth, height: 22)
+        return proLabel
     }()
     fileprivate var isEditingStatus: Bool = false
     
@@ -226,12 +236,20 @@ extension ZLPhotoEditorController {
             present(navigationController, animated: true)
             break
         case 3:
-            self.view.addSubview(self.coverView)
+            isFilter = !isFilter
+            view.addSubview(self.coverView)
+            view.addSubview(self.proLabel)
             start(CGPoint.init(x: coverView.center.x, y: coverView.frame.height))
             
-            DispatchQueue.main.asyncAfter(deadline: .now()+5) {
+            DispatchQueue.main.asyncAfter(deadline: .now()+3) {
                 self.stop()
                 self.coverView.removeFromSuperview()
+                self.proLabel.removeFromSuperview()
+                if self.isFilter{
+                    self.proLabel.text = "Filter ..."
+                }else{
+                    self.proLabel.text = "Restore ..."
+                }
             }
             break
         default:
