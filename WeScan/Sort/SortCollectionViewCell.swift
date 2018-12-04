@@ -55,9 +55,9 @@ class SortCollectionViewCell: UICollectionViewCell {
         self.backgroundColor = UIColor.clear
         self.contentView.addSubview(self.imaginaryLine)
         self.contentView.addSubview(self.iconimageView)
-//        self.contentView.addSubview(self.title)
+        self.contentView.addSubview(self.title)
         self.contentView.addSubview(self.delBtn)
-//        self.title.frame = CGRect(x: 0, y: self.frame.height - 16, width: self.frame.width, height: 16)
+        self.title.frame = CGRect(x: 0, y: self.frame.height - 16, width: self.frame.width, height: 16)
     }
     func configImage(iconImage: UIImage){
         let itemWidth = self.frame.width - 40

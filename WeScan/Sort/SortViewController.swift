@@ -73,6 +73,8 @@ class SortViewController: UIViewController {
         layer.locations = [0,1]
         toolView.layer.addSublayer(layer)
     }
+}
+extension SortViewController{
     @objc func leftBtnClick(){
         self.dismiss(animated: true, completion: nil)
     }
