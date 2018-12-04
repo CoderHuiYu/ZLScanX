@@ -330,6 +330,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             self.scanningNoticeView.isHidden = true
         }
         let image = picture.applyingPortraitOrientation()
+        
+        
         let quad = quad ?? ScannerViewController.defaultQuad(forImage: image)
         
         guard let ciImage = CIImage(image: image) else {
@@ -339,6 +341,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             }
             return
         }
+        
+        
         
         var cartesianScaledQuad = quad.toCartesian(withHeight: image.size.height)
         cartesianScaledQuad.reorganize()
@@ -352,6 +356,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         var uiImage: UIImage!
         
+        
+        
         // Let's try to generate the CGImage from the CIImage before creating a UIImage.
         if let cgImage = CIContext(options: nil).createCGImage(filteredImage, from: filteredImage.extent) {
             uiImage = UIImage(cgImage: cgImage)
@@ -359,16 +365,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             uiImage = UIImage(ciImage: filteredImage, scale: 1.0, orientation: .up)
         }
         
+        
         let results = ImageScannerResults(originalImage: image, scannedImage: uiImage, enhancedImage: nil, doesUserPreferEnhancedImage: false, detectedRectangle: quad)
-//        let reviewViewController = ReviewViewController(results: results ,quad : quad)
-//        if navigationController?.viewControllers.last == self {
-//            navigationController?.pushViewController(reviewViewController, animated: true)
-//            shutterButton.isUserInteractionEnabled = true
-//        }
-        
-        
-        // MARK: - mason test code
-        let photoModel = ZLPhotoModel.init(image: uiImage, results: results, imageSize: uiImage.size)
         
         previewImageView.image = uiImage
         if uiImage.size.width == 0 || uiImage.size.height == 0 {
@@ -376,15 +374,16 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         }
         let quadRect = CGRect(x: quadView.quadLayer.path?.boundingBox.origin.x ?? 0.0, y: quadView.quadLayer.path?.boundingBox.origin.y ?? 0.0, width: quadView.quadLayer.path?.boundingBox.size.width ?? 0.0, height: quadView.quadLayer.path?.boundingBox.size.height ?? 0.0)
         previewImageView.frame = quadRect;
-
+        
         UIView.animate(withDuration: 0.5, animations: {
             self.previewImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             self.previewImageView.center = self.view.center
-
+            
         }) { (Bool) in
             UIView.animate(withDuration: 0.5, animations: {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                self.photoCollectionView.addPhotoModel(photoModel)
+                // MARK: - add photo 
+                self.photoCollectionView.addPhoto(image, results.scannedImage, uiImage, results.detectedRectangle)
                 self.quadView.removeQuadrilateral()
             }) { (finish) in
                 // continue to capture
@@ -394,6 +393,9 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
                 CaptureSession.current.isPreviewing = false
             }
         }
+      
+        /*
+        */
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didDetectQuad quad: Quadrilateral?, _ imageSize: CGSize) {
