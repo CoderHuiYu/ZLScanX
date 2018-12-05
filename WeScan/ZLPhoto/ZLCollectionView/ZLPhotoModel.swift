@@ -15,10 +15,6 @@ struct ZLPhotoModel {
     
     var imageSize: CGSize
     
-    var results: ImageScannerResults?
-    
-    // location plist path
-    
     // result
     var originalImagePath: String
     
@@ -147,16 +143,16 @@ extension ZLPhotoModel {
                 index += 1
             }
             
-            // remove last model data
-            ZLPhotoManager.removeImage(self) { (isSuccess) in
-                if isSuccess {
-                    
-                    array.removeObject(at: index)
-                    
-                    ZLPhotoManager.saveImage(originalImage) { (oriPath) in
-                        ZLPhotoManager.saveImage(scannedImage, handle: { (scanPath) in
-                            ZLPhotoManager.saveImage(enhancedImage, handle: { (enhanPath) in
-                                if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
+            ZLPhotoManager.saveImage(originalImage) { (oriPath) in
+                ZLPhotoManager.saveImage(scannedImage, handle: { (scanPath) in
+                    ZLPhotoManager.saveImage(enhancedImage, handle: { (enhanPath) in
+                        if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
+                            
+                            // remove last model data
+                            ZLPhotoManager.removeImage(self) { (isSuccess) in
+                                if isSuccess {
+                                    
+                                    array.removeObject(at: index)
                                     
                                     let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRect))
                                     
@@ -172,14 +168,14 @@ extension ZLPhotoModel {
                                     // save current model data
                                     let isSuccess = array.write(toFile: kPhotoModelDataPath, atomically: true)
                                     handle(isSuccess, photoModel)
+                                    
+                                } else {
+                                    handle(false, nil)
                                 }
-                            })
-                        })
-                    }
-                    
-                } else {
-                    handle(false, nil)
-                }
+                            }
+                        }
+                    })
+                })
             }
         
         } else {

@@ -333,9 +333,9 @@ extension ZLPhotoEditorController {
                 })
             } else {
                 // need review - this pic don't changed
-                let enhancedImage = lastModel.enhancedImage.filter(name: "CIColorControls", parameters: ["inputContrast":1.35])
+                let enhancedImage = lastModel.enhancedImage.filter(name: "CIColorControls", parameters: ["inputContrast":1.35]) ?? lastModel.scannedImage
                 
-                lastModel.replace(originalImage, lastModel.scannedImage, enhancedImage ?? lastModel.scannedImage, true, lastModel.detectedRectangle, handle: { (isSuccess, model) in
+                lastModel.replace(originalImage, lastModel.scannedImage, enhancedImage, true, lastModel.detectedRectangle, handle: { (isSuccess, model) in
                     if isSuccess {
                         
                         guard let model = model else { return }
