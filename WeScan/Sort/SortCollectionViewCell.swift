@@ -53,11 +53,11 @@ class SortCollectionViewCell: UICollectionViewCell {
     func setupView(){
         self.contentView.backgroundColor = UIColor.clear
         self.backgroundColor = UIColor.clear
-        self.contentView.addSubview(self.imaginaryLine)
-        self.contentView.addSubview(self.iconimageView)
-        self.contentView.addSubview(self.title)
-        self.contentView.addSubview(self.delBtn)
-        self.title.frame = CGRect(x: 0, y: self.frame.height - 16, width: self.frame.width, height: 16)
+        self.contentView.addSubview(imaginaryLine)
+        self.contentView.addSubview(iconimageView)
+        self.contentView.addSubview(title)
+        self.contentView.addSubview(delBtn)
+        title.frame = CGRect(x: 0, y: self.frame.height - 16, width: self.frame.width, height: 16)
     }
     func configImage(iconImage: UIImage){
         let itemWidth = self.frame.width - 40
@@ -67,15 +67,15 @@ class SortCollectionViewCell: UICollectionViewCell {
             heigh = self.frame.height - 46
         }
         let gap = (self.frame.height - 16 - heigh)/2 - 10
-        self.iconimageView.frame = CGRect(x: 20, y: gap, width: itemWidth, height:heigh)
-        self.iconimageView.image = iconImage
-        self.imaginaryLine.frame = CGRect(x: 20, y: gap, width: itemWidth, height: heigh)
-        self.delBtn.frame = CGRect(x: 10, y: gap-10, width: 22, height: 22)
+        iconimageView.frame = CGRect(x: 20, y: gap, width: itemWidth, height:heigh)
+        iconimageView.image = iconImage
+        imaginaryLine.frame = CGRect(x: 20, y: gap, width: itemWidth, height: heigh)
+        delBtn.frame = CGRect(x: 10, y: gap-10, width: 22, height: 22)
         addImaginaryLine(self.iconimageView.frame)
     }
     //MARK: -- Add ImaginaryLine
     func addImaginaryLine(_ frame: CGRect){
-        self.imaginaryLine.layer.sublayers?.removeAll()
+        imaginaryLine.layer.sublayers?.removeAll()
         let border = CAShapeLayer()
         border.strokeColor = RGBColor(r: 80, g: 165, b: 195).cgColor
         border.fillColor = UIColor.clear.cgColor

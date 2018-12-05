@@ -41,9 +41,10 @@ class SortViewController: UIViewController {
         view.addSubview(sortView)
         
         sortView.leftBtnComplete  = { () in self.dismiss(animated: true, completion: nil)}
-        sortView.rightBtnComplete = { () in
-            if self.delegate != nil {self.delegate?.sortDidFinished(self.collectionView.photoModels)}
-            self.dismiss(animated: true, completion: nil)
+        sortView.rightBtnComplete = { [weak self] () in
+            guard let strongSelf = self else {return}
+            if strongSelf.delegate != nil {strongSelf.delegate?.sortDidFinished(strongSelf.collectionView.photoModels)}
+            strongSelf.dismiss(animated: true, completion: nil)
         }
     }
 }
