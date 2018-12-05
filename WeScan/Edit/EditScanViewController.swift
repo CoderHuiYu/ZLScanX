@@ -12,8 +12,8 @@ import AVFoundation
 /// The `EditScanViewController` offers an interface for the user to edit the detected quadrilateral.
 final class EditScanViewController: UIViewController {
     
-    var didEditResults: ((ImageScannerResults) -> ())?
-    var didEditQuad: ((Quadrilateral) -> ())?
+    
+    var editCompletion: ((_ result: ImageScannerResults, _ rect: Quadrilateral)->())?
     
     lazy private var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -178,8 +178,9 @@ final class EditScanViewController: UIViewController {
         }
         
         let results = ImageScannerResults(originalImage: image, scannedImage: uiImage, enhancedImage: nil, doesUserPreferEnhancedImage: false, detectedRectangle: scaledQuad)
-        didEditResults?(results)
-        didEditQuad?(scaledQuad)
+        if let callBack = editCompletion {
+            callBack(results, scaledQuad)
+        }
         dismiss(animated: true, completion: nil)
     }
     

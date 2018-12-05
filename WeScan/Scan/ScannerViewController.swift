@@ -87,6 +87,12 @@ final class ScannerViewController: UIViewController {
             let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: weakSelf.classForCoder))
             vc.photoModels = photoModels
             vc.currentIndex = IndexPath(item: index, section: 0)
+            
+            vc.updataCallBack = { [weak self] in
+                self?.photoCollectionView.getData()
+                
+            }
+            self?.captureSessionManager?.stop()
             self?.navigationController?.pushViewController(vc, animated: true)
         }
         return photoCollectionView
@@ -139,7 +145,7 @@ final class ScannerViewController: UIViewController {
         return previewImageView
     }()
     
-    
+    fileprivate var disappear: Bool = false
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -157,6 +163,9 @@ final class ScannerViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        disappear = false
+        
         CaptureSession.current.isEditing = false
         quadView.removeQuadrilateral()
         captureSessionManager?.start()
@@ -172,6 +181,9 @@ final class ScannerViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        disappear = true
+        
         UIApplication.shared.isIdleTimerDisabled = false
         
         guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
@@ -329,6 +341,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         UIView.animate(withDuration: 0.2) {
             self.scanningNoticeView.isHidden = true
         }
+        
         let image = picture.applyingPortraitOrientation()
         
         
@@ -356,17 +369,12 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         var uiImage: UIImage!
         
-        
-        
         // Let's try to generate the CGImage from the CIImage before creating a UIImage.
         if let cgImage = CIContext(options: nil).createCGImage(filteredImage, from: filteredImage.extent) {
             uiImage = UIImage(cgImage: cgImage)
         } else {
             uiImage = UIImage(ciImage: filteredImage, scale: 1.0, orientation: .up)
         }
-        
-        
-        let results = ImageScannerResults(originalImage: image, scannedImage: uiImage, enhancedImage: nil, doesUserPreferEnhancedImage: false, detectedRectangle: quad)
         
         previewImageView.image = uiImage
         if uiImage.size.width == 0 || uiImage.size.height == 0 {
@@ -383,13 +391,17 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             UIView.animate(withDuration: 0.5, animations: {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
                 // MARK: - add photo 
-                self.photoCollectionView.addPhoto(image, results.scannedImage, uiImage, results.detectedRectangle)
+                self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
                 self.quadView.removeQuadrilateral()
             }) { (finish) in
                 // continue to capture
+                self.previewImageView.image = nil
+                
+                if self.disappear {
+                    return
+                }
                 CaptureSession.current.isEditing = false
                 captureSessionManager.start()
-                self.previewImageView.image = nil
                 CaptureSession.current.isPreviewing = false
             }
         }

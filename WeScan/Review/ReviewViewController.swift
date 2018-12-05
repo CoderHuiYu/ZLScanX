@@ -153,8 +153,8 @@ final class ReviewViewController: UIViewController {
     @objc private func editEdges() {
         let imageToEdit = results.originalImage
         let editVC = EditScanViewController(image: imageToEdit.applyingPortraitOrientation(), quad: quad)
-        editVC.didEditResults = { [unowned self] results in self.results = results; self.imageView.image = results.scannedImage; self.originalScannedImage = results.scannedImage }
-        editVC.didEditQuad = { [unowned self] quad in self.quad = quad }
+//        editVC.didEditResults = { [unowned self] results in self.results = results; self.imageView.image = results.scannedImage; self.originalScannedImage = results.scannedImage }
+//        editVC.didEditQuad = { [unowned self] quad in self.quad = quad }
         let navigationController = UINavigationController(rootViewController: editVC)
         present(navigationController, animated: true)
     }
