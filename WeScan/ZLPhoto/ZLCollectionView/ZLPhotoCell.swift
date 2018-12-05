@@ -146,9 +146,11 @@ extension ZLPhotoCell: UIGestureRecognizerDelegate {
     
     @objc fileprivate func pinchGestureAction(_ ges: UIPinchGestureRecognizer) {
 //        print(pinchGesture.scale)
-        if pinchGesture.scale > 1.2 {
-            if let callBack = itemPinch {
-                callBack(self)
+        if pinchGesture.state == .began {
+            if pinchGesture.scale > 1{
+                if let callBack = itemPinch {
+                    callBack(self)
+                }
             }
         }
     }

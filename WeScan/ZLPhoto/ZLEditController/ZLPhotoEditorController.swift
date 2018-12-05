@@ -73,6 +73,10 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate {
         proLabel.frame = CGRect(x: 0, y: self.view.center.y-80, width: kScreenWidth, height: 22)
         return proLabel
     }()
+    lazy var imageViewer: ImageViewer = {
+        let imgViewer = ImageViewer.init()
+        return imgViewer
+    }()
 
     fileprivate var isSavingStatus = false {
         didSet {
@@ -393,8 +397,11 @@ extension ZLPhotoEditorController {
     
     
     fileprivate func scaleImageView(_ cell: ZLPhotoCell) {
-        let viewer = ImageViewer(contentImages: [cell.imageView.image!], originFrame: cell.imageView.frame)
-        viewer.show()
+        let imgView = cell.imageView as UIImageView
+        imageViewer.contentImages = [imgView.image!]
+        let frame = UIView.getCorrectFrameFromOriginView(originView: imgView)
+        imageViewer.originFrame = frame
+        imageViewer.show()
     }
 }
 

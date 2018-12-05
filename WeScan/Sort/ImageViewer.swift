@@ -26,14 +26,14 @@ class ImageViewer: UIView {
     }
     init(contentImages: [UIImage] = [], originFrame: CGRect = CGRect.zero) {
         super.init(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
-        self.backgroundColor = UIColor.black
+        self.backgroundColor = UIColor.white
         self.alpha = 0.0
         
         self.contentImages = contentImages
         self.originFrame = originFrame
     
         contentSC = UIScrollView.init(frame: UIScreen.main.bounds)
-        contentSC?.backgroundColor = UIColor.black
+        contentSC?.backgroundColor = UIColor.white
         contentSC?.isPagingEnabled = true
         contentSC?.showsHorizontalScrollIndicator = false
         contentSC?.maximumZoomScale = 4
@@ -54,8 +54,8 @@ class ImageViewer: UIView {
                 newImageView!.tag = ImageViewer.kDefaultImageTag + index
                 contentSC?.addSubview(newImageView!)
                 newImageView?.isUserInteractionEnabled = true
-                let tapGR = UITapGestureRecognizer.init(target: self, action: #selector(hideImage(sender:)))
-                newImageView?.addGestureRecognizer(tapGR)
+//                let tapGR = UITapGestureRecognizer.init(target: self, action: #selector(hideImage(sender:)))
+//                newImageView?.addGestureRecognizer(tapGR)
             }
             newImageView?.image = image
             if index == selectedIndex {
@@ -72,7 +72,7 @@ class ImageViewer: UIView {
         let window = UIApplication.shared.keyWindow
         window?.addSubview(self)
         
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.3) {
             self.alpha = 1
             let selectedView = self.contentSC?.viewWithTag(ImageViewer.kDefaultImageTag + self.selectedIndex) as? UIImageView
             let image = selectedView?.image
@@ -89,16 +89,18 @@ class ImageViewer: UIView {
     
     // Hide
     @objc func hideImage(sender: UIGestureRecognizer) {
-        if currentZoom > 1.1 {
-            return
-        }
+//        if currentZoom > 1.1 {
+//            return
+//        }
         let selectedView = sender.view as? UIImageView
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.7, animations: {
             // back
             let x = self.originFrame.minX + kScreenWidth * CGFloat((selectedView?.tag)! - ImageViewer.kDefaultImageTag)
             let frame = CGRect.init(x: x, y: self.originFrame.minY, width: self.originFrame.width, height: self.originFrame.height)
             selectedView?.frame = frame
             self.alpha = 0.0
+            let generatro = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.light)
+            generatro.impactOccurred()
         }) { (completed) in
             self.removeFromSuperview()
         }
@@ -160,9 +162,9 @@ extension ImageViewer: UIScrollViewDelegate{
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         print(scrollView.zoomScale)
         currentZoom = scrollView.zoomScale
-        if currentZoom < 1.1 {
+        if currentZoom <= 1 {
             let selectedView = scrollView.subviews.first as? UIImageView
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 let x = self.originFrame.minX + kScreenWidth * CGFloat((selectedView?.tag)! - ImageViewer.kDefaultImageTag)
                 
                 let frame = CGRect.init(x: x, y: self.originFrame.minY, width: self.originFrame.width, height: self.originFrame.height)
@@ -170,8 +172,13 @@ extension ImageViewer: UIScrollViewDelegate{
                 self.alpha = 0.0
             }) { (completed) in
                 self.removeFromSuperview()
+                let generatro = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.light)
+                generatro.impactOccurred()
             }
         }
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+
     }
 }
 
