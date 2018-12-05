@@ -52,6 +52,12 @@ extension EmitterAnimate where Self : ZLPhotoEditorController {
         emitterCell.contents = UIImage(named: "icon-test", in: Bundle.init(for: self.classForCoder), compatibleWith: nil)?.cgImage
         
         cells.append(emitterCell)
+        cells.append(emitterCell)
+        cells.append(emitterCell)
+        cells.append(emitterCell)
+        cells.append(emitterCell)
+        cells.append(emitterCell)
+        cells.append(emitterCell)
         //        }
         
         emitterLayer.emitterCells = cells
