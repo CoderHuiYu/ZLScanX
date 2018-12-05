@@ -13,9 +13,8 @@ let kPhotoModelDataPath = "\(kPathDocument)/WescanData.plist"
 
 struct ZLPhotoModel {
     
-    var imageSize: CGSize
     
-    // result
+    // local store
     var originalImagePath: String
     
     var scannedImagePath: String
@@ -26,8 +25,13 @@ struct ZLPhotoModel {
     
     var rectangle: [String: [String: Double]]
     
+    
+    // to show
     var scannedImage: UIImage
     var enhancedImage: UIImage
+    var imageSize: CGSize
+    
+    var isSelected: Bool = false
     
     var detectedRectangle: Quadrilateral = Quadrilateral(topLeft: CGPoint.zero, topRight: CGPoint.zero, bottomRight: CGPoint.zero, bottomLeft: CGPoint.zero)
     

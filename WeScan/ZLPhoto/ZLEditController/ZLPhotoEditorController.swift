@@ -8,9 +8,19 @@
 
 import UIKit
 import CoreGraphics
+import Photos
 
 private let kCollectionCellIdentifier = "kCollectionCellIdentifier"
 private let kToolBarHeight: CGFloat = 50
+
+private let kSaveToolBarHeight: CGFloat = 200
+
+private let kCollectionBottomConsValue: CGFloat = 170
+private let kCollectionBottomConsSaveValue: CGFloat = 220
+
+private let kRightButtonTitle = "Sort"
+private let kRightButtonTitleSelectedAll = "SelectAll"
+private let kRightButtonTitleCancleSelectedAll = "Cancle SelectAll"
 
 class ZLPhotoEditorController: UIViewController,emitterable {
     
@@ -26,10 +36,16 @@ class ZLPhotoEditorController: UIViewController,emitterable {
     @IBOutlet weak var toolBarView: UIView!
     
     @IBOutlet weak var toolBarViewBottomCons: NSLayoutConstraint!
+
+    @IBOutlet weak var saveToolBarViewBottomCons: NSLayoutConstraint!
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionViewBottomCons: NSLayoutConstraint!
     
-    lazy var editingView: ZLPhotoEditingView = {
+    @IBOutlet weak var rightNavButton: UIButton!
+    
+    
+    fileprivate lazy var editingView: ZLPhotoEditingView = {
         let editingView = Bundle.init(for: self.classForCoder).loadNibNamed("ZLPhotoEditingView", owner: nil, options: nil)?.first as! ZLPhotoEditingView
         editingView.frame = view.bounds
         // hide call back
@@ -51,7 +67,35 @@ class ZLPhotoEditorController: UIViewController,emitterable {
         return coverView
     }()
     
-    fileprivate var isEditingStatus: Bool = false
+    fileprivate var isSavingStatus = false {
+        didSet {
+            if isSavingStatus {
+                
+                photoModels = photoModels.map({ (model) -> ZLPhotoModel in
+                    var zlModel = model
+                    zlModel.isSelected = true
+                    return zlModel
+                })
+                
+                rightNavButton.setTitle(kRightButtonTitleCancleSelectedAll, for: .normal)
+                setSaveToolBar(isHidden: false)
+                collectionView.reloadData()
+                collectionViewBottomCons.constant = kCollectionBottomConsSaveValue
+//                UIView.animate(withDuration: 0.25) {
+//                    self.view.layoutIfNeeded()
+//                }
+            } else {
+                
+                rightNavButton.setTitle(kRightButtonTitle, for: .normal)
+                setSaveToolBar(isHidden: true)
+                collectionView.reloadData()
+                collectionViewBottomCons.constant = kCollectionBottomConsValue
+//                UIView.animate(withDuration: 0.25) {
+//                    self.view.layoutIfNeeded()
+//                }
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,14 +109,12 @@ class ZLPhotoEditorController: UIViewController,emitterable {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        navigationController?.setNavigationBarHidden(false, animated: true)
     }
-
+    
 }
 
 // MARK: - UI
@@ -100,6 +142,7 @@ extension ZLPhotoEditorController {
         }
     }
     
+    
     fileprivate func setNavBar(isHidden: Bool) {
         
         UIView.animate(withDuration: 0.25, animations: {
@@ -109,56 +152,18 @@ extension ZLPhotoEditorController {
         }
     }
     
-}
+    fileprivate func setSaveToolBar(isHidden: Bool) {
+        
+        if isHidden {
+            saveToolBarViewBottomCons.constant = -kSaveToolBarHeight
+        } else {
+            saveToolBarViewBottomCons.constant = 0
+        }
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+    }
 
-// MARK: - DataSource And Delegate
-extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photoModels.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCollectionCellIdentifier, for: indexPath) as! ZLPhotoCell
-        cell.cellType = .edit
-        cell.photoModel = photoModels[indexPath.row]
-        cell.itemDidRemove = { [weak self] (theCell) in
-            self?.removeItem(theCell)
-        }
-        cell.itemBeginDrag = { [weak self] (theCell, dragStatus) in
-            self?.setNavBar(isHidden: dragStatus == .begin)
-        }
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        print("visibleCellsCount: \(collectionView.visibleCells.count))")
-
-        guard let cell = collectionView.cellForItem(at: indexPath) else {
-            return
-        }
-        
-        let center = collectionView.convert(cell.center, to: view)
-        
-        if center.x == view.center.x {
-            
-            setNavBar(isHidden: true)
-            
-            let photoCell = cell as! ZLPhotoCell
-            currentIndex = indexPath
-            editingView.show(photoCell.imageView)
-        }
-        
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        updateTitle()
-    }
-    
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        updateTitle()
-    }
     
     fileprivate func updateTitle() {
         let cells = collectionView.visibleCells
@@ -172,6 +177,97 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
         
         titleLabel.text = "\(indexPath.row + 1)/\(photoModels.count)"
     }
+    
+    
+    
+    fileprivate func updateEditView(_ index: IndexPath, model: ZLPhotoModel) {
+        
+        self.photoModels[index.row] = model
+        self.collectionView.reloadData()
+        
+        if let callBack = self.updataCallBack {
+            callBack()
+        }
+        
+        self.collectionView.layoutIfNeeded()
+        guard let cell = self.collectionView.cellForItem(at: index) else {
+            return
+        }
+        let photoCell = cell as! ZLPhotoCell
+        self.editingView.update(photoCell.imageView)
+    }
+    
+    
+}
+
+// MARK: - DataSource And Delegate
+extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return photoModels.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCollectionCellIdentifier, for: indexPath) as! ZLPhotoCell
+        cell.cellType = isSavingStatus ? .saving : .edit
+        cell.photoModel = photoModels[indexPath.row]
+        cell.itemDidRemove = { [weak self] (theCell) in
+            self?.removeItem(theCell)
+        }
+        cell.itemBeginDrag = { [weak self] (theCell, dragStatus) in
+            self?.setNavBar(isHidden: dragStatus == .begin)
+        }
+        cell.itemPinch = { [weak self] (theCell) in
+            self?.scaleImageView(cell)
+        }
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            return
+        }
+        
+        if isSavingStatus {
+            
+            var model = photoModels[indexPath.row]
+            model.isSelected = !model.isSelected
+            photoModels[indexPath.row] = model
+            let photoCell = cell as! ZLPhotoCell
+            photoCell.photoModel = model
+            
+            let selectedModels = photoModels.filter({return $0.isSelected == true})
+            if selectedModels.count == 0 {
+                rightNavButton.setTitle(kRightButtonTitleSelectedAll, for: .normal)
+            } else {
+                rightNavButton.setTitle(kRightButtonTitleCancleSelectedAll, for: .normal)
+            }
+            
+        } else {
+            
+            let center = collectionView.convert(cell.center, to: view)
+            
+            if center.x == view.center.x {
+                
+                setNavBar(isHidden: true)
+                
+                let photoCell = cell as! ZLPhotoCell
+                currentIndex = indexPath
+                editingView.show(photoCell.imageView)
+            }
+        }
+        
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updateTitle()
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        updateTitle()
+    }
+
     
 }
 
@@ -194,6 +290,81 @@ extension ZLPhotoEditorController: ZLPhotoWaterFallLayoutDataSource {
 // MARK: - Event
 extension ZLPhotoEditorController {
     
+    // nav leftbutton action
+    @IBAction fileprivate func leftButtonAction(_ sender: Any) {
+        
+        if isSavingStatus {
+            isSavingStatus = false
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    // nav rightbutton action
+    @IBAction fileprivate func rightButtonAction(_ sender: Any) {
+        
+        if isSavingStatus {
+            
+            let button = sender as! UIButton
+            let title = button.titleLabel?.text ?? ""
+            if title == kRightButtonTitleSelectedAll {
+                rightNavButton.setTitle(kRightButtonTitleCancleSelectedAll, for: .normal)
+    
+                photoModels = photoModels.map { (model) -> ZLPhotoModel in
+                    var zlModel = model
+                    zlModel.isSelected = true
+                    return zlModel
+                }
+                collectionView.reloadData()
+                
+            } else {
+                rightNavButton.setTitle(kRightButtonTitleSelectedAll, for: .normal)
+                
+                photoModels = photoModels.map { (model) -> ZLPhotoModel in
+                    var zlModel = model
+                    zlModel.isSelected = false
+                    return zlModel
+                }
+                collectionView.reloadData()
+            }
+            
+        } else {
+            let sortVC = SortViewController()
+            sortVC.photoModels = photoModels
+            sortVC.delegate = self
+            self.present(sortVC, animated: true, completion: nil)
+        }
+    }
+    
+    // send action
+    @IBAction func sendButtonAction(_ sender: Any) {
+        
+    }
+    
+    // save action
+    @IBAction func saveButtonAction(_ sender: Any) {
+        isSavingStatus = true
+    }
+    
+    @IBAction func saveToolBarCancleAction(_ sender: Any) {
+        isSavingStatus = false
+    }
+    
+    
+    @IBAction func saveToPhotoLibrary(_ sender: Any) {
+        
+        let selectedModels = photoModels.filter({return $0.isSelected == true})
+        
+        selectedModels.forEach { (model) in
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetCreationRequest.creationRequestForAssetFromImage(atFileURL: URL(fileURLWithPath: kPhotoFileDataPath + "/\(model.enhancedImagePath)"))
+            }, completionHandler: { (isSuccess, error) in
+                print(isSuccess)
+            })
+        }
+        
+    }
+    
     fileprivate func removeItem(_ cell: ZLPhotoCell) {
         
         guard let indexPath = collectionView.indexPath(for: cell) else {
@@ -208,24 +379,40 @@ extension ZLPhotoEditorController {
         }
     }
     
-    @IBAction fileprivate func leftButtonAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
-
-    }
-    
-    @IBAction fileprivate func rightButtonAction(_ sender: Any) {
-        let sortVC = SortViewController()
-        sortVC.photoModels = photoModels
-        sortVC.delegate = self
-//        navigationController?.pushViewController(sortVC, animated: true)
-        self.present(sortVC, animated: true, completion: nil)
-    }
-    
     fileprivate func editToolBarItemAction(_ index: Int) {
         print(index)
+        editToolBarAction(index)
+    }
+    
+    
+    fileprivate func scaleImageView(_ cell: ZLPhotoCell) {
+        let viewer = ImageViewer(contentImages: [cell.imageView.image!], originFrame: cell.imageView.frame)
+        viewer.show()
+    }
+}
+
+
+// MARK: - SortViewControllerProtocol
+extension ZLPhotoEditorController: SortViewControllerProtocol{
+    func sortDidFinished(_ photoModels: [ZLPhotoModel]) {
+        ZLPhotoModel.sortAllModel(photoModels) { (isSuccess) in
+            if isSuccess {
+                self.photoModels = photoModels
+                self.collectionView.reloadData()
+            }
+        }
+    }
+}
+
+
+
+
+// MARK: - edit photo
+extension ZLPhotoEditorController {
+    fileprivate func editToolBarAction(_ index: Int) {
         // index
         switch index {
-            // delete
+        // delete
         case 0:
             guard let index = currentIndex else { return }
             photoModels[index.row].remove { (isSuccess) in
@@ -283,7 +470,7 @@ extension ZLPhotoEditorController {
             }
             break
         case 2:
-        // cut
+            // cut
             guard let currentIndex = currentIndex else { return }
             let lastModel = photoModels[currentIndex.item]
             
@@ -357,23 +544,7 @@ extension ZLPhotoEditorController {
         }
     }
     
-    fileprivate func updateEditView(_ index: IndexPath, model: ZLPhotoModel) {
-        
-        self.photoModels[index.row] = model
-        self.collectionView.reloadData()
-        
-        if let callBack = self.updataCallBack {
-            callBack()
-        }
-        
-        self.collectionView.layoutIfNeeded()
-        guard let cell = self.collectionView.cellForItem(at: index) else {
-            return
-        }
-        let photoCell = cell as! ZLPhotoCell
-        self.editingView.update(photoCell.imageView)
-    }
-    
+    // rotate rect
     fileprivate func rotateRect(_ rect: Quadrilateral) -> Quadrilateral {
         
         let topLeft = rect.topLeft
@@ -392,9 +563,9 @@ extension ZLPhotoEditorController {
         
     }
     
-    // Mark: - 翻转 image
+    // rotate iamge
     fileprivate func rotateImage(_ image: UIImage, orientation: UIImage.Orientation) -> UIImage {
-
+        
         var rotate:Double = 0.0
         var rect = CGRect.zero
         var translateX:Float = 0
@@ -442,18 +613,6 @@ extension ZLPhotoEditorController {
         context.draw(image.cgImage!, in: CGRect(x: 0, y: 0, width: rect.size.width, height: rect.size.height))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         return newImage!
-       
+        
     }
 }
-// MARK: -SortViewControllerProtocol
-extension ZLPhotoEditorController: SortViewControllerProtocol{
-    func sortDidFinished(_ photoModels: [ZLPhotoModel]) {
-        ZLPhotoModel.sortAllModel(photoModels) { (isSuccess) in
-            if isSuccess {
-                self.photoModels = photoModels
-                self.collectionView.reloadData()
-            }
-        }
-    }
-}
-
