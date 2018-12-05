@@ -73,7 +73,7 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wj6-IL-moB">
                             <rect key="frame" x="12" y="11" width="22" height="22"/>
-                            <state key="normal" image="back"/>
+                            <state key="normal" image="zl_back"/>
                             <connections>
                                 <action selector="leftButtonAction:" destination="-1" eventType="touchUpInside" id="etJ-99-r6g"/>
                             </connections>
@@ -121,6 +121,6 @@
         </view>
     </objects>
     <resources>
-        <image name="back" width="22" height="22"/>
+        <image name="zl_back" width="22" height="22"/>
     </resources>
 </document>

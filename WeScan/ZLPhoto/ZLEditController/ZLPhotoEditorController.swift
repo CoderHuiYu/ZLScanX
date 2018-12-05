@@ -43,6 +43,7 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate {
         }
         return editingView
     }()
+    
     lazy var coverView: UIView = {
         let coverView = UIView()
         coverView.backgroundColor = UIColor.white
@@ -50,6 +51,7 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate {
         coverView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight-160)
         return coverView
     }()
+    
     lazy var proLabel: UILabel = {
         let proLabel = UILabel()
         proLabel.text = "Restore ..."
@@ -59,6 +61,7 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate {
         proLabel.frame = CGRect(x: 0, y: self.view.center.y-80, width: kScreenWidth, height: 22)
         return proLabel
     }()
+
     fileprivate var isEditingStatus: Bool = false
     
     override func viewDidLoad() {
@@ -68,10 +71,8 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate {
         if let currentIndex = currentIndex {
             titleLabel.text = "\(currentIndex.row + 1)/\(photoModels.count)"
         }
-        
         setupUI()
     }
-
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -342,9 +343,9 @@ extension ZLPhotoEditorController {
                 })
             } else {
                 // need review - this pic don't changed
-                let enhancedImage = lastModel.enhancedImage.filter(name: "CIColorControls", parameters: ["inputContrast":1.35])
+                let enhancedImage = lastModel.enhancedImage.filter(name: "CIColorControls", parameters: ["inputContrast":1.35]) ?? lastModel.scannedImage
                 
-                lastModel.replace(originalImage, lastModel.scannedImage, enhancedImage ?? lastModel.scannedImage, true, lastModel.detectedRectangle, handle: { (isSuccess, model) in
+                lastModel.replace(originalImage, lastModel.scannedImage, enhancedImage, true, lastModel.detectedRectangle, handle: { (isSuccess, model) in
                     if isSuccess {
                         
                         guard let model = model else { return }

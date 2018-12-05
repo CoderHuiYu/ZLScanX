@@ -37,7 +37,7 @@ class SortCollectionViewCell: UICollectionViewCell {
     }()
     lazy var delBtn: UIButton = {
         let delBtn = UIButton()
-        let delImage = UIImage(named: "cancel", in: Bundle(for: self.classForCoder), compatibleWith: nil)
+        let delImage = UIImage(named: "zl_cancel", in: Bundle(for: self.classForCoder), compatibleWith: nil)
         delBtn.setImage(delImage, for: .normal)
         delBtn.layer.cornerRadius = 11
         delBtn.backgroundColor = UIColor.white
