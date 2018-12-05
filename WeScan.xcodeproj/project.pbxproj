@@ -85,6 +85,7 @@
 		FEE6A0C921B1183D00C2CEC3 /* WeScan-Banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */; };
 		FEE6A0DA21B3BC6900C2CEC3 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0D921B3BC6900C2CEC3 /* ImageViewer.swift */; };
 		FEE6A0E421B67BE500C2CEC3 /* EmitterAnimate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0E321B67BE500C2CEC3 /* EmitterAnimate.swift */; };
+		FEE6A0E821B7780400C2CEC3 /* Convertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0E721B7780400C2CEC3 /* Convertable.swift */; };
 		FEECF2A521AFCEE2009B7AC2 /* SortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */; };
 		FEECF2A721AFCEEE009B7AC2 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A621AFCEEE009B7AC2 /* Define.swift */; };
 		FEECF2F521AFD132009B7AC2 /* SortCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */; };
@@ -244,6 +245,7 @@
 		FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "WeScan-Banner.jpg"; path = "Assets/WeScan-Banner.jpg"; sourceTree = SOURCE_ROOT; };
 		FEE6A0D921B3BC6900C2CEC3 /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		FEE6A0E321B67BE500C2CEC3 /* EmitterAnimate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitterAnimate.swift; sourceTree = "<group>"; };
+		FEE6A0E721B7780400C2CEC3 /* Convertable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Convertable.swift; sourceTree = "<group>"; };
 		FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewController.swift; sourceTree = "<group>"; };
 		FEECF2A621AFCEEE009B7AC2 /* Define.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
 		FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -543,6 +545,7 @@
 				FEE6A0C521B0125700C2CEC3 /* SortCollectionView.swift */,
 				FEE6A0D921B3BC6900C2CEC3 /* ImageViewer.swift */,
 				FEE6A0E321B67BE500C2CEC3 /* EmitterAnimate.swift */,
+				FEE6A0E721B7780400C2CEC3 /* Convertable.swift */,
 			);
 			path = Sort;
 			sourceTree = "<group>";
@@ -812,6 +815,7 @@
 				A1C4DD4E2044ADE600D36684 /* CGRect+Utils.swift in Sources */,
 				A1DF90A420331A0B00841A11 /* CIRectangleDetector.swift in Sources */,
 				A1DF90F62037187500841A11 /* UIImage+Orientation.swift in Sources */,
+				FEE6A0E821B7780400C2CEC3 /* Convertable.swift in Sources */,
 				A1F22E99202C7B66001723AD /* QuadrilateralView.swift in Sources */,
 				A194E97220431DD7003493E2 /* ReviewViewController.swift in Sources */,
 			);
@@ -1004,11 +1008,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = DQRZ4JBLWE;
+				DEVELOPMENT_TEAM = A5X7BL9CZV;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ZK.ZLHome;
+				PRODUCT_BUNDLE_IDENTIFIER = yuhui.com.scanX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1021,11 +1025,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = DQRZ4JBLWE;
+				DEVELOPMENT_TEAM = A5X7BL9CZV;
 				INFOPLIST_FILE = WeScanSampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ZK.ZLHome;
+				PRODUCT_BUNDLE_IDENTIFIER = yuhui.com.scanX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
