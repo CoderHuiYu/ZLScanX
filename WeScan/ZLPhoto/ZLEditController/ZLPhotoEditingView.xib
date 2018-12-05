@@ -22,7 +22,7 @@
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xVP-uN-S02">
                             <rect key="frame" x="0.0" y="20" width="94" height="110"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="30"/>
-                            <state key="normal" image="Delete"/>
+                            <state key="normal" image="zl_delete"/>
                             <connections>
                                 <action selector="toolBarItemAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="5EZ-YM-6LL"/>
                             </connections>
@@ -30,7 +30,7 @@
                         <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0tk-eR-i4X">
                             <rect key="frame" x="94" y="20" width="93.5" height="110"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="30"/>
-                            <state key="normal" image="Delete"/>
+                            <state key="normal" image="zl_delete"/>
                             <connections>
                                 <action selector="toolBarItemAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="wYW-pc-fn1"/>
                             </connections>
@@ -44,7 +44,7 @@
                         <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FkC-ve-cLv">
                             <rect key="frame" x="187.5" y="20" width="94" height="110"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="30"/>
-                            <state key="normal" image="Delete"/>
+                            <state key="normal" image="zl_delete"/>
                             <connections>
                                 <action selector="toolBarItemAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="mud-Az-pw4"/>
                             </connections>
@@ -58,7 +58,7 @@
                         <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ooP-Om-0hA">
                             <rect key="frame" x="281.5" y="20" width="93.5" height="110"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="30"/>
-                            <state key="normal" image="Delete"/>
+                            <state key="normal" image="zl_delete"/>
                             <connections>
                                 <action selector="toolBarItemAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="BzI-h7-35m"/>
                             </connections>
@@ -129,6 +129,6 @@
         </tapGestureRecognizer>
     </objects>
     <resources>
-        <image name="Delete" width="48" height="48"/>
+        <image name="zl_delete" width="48" height="48"/>
     </resources>
 </document>

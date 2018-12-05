@@ -42,6 +42,7 @@ class ZLPhotoEditorController: UIViewController,emitterable {
         }
         return editingView
     }()
+    
     lazy var coverView: UIView = {
         let coverView = UIView()
         coverView.backgroundColor = UIColor.white
@@ -49,6 +50,7 @@ class ZLPhotoEditorController: UIViewController,emitterable {
         coverView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight-160)
         return coverView
     }()
+    
     fileprivate var isEditingStatus: Bool = false
     
     override func viewDidLoad() {
@@ -58,10 +60,8 @@ class ZLPhotoEditorController: UIViewController,emitterable {
         if let currentIndex = currentIndex {
             titleLabel.text = "\(currentIndex.row + 1)/\(photoModels.count)"
         }
-        
         setupUI()
     }
-
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

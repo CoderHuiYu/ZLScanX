@@ -22,14 +22,14 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lbK-Si-0Kc">
                         <rect key="frame" x="0.0" y="0.0" width="150" height="125"/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="balloon" translatesAutoresizingMaskIntoConstraints="NO" id="kKu-or-19o">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="zl_balloon" translatesAutoresizingMaskIntoConstraints="NO" id="kKu-or-19o">
                         <rect key="frame" x="50" y="-60" width="50" height="50"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="50" id="6Sf-hF-3RS"/>
                             <constraint firstAttribute="height" constant="50" id="j2l-GC-VoF"/>
                         </constraints>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Edit" translatesAutoresizingMaskIntoConstraints="NO" id="h4f-Ca-g2l">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="zl_edit" translatesAutoresizingMaskIntoConstraints="NO" id="h4f-Ca-g2l">
                         <rect key="frame" x="116" y="91" width="34" height="34"/>
                     </imageView>
                 </subviews>
@@ -57,7 +57,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="Edit" width="34" height="34"/>
-        <image name="balloon" width="200" height="200"/>
+        <image name="zl_balloon" width="200" height="200"/>
+        <image name="zl_edit" width="34" height="34"/>
     </resources>
 </document>
