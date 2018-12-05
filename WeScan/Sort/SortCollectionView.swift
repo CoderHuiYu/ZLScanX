@@ -14,7 +14,9 @@ class SortCollectionView: UICollectionView{
     var playTimer: Timer?
     var photoModels = [ZLPhotoModel]()
     var cell: SortCollectionViewCell?
-    var yyy = 0
+    var moveOffsetY: CGFloat = 0.0
+    var topGap: CGFloat = 20.0
+    var transY: CGFloat = 10.0
     lazy var dragCell : UIImageView = {
         let dragCell = UIImageView()
         dragCell.contentMode = .scaleAspectFill
@@ -46,26 +48,13 @@ class SortCollectionView: UICollectionView{
         fatalError("init(coder:) has not been implemented")
     }
 }
+//MARk: -- UIGestureRecognizerDelegate
 extension SortCollectionView : UIGestureRecognizerDelegate{
     @objc func longPressMethod(_ press: UILongPressGestureRecognizer){
         let point = press.location(in: self)
         switch press.state {
         case .began :
-//            dragBegin(point)
-            let touchP = press.location(in: self)
-            guard let indexPath = self.indexPathForItem(at: touchP) else {return}
-            self.dragingIndexPath = indexPath
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue:"BeginDrag"), object: nil)
-            let cell = self.cellForItem(at: self.dragingIndexPath! as IndexPath) as! SortCollectionViewCell
-            cell.iconimageView.isHidden = true
-            cell.delBtn.isHidden = true
-            self.dragCell.frame = cell.iconimageView.frame
-            self.dragCell.isHidden = false
-            self.dragCell.center = CGPoint(x: point.x, y: point.y)
-            self.dragCell.image = photoModels[(self.dragingIndexPath?.row)!].enhancedImage
-            self.dragCell.transform = CGAffineTransform.identity
-            playTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countPressTime), userInfo: nil, repeats: true)
-            
+            dragBegin(point)
         case .changed :
             dragChange(point)
         case .ended :
@@ -75,76 +64,75 @@ extension SortCollectionView : UIGestureRecognizerDelegate{
         }
     }
     func dragBegin(_ point: CGPoint){
-        self.dragingIndexPath = getDragingIndexPathWithPoint(point)
-        if self.dragingIndexPath == nil {return}
+        guard let indexPath = self.indexPathForItem(at: point) else {return}
+        dragingIndexPath = indexPath
+        targetIndexPath  = indexPath
         NotificationCenter.default.post(name: NSNotification.Name(rawValue:"BeginDrag"), object: nil)
-        let cell = self.cellForItem(at: self.dragingIndexPath! as IndexPath) as! SortCollectionViewCell
+        let cell = self.cellForItem(at: dragingIndexPath! ) as! SortCollectionViewCell
         cell.iconimageView.isHidden = true
         cell.delBtn.isHidden = true
-        self.dragCell.frame = cell.iconimageView.frame
-        self.dragCell.isHidden = false
-        self.dragCell.center = CGPoint(x: point.x, y: point.y)
-        self.dragCell.image = photoModels[(self.dragingIndexPath?.row)!].enhancedImage
-        self.dragCell.transform = CGAffineTransform.identity
+        dragCell.frame = cell.iconimageView.frame
+        dragCell.isHidden = false
+        dragCell.center = point
+        dragCell.image = photoModels[(dragingIndexPath?.row)!].enhancedImage
+        dragCell.transform = CGAffineTransform.identity
         playTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countPressTime), userInfo: nil, repeats: true)
     }
     func dragChange(_ point: CGPoint){
-        if self.dragingIndexPath == nil{return}
-        self.dragCell.center = CGPoint(x: point.x, y: point.y)
-        self.targetIndexPath = getTargetIndexPathWithPoint(point)
-        print(point)
-        print(self.contentOffset.y)
-        if point.y <=  self.contentOffset.y + 20 {
-            self.yyy = Int(self.contentOffset.y - 10)
-            if CGFloat(self.yyy) < -20{
-                self.yyy = -20
+        if dragingIndexPath == nil {return}
+        dragCell.center = point
+        let indexPath = self.indexPathForItem(at: point)
+        if indexPath != nil { self.targetIndexPath = indexPath }
+        
+        if point.y <=  self.contentOffset.y + topGap {
+            moveOffsetY = self.contentOffset.y - transY
+            if moveOffsetY < -topGap {
+                moveOffsetY = -topGap
             }
-            UIView.animate(withDuration: 0.5) {
-                self.contentOffset = CGPoint(x: self.contentOffset.x, y: CGFloat(self.yyy))
+            UIView.animate(withDuration: 0.3) {
+                self.contentOffset = CGPoint(x: self.contentOffset.x, y: self.moveOffsetY)
             }
         }
-        if point.y - self.contentOffset.y + 20 > kScreenHeight - kNavHeight {
-            UIView.animate(withDuration: 0.5) {
-                self.yyy = Int(self.contentOffset.y + 10)
-                if CGFloat(self.yyy) > self.contentSize.height - kScreenHeight - kNavHeight{
-                    self.yyy = Int(self.contentSize.height - kScreenHeight + kNavHeight)
+        if point.y - self.contentOffset.y + topGap > kScreenHeight - kNavHeight {
+            moveOffsetY = self.contentOffset.y + transY
+            UIView.animate(withDuration: 0.3) {
+                if self.moveOffsetY > self.contentSize.height - kScreenHeight - kNavHeight{
+                    self.moveOffsetY = self.contentSize.height - kScreenHeight + kNavHeight
                 }
-                self.contentOffset = CGPoint(x: self.contentOffset.x, y:CGFloat(self.yyy))
+                self.contentOffset = CGPoint(x: self.contentOffset.x, y:self.moveOffsetY)
             }
         }
-        if self.dragingIndexPath != nil && self.targetIndexPath != nil{
+        if dragingIndexPath != nil && targetIndexPath != nil{
             rankImageMutableArr()
-            self.moveItem(at: self.dragingIndexPath! as IndexPath, to: self.targetIndexPath! as IndexPath)
+            self.moveItem(at: dragingIndexPath!, to: targetIndexPath!)
             //update cell's title text
-            let cell = self.cellForItem(at: self.dragingIndexPath!) as! SortCollectionViewCell
-            let changed = self.cellForItem(at: self.targetIndexPath!) as! SortCollectionViewCell
-            let dif = self.targetIndexPath!.row - self.dragingIndexPath!.row
+            let currentCell = self.cellForItem(at: dragingIndexPath!) as! SortCollectionViewCell
+            let targetCell = self.cellForItem(at: targetIndexPath!) as! SortCollectionViewCell
+            let dif = targetIndexPath!.row - dragingIndexPath!.row
             if  dif >= 2{
-                let mid1 = self.cellForItem(at: IndexPath.init(row: (self.dragingIndexPath?.row)! + 1, section: (self.dragingIndexPath?.section)!)) as! SortCollectionViewCell
-                mid1.title.text = String((self.dragingIndexPath?.item)! + 2)
-                let mid2 = self.cellForItem(at: IndexPath.init(row: self.dragingIndexPath!.row + 2, section: self.dragingIndexPath!.section)) as! SortCollectionViewCell
-                mid2.title.text = String(self.dragingIndexPath!.item + 3)
+                let midCell1 = self.cellForItem(at: IndexPath.init(row: (dragingIndexPath?.row)! + 1, section: (dragingIndexPath?.section)!)) as! SortCollectionViewCell
+                midCell1.title.text = String((dragingIndexPath?.item)! + 2)
+                let midCell2 = self.cellForItem(at: IndexPath.init(row: dragingIndexPath!.row + 2, section: self.dragingIndexPath!.section)) as! SortCollectionViewCell
+                midCell2.title.text = String(dragingIndexPath!.item + 3)
             }
             if dif <= -2{
-                let mid1 = self.cellForItem(at: IndexPath.init(row: (self.targetIndexPath?.row)! + 1, section: (self.targetIndexPath?.section)!)) as! SortCollectionViewCell
-                mid1.title.text = String((self.targetIndexPath?.item)! + 2)
-                let mid2 = self.cellForItem(at: IndexPath.init(row: self.targetIndexPath!.row + 2, section: self.targetIndexPath!.section)) as! SortCollectionViewCell
-                mid2.title.text = String(self.targetIndexPath!.item + 3)
+                let midCell1 = self.cellForItem(at: IndexPath.init(row: (targetIndexPath?.row)! + 1, section: (targetIndexPath?.section)!)) as! SortCollectionViewCell
+                midCell1.title.text = String((targetIndexPath?.item)! + 2)
+                let midCell2 = self.cellForItem(at: IndexPath.init(row: targetIndexPath!.row + 2, section: self.targetIndexPath!.section)) as! SortCollectionViewCell
+                midCell2.title.text = String(targetIndexPath!.item + 3)
             }
-            cell.title.text = String((self.dragingIndexPath?.item)! + 1)
-            changed.title.text = String((self.targetIndexPath?.item)! + 1)
-            self.dragingIndexPath = self.targetIndexPath
+            currentCell.title.text = String((dragingIndexPath?.item)! + 1)
+            targetCell.title.text = String((targetIndexPath?.item)! + 1)
+            dragingIndexPath = targetIndexPath
         }
     }
     func dragEnd(_ point: CGPoint){
-        if self.dragingIndexPath == nil{return}
+        if dragingIndexPath == nil{return}
         NotificationCenter.default.post(name: NSNotification.Name(rawValue:"EndDrag"), object: nil)
         let cell = self.cellForItem(at: self.dragingIndexPath! as IndexPath) as! SortCollectionViewCell
-//        let endFrame = cell.frame
-        self.dragCell.transform = CGAffineTransform.identity
+        dragCell.transform = CGAffineTransform.identity
         UIView.animate(withDuration: 0.3, animations: {
             self.dragCell.frame = CGRect(x: cell.frame.origin.x + 20, y: cell.frame.origin.y + cell.iconimageView.frame.origin.y, width: cell.iconimageView.frame.width, height: cell.iconimageView.frame.height)
-//            self.dragCell.removeFromSuperview()
         }) { (finished) in
             self.dragCell.isHidden = true
             cell.iconimageView.isHidden = false
@@ -155,37 +143,12 @@ extension SortCollectionView : UIGestureRecognizerDelegate{
     }
     func rankImageMutableArr(){
         //update Models
-        let cell = photoModels[(self.dragingIndexPath?.row)!]
-        photoModels.remove(at: (self.dragingIndexPath?.row)!)
-        photoModels.insert(cell, at: (self.targetIndexPath?.row)!)
-    }
-    //return draging indexPath
-    func getDragingIndexPathWithPoint(_ startPoint: CGPoint) -> IndexPath{
-        var dragIndex: IndexPath?
-        for index in self.indexPathsForVisibleItems{
-            if (self.cellForItem(at: index)?.frame)!.contains(startPoint){
-                if index.row == photoModels.count{
-                    return dragIndex!
-                }else{
-                    dragIndex = index as IndexPath
-                    return dragIndex!
-                }
-            }
-        }
-        return dragIndex!
-    }
-    //return exchanged indexPath
-    func getTargetIndexPathWithPoint(_ movePoint: CGPoint) -> IndexPath? {
-        var targeIndex:IndexPath?
-        for index in self.indexPathsForVisibleItems{
-            if index == self.dragingIndexPath {continue}
-            if (self.cellForItem(at: index)?.frame.contains(movePoint))! && index.row != photoModels.count{
-                targeIndex = index as IndexPath
-            }
-        }
-        return targeIndex
+        let cell = photoModels[(dragingIndexPath?.row)!]
+        photoModels.remove(at: (dragingIndexPath?.row)!)
+        photoModels.insert(cell, at: (targetIndexPath?.row)!)
     }
     @objc func countPressTime(){
+        // dragging animate
         UIView.animate(withDuration: 0.7, animations: {
             self.dragCell.transform = CGAffineTransform(scaleX: 1.03, y: 1.03)
         }) { (isFinished) in
@@ -194,14 +157,15 @@ extension SortCollectionView : UIGestureRecognizerDelegate{
             }, completion: nil)
         }
     }
+    // removeTimer
     func cancelPress(){
         if (playTimer != nil) {
             playTimer?.invalidate()
             playTimer = nil
         }
-        print("cancel")
     }
 }
+//MARK: --collectionViewDelegate
 extension SortCollectionView: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photoModels.count
@@ -214,7 +178,9 @@ extension SortCollectionView: UICollectionViewDelegate,UICollectionViewDataSourc
         return cell
     }
 }
+//MARK: -- SortCollectionViewCellProtocol
 extension SortCollectionView: SortCollectionViewCellProtocol{
+    //removeImageFrom photoModels
     func deleteItem(_ currentCell: SortCollectionViewCell) {
         let index = self.indexPath(for: currentCell)
         photoModels.remove(at: (index?.item)!)

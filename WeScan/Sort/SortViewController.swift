@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SortViewControllerProtocol:NSObjectProtocol{
+protocol SortViewControllerProtocol: NSObjectProtocol{
     func sortDidFinished(_ photoModels: [ZLPhotoModel])
 }
 
@@ -32,56 +32,18 @@ class SortViewController: UIViewController {
     }
     func creatCollectionView(){
         title = "Sort"
-        self.view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor.white
 
         collectionView.photoModels = photoModels
-        self.view.addSubview(collectionView)
+        view.addSubview(collectionView)
         
-        let toolView = UIView()
-        toolView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kNavHeight)
-        toolView.backgroundColor = UIColor.white
-        view.addSubview(toolView)
+        let sortView = SortNavView.init(frame: CGRect(x: 0, y: 0, width: kScreenWidth, height: kNavHeight))
+        view.addSubview(sortView)
         
-        let titleLabel = UILabel()
-        titleLabel.text = "Sort"
-        titleLabel.textColor = UIColor.black
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 15)
-        titleLabel.backgroundColor = UIColor.clear
-        titleLabel.frame = CGRect(x: 0, y: kNavHeight - 44, width: kScreenWidth, height: 44)
-        titleLabel.textAlignment = .center
-        toolView.addSubview(titleLabel)
-        
-        let leftBtn = UIButton()
-        leftBtn.setTitle("back", for: .normal)
-        leftBtn.setTitleColor(RGBColor(r: 80, g: 165, b: 195), for: .normal)
-        leftBtn.frame = CGRect(x: 10, y: kNavHeight-44, width: 44, height: 44)
-        leftBtn.addTarget(self, action: #selector(leftBtnClick), for: .touchUpInside)
-        toolView.addSubview(leftBtn)
-        
-        let rightBtn = UIButton()
-        rightBtn.setTitle("done", for: .normal)
-        rightBtn.setTitleColor(RGBColor(r: 80, g: 165, b: 195), for: .normal)
-        rightBtn.frame = CGRect(x: kScreenWidth-54, y: kNavHeight-44, width: 44, height: 44)
-        rightBtn.addTarget(self, action: #selector(rightBtnClick), for: .touchUpInside)
-        toolView.addSubview(rightBtn)
-
-        let layer = CAGradientLayer()
-        layer.frame = CGRect(x: 0, y: kNavHeight, width: kScreenWidth, height: 20)
-        layer.colors = [UIColor.white.cgColor,UIColor.white.withAlphaComponent(0).cgColor]
-        layer.startPoint = CGPoint(x: 0, y: 0)
-        layer.endPoint = CGPoint(x: 0, y: 1)
-        layer.locations = [0,1]
-        toolView.layer.addSublayer(layer)
-    }
-}
-extension SortViewController{
-    @objc func leftBtnClick(){
-        self.dismiss(animated: true, completion: nil)
-    }
-    @objc func rightBtnClick(){
-        if self.delegate != nil {
-            self.delegate?.sortDidFinished(collectionView.photoModels)
+        sortView.leftBtnComplete  = { () in self.dismiss(animated: true, completion: nil)}
+        sortView.rightBtnComplete = { () in
+            if self.delegate != nil {self.delegate?.sortDidFinished(self.collectionView.photoModels)}
+            self.dismiss(animated: true, completion: nil)
         }
-        self.dismiss(animated: true, completion: nil)
     }
 }
