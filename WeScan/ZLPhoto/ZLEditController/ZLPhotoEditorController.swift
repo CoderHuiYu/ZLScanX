@@ -366,20 +366,11 @@ extension ZLPhotoEditorController {
     @IBAction func saveToPhotoLibrary(_ sender: Any) {
         
         let selectedModels = photoModels.filter({return $0.isSelected == true})
-        
-        selectedModels.forEach { (model) in
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetCreationRequest.creationRequestForAssetFromImage(atFileURL: URL(fileURLWithPath: kPhotoFileDataPath + "/\(model.enhancedImagePath)"))
-            }, completionHandler: { (isSuccess, error) in
-                if let error = error {
-                    print("save failed \(error.localizedDescription)")
-                } else {
-                    print("save to library success")
-                }
 
-            })
+        selectedModels.forEach { (model) in
+            let image = UIImage.init(contentsOfFile: kPhotoFileDataPath + "/\(model.enhancedImagePath)")
+            UIImageWriteToSavedPhotosAlbum(image!, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
         }
-        
     }
     
     fileprivate func removeItem(_ cell: ZLPhotoCell) {
@@ -654,5 +645,12 @@ extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewContr
         preVC.delegate = self
         preVC.dataSource = self
         self.present(preVC, animated: true, completion: nil)
+    }
+    @objc func image(image:UIImage,didFinishSavingWithError error:NSError?,contextInfo:AnyObject) {
+        if error != nil {
+            Toast.showText("save failed!")
+        }else{
+            Toast.showText("save success!")
+        }
     }
 }
