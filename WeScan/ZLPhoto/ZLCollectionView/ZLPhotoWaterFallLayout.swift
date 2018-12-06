@@ -17,6 +17,8 @@ class ZLPhotoWaterFallLayout: UICollectionViewFlowLayout {
 
     lazy var attributes = [UICollectionViewLayoutAttributes]()
     
+    var isNeedScrollToMiddle: Bool = false
+    
 }
 
 
@@ -66,16 +68,21 @@ extension ZLPhotoWaterFallLayout {
     }
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
-        guard let collectionView = collectionView else { return CGPoint.zero }
-        var offsetAdjustment = CGFloat(MAXFLOAT)
-        let horizontalCenter = proposedContentOffset.x + (collectionView.bounds.width / 2.0)
-        for layoutAttributes in attributes{
-            let itemHorizontalCenter = layoutAttributes.center.x
-            if(abs(itemHorizontalCenter-horizontalCenter) < abs(offsetAdjustment)) {
-                offsetAdjustment = itemHorizontalCenter-horizontalCenter
+        if isNeedScrollToMiddle {
+            guard let collectionView = collectionView else { return CGPoint.zero }
+            var offsetAdjustment = CGFloat(MAXFLOAT)
+            let horizontalCenter = proposedContentOffset.x + (collectionView.bounds.width / 2.0)
+            for layoutAttributes in attributes{
+                let itemHorizontalCenter = layoutAttributes.center.x
+                if(abs(itemHorizontalCenter-horizontalCenter) < abs(offsetAdjustment)) {
+                    offsetAdjustment = itemHorizontalCenter-horizontalCenter
+                }
             }
+            return CGPoint(x: proposedContentOffset.x + offsetAdjustment, y: proposedContentOffset.y)
+        } else {
+            return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
         }
-        return CGPoint(x: proposedContentOffset.x + offsetAdjustment, y: proposedContentOffset.y)
+        
     }
     
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {

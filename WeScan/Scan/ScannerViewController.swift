@@ -26,6 +26,7 @@ final class ScannerViewController: UIViewController {
     
     /// Whether flash is enabled
     private var flashEnabled = false
+    private var banTriggerFlash = false
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -458,7 +459,61 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, brightValueDidChange brightValue: Double) {
+        
+        
+        if banTriggerFlash == true {
+            return
+        }
+        
         print(brightValue)
+        
+        if brightValue < -2 {
+            openFlash()
+        }
+        
+        
+        if brightValue > 3 {
+            closeFlash()
+        }
+        
+        
+    }
+    
+    
+    fileprivate func openFlash() {
+        guard UIImagePickerController.isFlashAvailable(for: .rear) else { return }
+        
+        DispatchQueue.main.async {
+            if self.flashEnabled == false && self.toggleTorch(toOn: true) == .successful {
+                self.flashEnabled = true
+                self.flashButton.tintColor = .yellow
+            }
+        }
+        
+        banTriggerFlash = true
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+            self.banTriggerFlash = false
+        }
+    }
+    
+    fileprivate func closeFlash() {
+        guard UIImagePickerController.isFlashAvailable(for: .rear) else { return }
+        
+        DispatchQueue.main.async {
+            if self.flashEnabled == true {
+                self.flashEnabled = false
+                self.flashButton.tintColor = .white
+                self.toggleTorch(toOn: false)
+            }
+        }
+        
+        banTriggerFlash = true
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+            self.banTriggerFlash = false
+        }
+        
     }
     
 }
