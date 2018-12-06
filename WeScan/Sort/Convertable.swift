@@ -80,26 +80,44 @@ extension Convertable {
                 let newRect = CGRect(x: (rect?.origin.x)!, y: (rect?.origin.y)!, width: (rect?.size.height)!, height: (rect?.size.width)!)
                 rect = newRect
             }
-            let maxSize = 300
+            let maxSize: CGFloat = 700.0
             let tempSize = max((rect?.size.width)!, (rect?.size.height)!)
-            if Int(tempSize) > maxSize{
+            if tempSize > maxSize{
                 if (rect?.size.width)! > (rect?.size.height)! {
                     let tRect = CGRect(x: (rect?.origin.x)!, y: (rect?.origin.y)!, width: CGFloat(maxSize), height: CGFloat(maxSize) * (rect?.size.height)! / (rect?.size.width)!)
                     rect = tRect
                 }else {
-                    let tRect = CGRect(x: (rect?.origin.x)!, y: (rect?.origin.y)!, width: CGFloat(maxSize) * (rect?.size.width)! / (rect?.size.height)!, height: CGFloat(maxSize))
-                    rect = tRect
+//                    let tRect = CGRect(x: (rect?.origin.x)!, y: (rect?.origin.y)!, width: CGFloat(maxSize) * (rect?.size.width)! / (rect?.size.height)!, height: CGFloat(maxSize))
+//                    rect = tRect
                 }
             }
             if !(rect?.equalTo(.null))!{
                 UIGraphicsBeginImageContext((rect?.size)!)
-                let drawingTransform = currentPage?.getDrawingTransform(.cropBox, rect: rect!, rotate: 0, preserveAspectRatio: true)
+                let drawingTransform = currentPage?.getDrawingTransform(.cropBox, rect: CGRect(x: 0, y: 0, width: (rect?.size.width)!, height:(rect?.size.height)!), rotate: 180, preserveAspectRatio: true)
+
                 let ctx = UIGraphicsGetCurrentContext()
-                ctx?.ctm.concatenating(drawingTransform!)
+                ctx?.setFillColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+                ctx?.fill(rect!)
+                ctx?.saveGState()
+//                ctx?.ctm.translatedBy(x: (0 - (rect?.size.width)!), y: 0 - (rect?.size.height)!)
+//                ctx?.ctm.scaledBy(x: 1.0, y: -1.0)
+                ctx?.concatenate(drawingTransform!)
+//                ctx?.ctm.rotated(by: .pi)
+//                ctx?.ctm.translatedBy(x: -((rect?.size.width)!), y: -(rect?.size.height)!)
                 ctx?.drawPDFPage(currentPage!)
+                ctx?.restoreGState()
                 image = UIGraphicsGetImageFromCurrentImageContext()
-                image = UIImage.init(cgImage: (image?.cgImage)!, scale: 1.0, orientation: .right)
                 UIGraphicsEndImageContext()
+                let rect = CGRect(x: 0, y: 0, width: (image?.size.width)!, height: (image?.size.height)!)
+                UIGraphicsBeginImageContextWithOptions(rect.size, false, 2)
+                let currentContext =  UIGraphicsGetCurrentContext();//获取当前quartz 2d绘图环境
+                currentContext?.clip(to: rect)
+                currentContext?.rotate(by: .pi)
+                currentContext?.translateBy(x: -(rect.size.width), y: -(rect.size.height))
+                currentContext?.draw((image?.cgImage)!, in: rect)
+                
+                let drwaImage = UIGraphicsGetImageFromCurrentImageContext()
+                image = drwaImage
             }
             if image != nil{
                 // write to file

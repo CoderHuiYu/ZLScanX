@@ -30,6 +30,7 @@ class EditPDFViewController: UIViewController ,Convertable{
         navigationItem.leftBarButtonItem = leftItem
     }
     func loadPDF(){
+        view.showLoadingView()
         let path = Bundle.main.path(forResource: "testA", ofType: "pdf")
         let url = URL.init(fileURLWithPath: path!)
         imageArray = pdfConvertToImage(url)
@@ -49,7 +50,7 @@ class EditPDFViewController: UIViewController ,Convertable{
                         model.save(handle: { (isSuccess) in
                             array.append(model)
                             group.leave()
-                        })   
+                        })
                     }
                 })
             }
@@ -57,6 +58,7 @@ class EditPDFViewController: UIViewController ,Convertable{
         
         group.notify(queue: queue) {
             DispatchQueue.main.async {
+                self.view.hideLoadingView()
                 let vc = ScannerViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
             }
