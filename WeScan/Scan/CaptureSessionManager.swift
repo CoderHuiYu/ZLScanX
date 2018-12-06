@@ -48,6 +48,14 @@ protocol RectangleDetectionDelegateProtocol: NSObjectProtocol {
     ///   - captureSessionManager: The `CaptureSessionManager` that encountered an error.
     ///   - error: The encountered error.
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didFailWithError error: Error)
+    
+    
+    /// Called when bright change
+    ///
+    /// - Parameters:
+    ///   - captureSessionManager: captureSessionManager
+    ///   - brightValueDidChange: bright value
+    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, brightValueDidChange brightValue: Double)
 }
 
 /// The CaptureSessionManager is responsible for setting up and managing the AVCaptureSession and the functions related to capturing.
@@ -150,6 +158,16 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        
+        let metadataDict = CMCopyDictionaryOfAttachments(allocator: nil, target: sampleBuffer, attachmentMode: kCMAttachmentMode_ShouldPropagate)
+        if let metadata = metadataDict as? [AnyHashable : Any] {
+            if let exifMetadata = (metadata[kCGImagePropertyExifDictionary]) as? [AnyHashable : Any] {
+                if let brightnessValue = exifMetadata[kCGImagePropertyExifBrightnessValue] as? Double {
+                    delegate?.captureSessionManager(self, brightValueDidChange: brightnessValue)
+                }
+            }
+        }
+        
         guard isDetecting == true else {
             return
         }

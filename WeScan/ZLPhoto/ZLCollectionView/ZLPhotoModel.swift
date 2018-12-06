@@ -13,7 +13,6 @@ let kPhotoModelDataPath = "\(kPathDocument)/WescanData.plist"
 
 struct ZLPhotoModel {
     
-    
     // local store
     var originalImagePath: String
     
@@ -74,6 +73,7 @@ struct ZLPhotoModel {
 }
 
 extension ZLPhotoModel {
+    
     
     func save(handle:((_ isSuccess: Bool)->())) {
         
@@ -147,39 +147,37 @@ extension ZLPhotoModel {
                 index += 1
             }
             
-            ZLPhotoManager.saveImage(originalImage) { (oriPath) in
-                ZLPhotoManager.saveImage(scannedImage, handle: { (scanPath) in
-                    ZLPhotoManager.saveImage(enhancedImage, handle: { (enhanPath) in
-                        if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
+            
+            ZLPhotoManager.saveImage(originalImage, scannedImage, enhancedImage) { (oriPath, scanPath, enhanPath) in
+                
+                if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
+                    
+                    // remove last model data
+                    ZLPhotoManager.removeImage(self) { (isSuccess) in
+                        if isSuccess {
                             
-                            // remove last model data
-                            ZLPhotoManager.removeImage(self) { (isSuccess) in
-                                if isSuccess {
-                                    
-                                    array.removeObject(at: index)
-                                    
-                                    let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRect))
-                                    
-                                    
-                                    let rectDict: [String: Any] = photoModel.rectangle
-                                    let dict: [String : Any] = ["originalImagePath":oritempPath,
-                                                                "scannedImagePath":scantempPath,
-                                                                "enhancedImagePath":enhantempPath,
-                                                                "isEnhanced": isEnhanced,
-                                                                "rectangle":rectDict]
-                                    
-                                    array.insert(dict, at: index)
-                                    // save current model data
-                                    let isSuccess = array.write(toFile: kPhotoModelDataPath, atomically: true)
-                                    handle(isSuccess, photoModel)
-                                    
-                                } else {
-                                    handle(false, nil)
-                                }
-                            }
+                            array.removeObject(at: index)
+                            
+                            let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRect))
+                            
+                            
+                            let rectDict: [String: Any] = photoModel.rectangle
+                            let dict: [String : Any] = ["originalImagePath":oritempPath,
+                                                        "scannedImagePath":scantempPath,
+                                                        "enhancedImagePath":enhantempPath,
+                                                        "isEnhanced": isEnhanced,
+                                                        "rectangle":rectDict]
+                            
+                            array.insert(dict, at: index)
+                            // save current model data
+                            let isSuccess = array.write(toFile: kPhotoModelDataPath, atomically: true)
+                            handle(isSuccess, photoModel)
+                            
+                        } else {
+                            handle(false, nil)
                         }
-                    })
-                })
+                    }
+                }
             }
         
         } else {
@@ -239,21 +237,24 @@ extension ZLPhotoModel {
                 print("remove photodata plist failed \(error.localizedDescription)")
                 handle(false)
             }
+        } else {
+            handle(false)
         }
     }
     
     static func sortAllModel(_ models: [ZLPhotoModel], handle:((_ isSuccess: Bool)->())) {
         
-        let array = NSMutableArray()
-        
-        removeAllModel { (isSuccess) in
+        ZLPhotoManager.removefile(kPhotoModelDataPath) { (isSuccess) in
             if isSuccess {
+                
+                let array = NSMutableArray()
                 for model in models {
                     
                     let rectDict: [String: Any] = model.rectangle
                     let dict: [String : Any] = ["originalImagePath":model.originalImagePath,
                                                 "scannedImagePath":model.scannedImagePath,
                                                 "enhancedImagePath":model.enhancedImagePath,
+                                                "isEnhanced":model.isEnhanced,
                                                 "rectangle":rectDict]
                     
                     array.add(dict)
@@ -261,6 +262,7 @@ extension ZLPhotoModel {
                 
                 let isSuccess = array.write(toFile: kPhotoModelDataPath, atomically: true)
                 handle(isSuccess)
+                
             } else {
                 handle(false)
             }

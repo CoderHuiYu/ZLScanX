@@ -64,7 +64,7 @@ class ZLPhotoWaterFallView: UIView {
         collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: kCellIdentifier)
         return collectionView
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -159,28 +159,21 @@ extension ZLPhotoWaterFallView {
     
     func addPhoto(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, _ isEnhanced: Bool, _ detectedRectangle: Quadrilateral) {
         
-        ZLPhotoManager.saveImage(originalImage) { [weak self] (oriPath) in
-            ZLPhotoManager.saveImage(scannedImage, handle: { [weak self] (scanPath) in
-                ZLPhotoManager.saveImage(enhancedImage, handle: { [weak self] (enhanPath) in
-                    if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
-                        let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRectangle))
-                        photoModel.save(handle: { (isSuccess) in
-                            if isSuccess {
-                                guard let weakSelf = self else { return }
-                                weakSelf.photoModels.append(photoModel)
-                                weakSelf.collectionView.reloadData()
-                                weakSelf.collectionView.layoutIfNeeded()
-                                // scroll to bottom
-                                weakSelf.scrollToBottom()
-                                
-                            }
-                        })
-                        
+        ZLPhotoManager.saveImage(originalImage, scannedImage, enhancedImage) { (oriPath, scanPath, enhanPath) in
+            
+            if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
+                let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRectangle))
+                photoModel.save(handle: { [weak self] (isSuccess) in
+                    if isSuccess {
+                        self?.photoModels.append(photoModel)
+                        self?.collectionView.reloadData()
+                        self?.collectionView.layoutIfNeeded()
+                        // scroll to bottom
+                        self?.scrollToBottom()
                     }
                 })
-            })
+            }
         }
-        
     }
     
     fileprivate func removeItem(_ cell: ZLPhotoCell) {
