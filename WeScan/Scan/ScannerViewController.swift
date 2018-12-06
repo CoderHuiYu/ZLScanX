@@ -39,6 +39,7 @@ final class ScannerViewController: UIViewController {
         let button = ShutterButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(captureImage(_:)), for: .touchUpInside)
+        button.isHidden = true
         return button
     }()
     
@@ -47,6 +48,7 @@ final class ScannerViewController: UIViewController {
         button.setTitle(NSLocalizedString("wescan.scanning.cancel", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Cancel", comment: "The cancel button"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(cancelImageScannerController), for: .touchUpInside)
+        button.isHidden = true
         return button
     }()
     
@@ -151,6 +153,8 @@ final class ScannerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .black
         
         title = NSLocalizedString("wescan.scanning.title", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Scanning", comment: "The title of the ScannerViewController")
         

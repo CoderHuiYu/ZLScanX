@@ -16,7 +16,7 @@
                 <outlet property="collectionViewBottomCons" destination="1Ls-sN-HFN" id="BuE-IO-UsR"/>
                 <outlet property="customNavBar" destination="thW-bb-CKN" id="TEW-Id-WHq"/>
                 <outlet property="rightNavButton" destination="FRx-Dh-ghc" id="Faz-3n-T2o"/>
-                <outlet property="saveToolBarViewBottomCons" destination="fNZ-CV-H0m" id="dYv-Cv-Kwe"/>
+                <outlet property="saveToolBarViewBottomCons" destination="MVP-0N-PWy" id="POz-FH-UjY"/>
                 <outlet property="titleLabel" destination="JnT-xO-sIi" id="vyv-aa-DlO"/>
                 <outlet property="toolBarView" destination="ofm-Wg-uGs" id="BeM-1C-m99"/>
                 <outlet property="toolBarViewBottomCons" destination="kEg-za-j2E" id="tdC-Wj-Ofl"/>
@@ -47,7 +47,7 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nQq-Ps-PBC">
                             <rect key="frame" x="0.0" y="0.0" width="187.5" height="50"/>
-                            <state key="normal" title="send">
+                            <state key="normal" title="Send">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                             <connections>
@@ -56,7 +56,7 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gl1-8t-y6s">
                             <rect key="frame" x="187.5" y="0.0" width="187.5" height="50"/>
-                            <state key="normal" title="save">
+                            <state key="normal" title="Save">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                             <connections>
@@ -89,13 +89,13 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FRx-Dh-ghc">
                             <rect key="frame" x="333" y="7" width="30" height="30"/>
-                            <state key="normal" title="sort"/>
+                            <state key="normal" title="Sort"/>
                             <connections>
                                 <action selector="rightButtonAction:" destination="-1" eventType="touchUpInside" id="6Sr-fI-oZv"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1/11" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JnT-xO-sIi">
-                            <rect key="frame" x="173.5" y="11.5" width="28" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JnT-xO-sIi">
+                            <rect key="frame" x="187.5" y="22" width="0.0" height="0.0"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -112,9 +112,9 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0I6-7d-mH7" userLabel="save tool bar">
-                    <rect key="frame" x="0.0" y="667" width="375" height="200"/>
+                    <rect key="frame" x="0.0" y="717" width="375" height="200"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="save" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wzQ-X2-rTT">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Save" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wzQ-X2-rTT">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="30" id="rfs-1T-9Fn"/>
@@ -135,7 +135,7 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="OmL-Zd-lHP"/>
                             </constraints>
-                            <state key="normal" title="cancle">
+                            <state key="normal" title="Cancle">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                             <connections>
@@ -159,8 +159,8 @@
                                                 <action selector="saveToPhotoLibrary:" destination="-1" eventType="touchUpInside" id="Zaj-z7-SH3"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="photo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3HJ-Ro-vJF">
-                                            <rect key="frame" x="71.5" y="94" width="45" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Save Library" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3HJ-Ro-vJF">
+                                            <rect key="frame" x="46.5" y="94" width="94.5" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -184,8 +184,8 @@
                                             </constraints>
                                             <state key="normal" image="zl_saveEvernote"/>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="evernote" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nSc-DV-MIM">
-                                            <rect key="frame" x="60" y="94" width="67.5" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Zilly" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nSc-DV-MIM">
+                                            <rect key="frame" x="78" y="94" width="31.5" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -236,10 +236,10 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="0I6-7d-mH7" secondAttribute="trailing" id="6Si-6M-0qg"/>
                 <constraint firstItem="Wtn-9Z-PLS" firstAttribute="top" secondItem="thW-bb-CKN" secondAttribute="bottom" constant="20" id="6go-5V-hda"/>
                 <constraint firstItem="Wtn-9Z-PLS" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="BB4-0h-z2G"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="0I6-7d-mH7" secondAttribute="bottom" constant="-250" id="MVP-0N-PWy"/>
                 <constraint firstItem="Wtn-9Z-PLS" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="S1W-eK-Mon"/>
                 <constraint firstItem="ofm-Wg-uGs" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="TYd-dz-ta5"/>
                 <constraint firstItem="0I6-7d-mH7" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="VDA-bZ-4rL"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="0I6-7d-mH7" secondAttribute="bottom" constant="-200" id="fNZ-CV-H0m"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="thW-bb-CKN" secondAttribute="trailing" id="h9H-Cr-0qa"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="ofm-Wg-uGs" secondAttribute="bottom" id="kEg-za-j2E"/>
                 <constraint firstItem="thW-bb-CKN" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="n89-DO-6nH"/>
