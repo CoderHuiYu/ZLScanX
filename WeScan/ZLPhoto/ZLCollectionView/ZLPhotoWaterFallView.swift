@@ -25,7 +25,6 @@ class ZLPhotoWaterFallView: UIView {
             guard let color = backViewColor else {
                 return
             }
-//            backgroundColor = color
             collectionView.backgroundColor = color
         }
     }
@@ -39,15 +38,15 @@ class ZLPhotoWaterFallView: UIView {
     }()
     
     fileprivate lazy var deleteButton: UIButton = {
-        let deleteButton = UIButton(frame: CGRect(x: completeButton.frame.origin.x - 10 - kToolBarViewHeight, y: 0, width: kToolBarViewHeight, height: kToolBarViewHeight))
-        deleteButton.setImage(UIImage(named: "Delete", in: Bundle.init(for: self.classForCoder), compatibleWith: nil), for: .normal)
+        let deleteButton = UIButton(frame: CGRect(x: completeButton.frame.origin.x - 5 - kToolBarViewHeight, y: 0, width: kToolBarViewHeight, height: kToolBarViewHeight))
+        deleteButton.setImage(UIImage(named: "zl_deleteButton1", in: Bundle.init(for: self.classForCoder), compatibleWith: nil), for: .normal)
         deleteButton.addTarget(self, action: #selector(deleteButtonAction), for: .touchUpInside)
         return deleteButton
     }()
     
     fileprivate lazy var completeButton: UIButton = {
         let completeButton = UIButton(frame: CGRect(x: bounds.width - 10 - kToolBarViewHeight, y: 0, width: kToolBarViewHeight, height: kToolBarViewHeight))
-        completeButton.setImage(UIImage(named: "Check", in: Bundle.init(for: self.classForCoder), compatibleWith: nil), for: .normal)
+        completeButton.setImage(UIImage(named: "zl_capture-done", in: Bundle.init(for: self.classForCoder), compatibleWith: nil), for: .normal)
         completeButton.addTarget(self, action: #selector(completeButtonAction), for: .touchUpInside)
         return completeButton
     }()

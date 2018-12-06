@@ -13,13 +13,8 @@ let kPhotoModelDataPath = "\(kPathDocument)/WescanData.plist"
 
 struct ZLPhotoModel {
     
-    var imageSize: CGSize
     
-    var results: ImageScannerResults?
-    
-    // location plist path
-    
-    // result
+    // local store
     var originalImagePath: String
     
     var scannedImagePath: String
@@ -30,8 +25,13 @@ struct ZLPhotoModel {
     
     var rectangle: [String: [String: Double]]
     
+    
+    // to show
     var scannedImage: UIImage
     var enhancedImage: UIImage
+    var imageSize: CGSize
+    
+    var isSelected: Bool = false
     
     var detectedRectangle: Quadrilateral = Quadrilateral(topLeft: CGPoint.zero, topRight: CGPoint.zero, bottomRight: CGPoint.zero, bottomLeft: CGPoint.zero)
     
@@ -147,16 +147,16 @@ extension ZLPhotoModel {
                 index += 1
             }
             
-            // remove last model data
-            ZLPhotoManager.removeImage(self) { (isSuccess) in
-                if isSuccess {
-                    
-                    array.removeObject(at: index)
-                    
-                    ZLPhotoManager.saveImage(originalImage) { (oriPath) in
-                        ZLPhotoManager.saveImage(scannedImage, handle: { (scanPath) in
-                            ZLPhotoManager.saveImage(enhancedImage, handle: { (enhanPath) in
-                                if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
+            ZLPhotoManager.saveImage(originalImage) { (oriPath) in
+                ZLPhotoManager.saveImage(scannedImage, handle: { (scanPath) in
+                    ZLPhotoManager.saveImage(enhancedImage, handle: { (enhanPath) in
+                        if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
+                            
+                            // remove last model data
+                            ZLPhotoManager.removeImage(self) { (isSuccess) in
+                                if isSuccess {
+                                    
+                                    array.removeObject(at: index)
                                     
                                     let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRect))
                                     
@@ -172,14 +172,14 @@ extension ZLPhotoModel {
                                     // save current model data
                                     let isSuccess = array.write(toFile: kPhotoModelDataPath, atomically: true)
                                     handle(isSuccess, photoModel)
+                                    
+                                } else {
+                                    handle(false, nil)
                                 }
-                            })
-                        })
-                    }
-                    
-                } else {
-                    handle(false, nil)
-                }
+                            }
+                        }
+                    })
+                })
             }
         
         } else {

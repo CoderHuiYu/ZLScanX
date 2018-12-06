@@ -9,9 +9,8 @@
 import UIKit
 
 class ImageViewer: UIView {
-    /// 内容图数组
+    // contentArray
     public var contentImages = [UIImage]()
-    /// 被点击图片初始位置(相对于屏幕,同时也是还原时候的位置)
     public var originFrame = CGRect.zero
     
     public var selectedIndex = 0
@@ -27,14 +26,14 @@ class ImageViewer: UIView {
     }
     init(contentImages: [UIImage] = [], originFrame: CGRect = CGRect.zero) {
         super.init(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
-        self.backgroundColor = UIColor.black
+        self.backgroundColor = UIColor.white
         self.alpha = 0.0
         
         self.contentImages = contentImages
         self.originFrame = originFrame
-        // 创建滚动视图
+    
         contentSC = UIScrollView.init(frame: UIScreen.main.bounds)
-        contentSC?.backgroundColor = UIColor.black
+        contentSC?.backgroundColor = UIColor.white
         contentSC?.isPagingEnabled = true
         contentSC?.showsHorizontalScrollIndicator = false
         contentSC?.maximumZoomScale = 4
@@ -55,10 +54,8 @@ class ImageViewer: UIView {
                 newImageView!.tag = ImageViewer.kDefaultImageTag + index
                 contentSC?.addSubview(newImageView!)
                 newImageView?.isUserInteractionEnabled = true
-                let tapGR = UITapGestureRecognizer.init(target: self, action: #selector(hideImage(sender:)))
-                newImageView?.addGestureRecognizer(tapGR)
-//                let ges = UIPinchGestureRecognizer.init(target: self, action: #selector(hideImage(sender:)))
-//                newImageView?.addGestureRecognizer(ges)
+//                let tapGR = UITapGestureRecognizer.init(target: self, action: #selector(hideImage(sender:)))
+//                newImageView?.addGestureRecognizer(tapGR)
             }
             newImageView?.image = image
             if index == selectedIndex {
@@ -73,10 +70,9 @@ class ImageViewer: UIView {
             
         }
         let window = UIApplication.shared.keyWindow
-        // 显示到window上
         window?.addSubview(self)
         
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.3) {
             self.alpha = 1
             let selectedView = self.contentSC?.viewWithTag(ImageViewer.kDefaultImageTag + self.selectedIndex) as? UIImageView
             let image = selectedView?.image
@@ -89,47 +85,22 @@ class ImageViewer: UIView {
 
         
         
-//        if self.contentImages.count > 0 {
-//            let image = self.contentImages.first
-//            // 构造一个和被点击图片位置,内容一模一样的视图,如果不存在,则创建
-//            var newView = self.viewWithTag(1024) as? UIImageView
-//            if newView == nil {
-//                newView = UIImageView.init()
-//                newView!.tag = 1024
-//                self.addSubview(newView!)
-//            }
-//            newView?.frame = originFrame
-//            newView?.image = image
-//
-//            let window = UIApplication.shared.keyWindow
-//            // 显示到window上
-//            window?.addSubview(self)
-//            // 动画效果显示
-//            UIView.animate(withDuration: 0.5) {
-//                let width = UIScreen.main.bounds.width
-//                let height = width * (image?.size.height)! / (image?.size.width)!
-//                let y = (UIScreen.main.bounds.height - height)/2
-//
-//                newView!.frame = CGRect.init(x: 0, y: y, width: width, height: height)
-//                self.alpha = 1.0
-//            }
-//        }
     }
     
-    // 隐藏图片浏览器
+    // Hide
     @objc func hideImage(sender: UIGestureRecognizer) {
-        if currentZoom > 1.1 {
-            return
-        }
+//        if currentZoom > 1.1 {
+//            return
+//        }
         let selectedView = sender.view as? UIImageView
-        // 动画效果移除
-        UIView.animate(withDuration: 0.5, animations: {
-            // 貌似原路返回
+        UIView.animate(withDuration: 0.7, animations: {
+            // back
             let x = self.originFrame.minX + kScreenWidth * CGFloat((selectedView?.tag)! - ImageViewer.kDefaultImageTag)
-            
             let frame = CGRect.init(x: x, y: self.originFrame.minY, width: self.originFrame.width, height: self.originFrame.height)
             selectedView?.frame = frame
             self.alpha = 0.0
+            let generatro = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.light)
+            generatro.impactOccurred()
         }) { (completed) in
             self.removeFromSuperview()
         }
@@ -151,7 +122,6 @@ extension UIView {
             correctY = correctY + frame.minY
             
             tmpView = tmpView.superview!
-            // 由于ScrollView存在contentOffset,因此对于ScrollView及其子类要做特殊判断
             if tmpView is UIScrollView {
                 let scView = tmpView as! UIScrollView
                 correctX = correctX - scView.contentOffset.x
@@ -166,7 +136,7 @@ extension UIView {
 }
 extension UIImage {
     /**
-     *  重设图片大小
+     *  resetImageSize
      */
     func reSizeImage(reSize:CGSize) -> UIImage {
         //UIGraphicsBeginImageContext(reSize);
@@ -178,7 +148,7 @@ extension UIImage {
     }
     
     /**
-     *  等比率缩放
+     *  scaleImage
      */
     func scaleImage(scaleSize:CGFloat) -> UIImage {
         let reSize = CGSize.init(width: self.size.width * scaleSize, height: self.size.height * scaleSize)
@@ -192,11 +162,9 @@ extension ImageViewer: UIScrollViewDelegate{
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         print(scrollView.zoomScale)
         currentZoom = scrollView.zoomScale
-        if currentZoom < 1.1 {
+        if currentZoom <= 1 {
             let selectedView = scrollView.subviews.first as? UIImageView
-            // 动画效果移除
-            UIView.animate(withDuration: 0.5, animations: {
-                // 貌似原路返回
+            UIView.animate(withDuration: 0.3, animations: {
                 let x = self.originFrame.minX + kScreenWidth * CGFloat((selectedView?.tag)! - ImageViewer.kDefaultImageTag)
                 
                 let frame = CGRect.init(x: x, y: self.originFrame.minY, width: self.originFrame.width, height: self.originFrame.height)
@@ -204,8 +172,13 @@ extension ImageViewer: UIScrollViewDelegate{
                 self.alpha = 0.0
             }) { (completed) in
                 self.removeFromSuperview()
+                let generatro = UIImpactFeedbackGenerator(style: UIImpactFeedbackGenerator.FeedbackStyle.light)
+                generatro.impactOccurred()
             }
         }
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+
     }
 }
 

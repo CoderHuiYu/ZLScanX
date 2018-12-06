@@ -76,7 +76,7 @@ final class ScannerViewController: UIViewController {
     
     fileprivate lazy var photoCollectionView: ZLPhotoWaterFallView = {
         let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - photoCollectionViewHeight, width: view.frame.width, height: photoCollectionViewHeight))
-        photoCollectionView.backViewColor = UIColor.gray
+        photoCollectionView.backViewColor = UIColor.darkGray
         
         photoCollectionView.deleteActionCallBack = { [weak self] in
             

@@ -20,6 +20,7 @@ private let kDeleteImageViewBottomOriginalConsEditing: CGFloat = -30
 enum ZLPhotoCellType {
     case normal
     case edit
+    case saving
 }
 
 enum DragStatus {
@@ -31,23 +32,42 @@ class ZLPhotoCell: UICollectionViewCell {
 
     var itemDidRemove:((_ cell: ZLPhotoCell)->())?
     var itemBeginDrag:((_ cell: ZLPhotoCell, _ status: DragStatus)->())?
+    var itemPinch:((_ cell: ZLPhotoCell)->())?
     
     var photoModel: ZLPhotoModel? {
         didSet {
             guard let model = photoModel else { return }
             imageView.image = model.enhancedImage
             updateToOriginalLayout(false)
+            selectedButton.isSelected = model.isSelected
         }
     }
     
     var cellType: ZLPhotoCellType = .normal {
         didSet {
-            if cellType == .edit {
+            
+            switch cellType {
+            case .edit:
+                selectedButton.isHidden = true
                 editImageView.isHidden = false
                 deleteImageViewBottomCons.constant = kDeleteImageViewBottomOriginalConsEditing
-            } else {
+                panGesture.isEnabled = true
+                pinchGesture.isEnabled = true
+                break
+            case .normal:
+                selectedButton.isHidden = true
                 editImageView.isHidden = true
                 deleteImageViewBottomCons.constant = kDeleteImageViewBottomOriginalCons
+                panGesture.isEnabled = true
+                pinchGesture.isEnabled = false
+                break
+            case .saving:
+                selectedButton.isHidden = false
+                editImageView.isHidden = true
+                deleteImageViewBottomCons.constant = kDeleteImageViewBottomOriginalCons
+                panGesture.isEnabled = false
+                pinchGesture.isEnabled = false
+                break
             }
         }
     }
@@ -56,17 +76,32 @@ class ZLPhotoCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var deleteImageView: UIImageView!
     @IBOutlet weak var editImageView: UIImageView!
+    @IBOutlet weak var selectedButton: UIButton!
     
     @IBOutlet weak var deleteImageViewBottomCons: NSLayoutConstraint!
     @IBOutlet weak var imageViewBottomCons: NSLayoutConstraint!
+    
+    fileprivate lazy var panGesture: UIPanGestureRecognizer = {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
+        panGesture.delegate = self
+        return panGesture
+    }()
+    
+    fileprivate lazy var pinchGesture: UIPinchGestureRecognizer = {
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(pinchGestureAction(_:)))
+        pinchGesture.delegate = self
+        return pinchGesture
+    }()
     
     override func awakeFromNib() {
         super.awakeFromNib()
         updateToOriginalLayout(false)
         // add panGesture
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
-        panGesture.delegate = self
         addGestureRecognizer(panGesture)
+        addGestureRecognizer(pinchGesture)
+        
+//        panGesture.require(toFail: pinchGesture)
+        
     }
     
     override func layoutSubviews() {
@@ -88,7 +123,7 @@ extension ZLPhotoCell: UIGestureRecognizerDelegate {
                 dragCallBack(self, .begin)
             }
         }
-        
+//        print(offSetPoint)
         if offSetPoint.y > 0 {
             // bug fix
             updateToOriginalLayout(false)
@@ -109,7 +144,21 @@ extension ZLPhotoCell: UIGestureRecognizerDelegate {
         }
     }
     
+    @objc fileprivate func pinchGestureAction(_ ges: UIPinchGestureRecognizer) {
+//        print(pinchGesture.scale)
+        if pinchGesture.state == .began {
+            if pinchGesture.scale > 1{
+                if let callBack = itemPinch {
+                    callBack(self)
+                }
+            }
+        }
+    }
+    
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer.numberOfTouches == 2 {
+            return true
+        }
         guard let pan = gestureRecognizer as? UIPanGestureRecognizer else { return false }
         let offSetPoint = pan.translation(in: self)
         if (offSetPoint.x != 0 && offSetPoint.y != 0) || offSetPoint.y == 0 || offSetPoint.y > 0 {

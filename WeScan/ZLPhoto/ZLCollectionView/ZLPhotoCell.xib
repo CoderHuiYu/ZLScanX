@@ -22,21 +22,28 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lbK-Si-0Kc">
                         <rect key="frame" x="0.0" y="0.0" width="150" height="125"/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="balloon" translatesAutoresizingMaskIntoConstraints="NO" id="kKu-or-19o">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="zl_balloon" translatesAutoresizingMaskIntoConstraints="NO" id="kKu-or-19o">
                         <rect key="frame" x="50" y="-60" width="50" height="50"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="50" id="6Sf-hF-3RS"/>
                             <constraint firstAttribute="height" constant="50" id="j2l-GC-VoF"/>
                         </constraints>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Edit" translatesAutoresizingMaskIntoConstraints="NO" id="h4f-Ca-g2l">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="zl_edit" translatesAutoresizingMaskIntoConstraints="NO" id="h4f-Ca-g2l">
                         <rect key="frame" x="116" y="91" width="34" height="34"/>
                     </imageView>
+                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ggo-qu-bQ1">
+                        <rect key="frame" x="106" y="81" width="44" height="44"/>
+                        <state key="normal" image="zl_recents-check-off"/>
+                        <state key="selected" image="zl_recents-check-on"/>
+                    </button>
                 </subviews>
             </view>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="lbK-Si-0Kc" secondAttribute="bottom" id="2xW-OP-HnU"/>
                 <constraint firstItem="lbK-Si-0Kc" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="4wz-ZZ-3Zs"/>
+                <constraint firstAttribute="bottom" secondItem="Ggo-qu-bQ1" secondAttribute="bottom" id="Lop-ra-ENk"/>
+                <constraint firstAttribute="trailing" secondItem="Ggo-qu-bQ1" secondAttribute="trailing" id="Rjj-Pk-gJ3"/>
                 <constraint firstItem="h4f-Ca-g2l" firstAttribute="trailing" secondItem="lbK-Si-0Kc" secondAttribute="trailing" id="eUT-pL-J14"/>
                 <constraint firstItem="lbK-Si-0Kc" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" id="mxn-3b-AdT"/>
                 <constraint firstItem="kKu-or-19o" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="n71-Ho-JkZ"/>
@@ -52,12 +59,15 @@
                 <outlet property="editImageView" destination="h4f-Ca-g2l" id="AAG-oo-NgA"/>
                 <outlet property="imageView" destination="lbK-Si-0Kc" id="A6y-gx-FHi"/>
                 <outlet property="imageViewBottomCons" destination="2xW-OP-HnU" id="90D-3M-Irt"/>
+                <outlet property="selectedButton" destination="Ggo-qu-bQ1" id="u9S-az-tY3"/>
             </connections>
             <point key="canvasLocation" x="235.19999999999999" y="183.05847076461771"/>
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="Edit" width="34" height="34"/>
-        <image name="balloon" width="200" height="200"/>
+        <image name="zl_balloon" width="200" height="200"/>
+        <image name="zl_edit" width="34" height="34"/>
+        <image name="zl_recents-check-off" width="44" height="44"/>
+        <image name="zl_recents-check-on" width="44" height="44"/>
     </resources>
 </document>
