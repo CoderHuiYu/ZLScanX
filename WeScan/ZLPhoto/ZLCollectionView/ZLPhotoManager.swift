@@ -76,7 +76,7 @@ class ZLPhotoManager {
     class func saveImage(_ image: UIImage, filePath: String = kPhotoFileDataPath, handle:@escaping ((_ fileName: String?)->())) {
         DispatchQueue.global().async {
             if let data = image.jpegData(compressionQuality: 0.1) {
-                let timeStr = getNowTimeStampMoreBit()
+                let timeStr = getNowTimeStampMoreBit() + "\(Int(arc4random()%100000)+1)"
                 let docuPath = kPhotoFileDataPath
                 let manager = FileManager.default
                 if !manager.fileExists(atPath: filePath) {

@@ -35,22 +35,20 @@ class EditPDFViewController: UIViewController ,Convertable{
         let url = URL.init(fileURLWithPath: path!)
         imageArray = pdfConvertToImage(url)
         
-        var array = [ZLPhotoModel]()
-        
         let group = DispatchGroup()
         let queue = DispatchQueue(label: "SavePDFImageQueue")
         
-        for image in imageArray {
+        var sortDict = [String:ZLPhotoModel]()
+        
+        for (index,image) in imageArray.enumerated() {
             queue.async(group: group) {
                 group.enter()
                 let dict = ZLPhotoManager.getRectDict(Quadrilateral(topLeft: CGPoint.zero, topRight: CGPoint.zero, bottomRight: CGPoint.zero, bottomLeft: CGPoint.zero))
                 ZLPhotoManager.saveImage(image, image, image, handle: { (oriPath, scanPath, enhanPath) in
                     if let tempOriPath = oriPath, let tempScanPath = scanPath, let tempEnhanPath = enhanPath {
                         let model = ZLPhotoModel(tempOriPath, tempScanPath, tempEnhanPath, false, dict)
-                        model.save(handle: { (isSuccess) in
-                            array.append(model)
-                            group.leave()
-                        })
+                        sortDict["\(index)"] = model
+                        group.leave()
                     }
                 })
             }
@@ -58,6 +56,12 @@ class EditPDFViewController: UIViewController ,Convertable{
         
         group.notify(queue: queue) {
             DispatchQueue.main.async {
+                for index in 0..<self.imageArray.count {
+                    let model = sortDict["\(index)"]
+                    model?.save(handle: { (isSuccess) in
+                        print(index)
+                    })
+                }
                 self.view.hideLoadingView()
                 let vc = ScannerViewController()
                 self.navigationController?.pushViewController(vc, animated: true)
