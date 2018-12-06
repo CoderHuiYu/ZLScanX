@@ -36,7 +36,15 @@ final class HomeViewController: UIViewController {
         button.layer.cornerRadius = 20.0
         return button
     }()
-
+    lazy private var editButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setTitle("Edit PDF", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(editPDF), for: .touchUpInside)
+        button.backgroundColor = UIColor(red: 64.0 / 255.0, green: 159 / 255.0, blue: 255 / 255.0, alpha: 1.0)
+        button.layer.cornerRadius = 20.0
+        return button
+    }()
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
@@ -52,6 +60,7 @@ final class HomeViewController: UIViewController {
         view.addSubview(logoImageView)
         view.addSubview(logoLabel)
         view.addSubview(scanButton)
+        view.addSubview(editButton)
     }
     
     private func setupConstraints() {
@@ -74,18 +83,28 @@ final class HomeViewController: UIViewController {
             scanButton.heightAnchor.constraint(equalToConstant: 40.0),
             scanButton.widthAnchor.constraint(equalToConstant: 150.0)
         ]
+        let editButtonConstraints = [
+            view.bottomAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 150.0),
+            editButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            editButton.heightAnchor.constraint(equalToConstant: 40.0),
+            editButton.widthAnchor.constraint(equalToConstant: 150.0)
+        ]
         
-        NSLayoutConstraint.activate(scanButtonConstraints + logoLabelConstraints + logoImageViewConstraints)
+        NSLayoutConstraint.activate(scanButtonConstraints + logoLabelConstraints + logoImageViewConstraints+editButtonConstraints)
     }
     
     // MARK: - Actions
     
     @objc func presentScanController(_ sender: UIButton) {
-        let scannerVC = ImageScannerController()
+        let scannerVC = ImageScannerController.init(false)
         scannerVC.imageScannerDelegate = self
         present(scannerVC, animated: true, completion: nil)
     }
-    
+    @objc func editPDF(){
+        let scannerVC = ImageScannerController.init(true)
+        scannerVC.imageScannerDelegate = self
+        present(scannerVC, animated: true, completion: nil)
+    }
 }
 
 extension HomeViewController: ImageScannerControllerDelegate {

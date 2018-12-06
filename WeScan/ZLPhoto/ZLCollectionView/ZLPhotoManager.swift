@@ -19,6 +19,54 @@ class ZLPhotoManager {
     }
 
     
+    /// save model image
+    ///
+    /// - Parameters:
+    ///   - originalImage: originalImage
+    ///   - scannedImage: scannedImage
+    ///   - enhancedImage: enhancedImage
+    ///   - handle: call back with path
+    class func saveImage(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, handle:@escaping ((_ oriPath: String?, _ scanPath: String?, _ enhanPath: String?)->())) {
+        
+        var tempOriPath: String?
+        var tempScanPath: String?
+        var tempEnhanPath: String?
+        
+        let queue = DispatchQueue(label: "ZLPhotoSaveTheLocalQueue")
+        let group = DispatchGroup()
+        
+        queue.async(group: group) {
+            group.enter()
+            ZLPhotoManager.saveImage(originalImage, handle: { (oriPath) in
+                tempOriPath = oriPath
+                group.leave()
+                
+            })
+        }
+        
+        queue.async(group: group) {
+            group.enter()
+            ZLPhotoManager.saveImage(scannedImage, handle: { (scanPath) in
+                tempScanPath = scanPath
+                group.leave()
+            })
+        }
+        
+        queue.async(group: group) {
+            group.enter()
+            ZLPhotoManager.saveImage(enhancedImage, handle: { (enhanPath) in
+                tempEnhanPath = enhanPath
+                group.leave()
+            })
+        }
+        
+        group.notify(queue: queue) {
+            DispatchQueue.main.async {
+                handle(tempOriPath,tempScanPath,tempEnhanPath)
+            }
+        }
+    }
+    
     /// save image with path
     ///
     /// - Parameters:

@@ -56,15 +56,27 @@ public final class ImageScannerController: UINavigationController {
         return view
     }()
     
-    public required init() {
-        let scannerViewController = ScannerViewController()
-        super.init(rootViewController: scannerViewController)
-        navigationBar.tintColor = .black
-        navigationBar.isTranslucent = false
-        self.view.addSubview(blackFlashView)
-        setupConstraints()
+//    public required init() {
+//        let scannerViewController = ScannerViewController()
+//        super.init(rootViewController: scannerViewController)
+//        navigationBar.tintColor = .black
+//        navigationBar.isTranslucent = false
+//        self.view.addSubview(blackFlashView)
+//        setupConstraints()
+//    }
+    public required init(_ isEdit: Bool){
+        if isEdit {
+            let editViewController = EditPDFViewController()
+            super.init(rootViewController: editViewController)
+        }else{
+            let scannerViewController = ScannerViewController()
+            super.init(rootViewController: scannerViewController)
+            navigationBar.tintColor = .black
+            navigationBar.isTranslucent = false
+            self.view.addSubview(blackFlashView)
+            setupConstraints()
+        }
     }
-    
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
