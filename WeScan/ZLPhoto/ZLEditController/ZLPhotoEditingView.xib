@@ -30,13 +30,13 @@
                         <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0tk-eR-i4X">
                             <rect key="frame" x="94" y="20" width="93.5" height="110"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="30"/>
-                            <state key="normal" image="zl_delete"/>
+                            <state key="normal" image="zl_rotate"/>
                             <connections>
                                 <action selector="toolBarItemAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="wYW-pc-fn1"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="rotate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WXk-v9-nAe">
-                            <rect key="frame" x="118" y="99" width="45.5" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rotate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WXk-v9-nAe">
+                            <rect key="frame" x="115.5" y="99" width="50" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -44,13 +44,13 @@
                         <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FkC-ve-cLv">
                             <rect key="frame" x="187.5" y="20" width="94" height="110"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="30"/>
-                            <state key="normal" image="zl_delete"/>
+                            <state key="normal" image="zl_crop"/>
                             <connections>
                                 <action selector="toolBarItemAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="mud-Az-pw4"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="cut" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XJW-b1-9OE">
-                            <rect key="frame" x="222" y="99" width="24.5" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cut" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XJW-b1-9OE">
+                            <rect key="frame" x="220.5" y="99" width="27.5" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -58,19 +58,19 @@
                         <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ooP-Om-0hA">
                             <rect key="frame" x="281.5" y="20" width="93.5" height="110"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="30"/>
-                            <state key="normal" image="zl_delete"/>
+                            <state key="normal" image="zl_enhance"/>
                             <connections>
                                 <action selector="toolBarItemAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="BzI-h7-35m"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="delete" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILP-Cd-19d">
-                            <rect key="frame" x="23" y="99" width="48" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delete" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILP-Cd-19d">
+                            <rect key="frame" x="22" y="99" width="49.5" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="filter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zmh-Xf-6xD">
-                            <rect key="frame" x="310.5" y="99" width="35" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enhance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zmh-Xf-6xD">
+                            <rect key="frame" x="295" y="99" width="66" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -110,14 +110,14 @@
             <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Amp-wV-Ka0" secondAttribute="trailing" id="Iiu-HP-s9W"/>
-                <constraint firstAttribute="bottom" secondItem="Amp-wV-Ka0" secondAttribute="bottom" id="MPD-NF-3VA"/>
+                <constraint firstItem="Amp-wV-Ka0" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="jNP-PJ-0mU"/>
                 <constraint firstItem="Amp-wV-Ka0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="sWt-yb-gzW"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="toolBarView" destination="Amp-wV-Ka0" id="DkZ-ZL-DV8"/>
-                <outlet property="toolBarViewBottomCons" destination="MPD-NF-3VA" id="Qmy-MB-Dqe"/>
+                <outlet property="toolBarViewBottomCons" destination="jNP-PJ-0mU" id="YX8-rp-LV0"/>
                 <outletCollection property="gestureRecognizers" destination="1ly-zc-ioY" appends="YES" id="wK2-bO-7rn"/>
             </connections>
             <point key="canvasLocation" x="114" y="134"/>
@@ -129,6 +129,9 @@
         </tapGestureRecognizer>
     </objects>
     <resources>
+        <image name="zl_crop" width="48" height="48"/>
         <image name="zl_delete" width="48" height="48"/>
+        <image name="zl_enhance" width="48" height="48"/>
+        <image name="zl_rotate" width="48" height="48"/>
     </resources>
 </document>

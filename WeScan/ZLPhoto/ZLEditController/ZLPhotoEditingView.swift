@@ -8,7 +8,7 @@
 
 import UIKit
 
-private let kToolBarHeight: CGFloat = 150
+private let kToolBarHeight: CGFloat = -200 // 150 -> 200 to right constraint
 
 class ZLPhotoEditingView: UIView {
     

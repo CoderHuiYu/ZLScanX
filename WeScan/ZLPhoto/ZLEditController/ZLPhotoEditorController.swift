@@ -13,12 +13,12 @@ import QuickLook
 
 private let kCollectionCellIdentifier = "kCollectionCellIdentifier"
 private let kToolBarHeight: CGFloat = 50
-private let kSaveToolBarHeight: CGFloat = 200
+private let kSaveToolBarHeight: CGFloat = 250 // 200 -> 250 is right constraint
 private let kCollectionBottomConsValue: CGFloat = 170
 private let kCollectionBottomConsSaveValue: CGFloat = 220
 private let kRightButtonTitle = "Sort"
-private let kRightButtonTitleSelectedAll = "SelectAll"
-private let kRightButtonTitleCancleSelectedAll = "Cancle SelectAll"
+private let kRightButtonTitleSelectedAll = "Select All"
+private let kRightButtonTitleCancleSelectedAll = "Cancel Select All"
 
 class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     
@@ -94,18 +94,12 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
                 setSaveToolBar(isHidden: false)
                 collectionView.reloadData()
                 collectionViewBottomCons.constant = kCollectionBottomConsSaveValue
-//                UIView.animate(withDuration: 0.25) {
-//                    self.view.layoutIfNeeded()
-//                }
             } else {
                 
                 rightNavButton.setTitle(kRightButtonTitle, for: .normal)
                 setSaveToolBar(isHidden: true)
                 collectionView.reloadData()
                 collectionViewBottomCons.constant = kCollectionBottomConsValue
-//                UIView.animate(withDuration: 0.25) {
-//                    self.view.layoutIfNeeded()
-//                }
             }
         }
     }
@@ -272,6 +266,13 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
             }
         }
         
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offSet = scrollView.contentOffset.x
+        let itemWidth = (collectionView.bounds.width - 80 + 10)
+        let index = Int((offSet + itemWidth * 0.5) / itemWidth)
+        titleLabel.text = "\(index + 1)/\(photoModels.count)"
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

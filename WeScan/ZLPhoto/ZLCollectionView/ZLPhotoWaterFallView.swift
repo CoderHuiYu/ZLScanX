@@ -131,8 +131,10 @@ extension ZLPhotoWaterFallView: UICollectionViewDataSource, UICollectionViewDele
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let callBack = selectedItemCallBack {
-            callBack(photoModels, indexPath.row)
+        if photoModels.count > 0 {
+            if let callBack = selectedItemCallBack {
+                callBack(photoModels, indexPath.row)
+            }
         }
     }
     
