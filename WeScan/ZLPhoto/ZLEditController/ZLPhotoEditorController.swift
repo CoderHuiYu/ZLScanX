@@ -9,6 +9,7 @@
 import UIKit
 import CoreGraphics
 import Photos
+import QuickLook
 
 private let kCollectionCellIdentifier = "kCollectionCellIdentifier"
 private let kToolBarHeight: CGFloat = 50
@@ -19,11 +20,12 @@ private let kRightButtonTitle = "Sort"
 private let kRightButtonTitleSelectedAll = "SelectAll"
 private let kRightButtonTitleCancleSelectedAll = "Cancle SelectAll"
 
-class ZLPhotoEditorController: UIViewController,EmitterAnimate {
+class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     
     var photoModels = [ZLPhotoModel]()
     var currentIndex: IndexPath?
     var isFilter: Bool = false
+    var pdfpath: String?
     
     var updataCallBack:(()->())?
     
@@ -351,11 +353,6 @@ extension ZLPhotoEditorController {
         }
     }
     
-    // send action
-    @IBAction func sendButtonAction(_ sender: Any) {
-        
-    }
-    
     // save action
     @IBAction func saveButtonAction(_ sender: Any) {
         isSavingStatus = true
@@ -374,7 +371,12 @@ extension ZLPhotoEditorController {
             PHPhotoLibrary.shared().performChanges({
                 PHAssetCreationRequest.creationRequestForAssetFromImage(atFileURL: URL(fileURLWithPath: kPhotoFileDataPath + "/\(model.enhancedImagePath)"))
             }, completionHandler: { (isSuccess, error) in
-                print(isSuccess)
+                if let error = error {
+                    print("save failed \(error.localizedDescription)")
+                } else {
+                    print("save to library success")
+                }
+
             })
         }
         
@@ -635,5 +637,22 @@ extension ZLPhotoEditorController {
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         return newImage!
         
+    }
+}
+extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewControllerDelegate{
+    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        return 1
+    }
+    
+    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+        return URL.init(fileURLWithPath: pdfpath!) as QLPreviewItem
+    }
+    // send action
+    @IBAction func sendButtonAction(_ sender: Any) {
+        pdfpath = convertPDF(photoModels, fileName: "temporary.pdf")
+        let preVC = QLPreviewController()
+        preVC.delegate = self
+        preVC.dataSource = self
+        self.present(preVC, animated: true, completion: nil)
     }
 }
