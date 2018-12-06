@@ -126,7 +126,7 @@ extension ZLPhotoCell: UIGestureRecognizerDelegate {
 //        print(offSetPoint)
         if offSetPoint.y > 0 {
             // bug fix
-            updateToOriginalLayout(false)
+            updateToOriginalLayout(false,true)
             return
         }
         
@@ -139,7 +139,7 @@ extension ZLPhotoCell: UIGestureRecognizerDelegate {
             if v.y < kMinVelocity {
                 removeItem()
             } else {
-                updateToOriginalLayout(true)
+                updateToOriginalLayout(true,true)
             }
         }
     }
@@ -187,7 +187,7 @@ extension ZLPhotoCell {
         }
     }
     
-    fileprivate func updateToOriginalLayout(_ animated: Bool) {
+    fileprivate func updateToOriginalLayout(_ animated: Bool,_ isNeedCallBack: Bool = false) {
         if animated {
             deleteImageViewBottomCons.constant = cellType == .normal ? kDeleteImageViewBottomOriginalCons : kDeleteImageViewBottomOriginalConsEditing
             deleteImageView.isHidden = true
@@ -196,8 +196,11 @@ extension ZLPhotoCell {
             UIView.animate(withDuration: kPhotoCellAnimateDuration, delay: 0.0, usingSpringWithDamping: 0.6, initialSpringVelocity: 10, options: .curveEaseOut, animations: {
                 self.layoutIfNeeded()
             }, completion: { _ in
-                if let dragCallBack = self.itemBeginDrag {
-                    dragCallBack(self, .end)
+                if isNeedCallBack {
+                    
+                    if let dragCallBack = self.itemBeginDrag {
+                        dragCallBack(self, .end)
+                    }
                 }
             })
         } else {
@@ -206,8 +209,11 @@ extension ZLPhotoCell {
             deleteImageView.alpha = 0.01
             imageViewBottomCons.constant = 0
             
-            if let dragCallBack = itemBeginDrag {
-                dragCallBack(self, .end)
+            if isNeedCallBack {
+                
+                if let dragCallBack = itemBeginDrag {
+                    dragCallBack(self, .end)
+                }
             }
         }
     }

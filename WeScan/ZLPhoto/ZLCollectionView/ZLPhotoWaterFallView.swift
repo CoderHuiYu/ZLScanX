@@ -65,6 +65,9 @@ class ZLPhotoWaterFallView: UIView {
         return collectionView
     }()
 
+    let queue = DispatchQueue(label: "SaveImageQueue")
+    let group = DispatchGroup()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -159,28 +162,21 @@ extension ZLPhotoWaterFallView {
     
     func addPhoto(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, _ isEnhanced: Bool, _ detectedRectangle: Quadrilateral) {
         
-        ZLPhotoManager.saveImage(originalImage) { [weak self] (oriPath) in
-            ZLPhotoManager.saveImage(scannedImage, handle: { [weak self] (scanPath) in
-                ZLPhotoManager.saveImage(enhancedImage, handle: { [weak self] (enhanPath) in
-                    if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
-                        let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRectangle))
-                        photoModel.save(handle: { (isSuccess) in
-                            if isSuccess {
-                                guard let weakSelf = self else { return }
-                                weakSelf.photoModels.append(photoModel)
-                                weakSelf.collectionView.reloadData()
-                                weakSelf.collectionView.layoutIfNeeded()
-                                // scroll to bottom
-                                weakSelf.scrollToBottom()
-                                
-                            }
-                        })
-                        
+        saveImage(originalImage, scannedImage, enhancedImage) { (oriPath, scanPath, enhanPath) in
+            
+            if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
+                let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRectangle))
+                photoModel.save(handle: { [weak self] (isSuccess) in
+                    if isSuccess {
+                        self?.photoModels.append(photoModel)
+                        self?.collectionView.reloadData()
+                        self?.collectionView.layoutIfNeeded()
+                        // scroll to bottom
+                        self?.scrollToBottom()
                     }
                 })
-            })
+            }
         }
-        
     }
     
     fileprivate func removeItem(_ cell: ZLPhotoCell) {
@@ -192,6 +188,46 @@ extension ZLPhotoWaterFallView {
             if isSuccess {
                 photoModels.remove(at: indexPath.row)
                 collectionView.reloadData()
+            }
+        }
+    }
+    
+    
+    
+    private func saveImage(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, handle:@escaping ((_ oriPath: String?, _ scanPath: String?, _ enhanPath: String?)->())) {
+        
+        var tempOriPath: String?
+        var tempScanPath: String?
+        var tempEnhanPath: String?
+        
+        queue.async(group: group) {
+            self.group.enter()
+            ZLPhotoManager.saveImage(originalImage, handle: { (oriPath) in
+                tempOriPath = oriPath
+                self.group.leave()
+                
+            })
+        }
+        
+        queue.async(group: group) {
+            self.group.enter()
+            ZLPhotoManager.saveImage(scannedImage, handle: { (scanPath) in
+                tempScanPath = scanPath
+                self.group.leave()
+            })
+        }
+        
+        queue.async(group: group) {
+            self.group.enter()
+            ZLPhotoManager.saveImage(enhancedImage, handle: { (enhanPath) in
+                tempEnhanPath = enhanPath
+                self.group.leave()
+            })
+        }
+        
+        group.notify(queue: queue) {
+            DispatchQueue.main.async {
+                handle(tempOriPath,tempScanPath,tempEnhanPath)
             }
         }
     }

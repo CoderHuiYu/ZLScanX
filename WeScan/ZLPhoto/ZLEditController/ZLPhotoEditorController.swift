@@ -409,10 +409,14 @@ extension ZLPhotoEditorController {
 // MARK: - SortViewControllerProtocol
 extension ZLPhotoEditorController: SortViewControllerProtocol{
     func sortDidFinished(_ photoModels: [ZLPhotoModel]) {
-        ZLPhotoModel.sortAllModel(photoModels) { (isSuccess) in
+        ZLPhotoModel.sortAllModel(photoModels) { [weak self] (isSuccess) in
             if isSuccess {
-                self.photoModels = photoModels
-                self.collectionView.reloadData()
+                self?.photoModels = photoModels
+                self?.collectionView.reloadData()
+                
+                if let callBack = self?.updataCallBack {
+                    callBack()
+                }
             }
         }
     }
