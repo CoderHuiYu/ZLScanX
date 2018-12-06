@@ -85,6 +85,10 @@ final class ScannerViewController: UIViewController {
         
         photoCollectionView.selectedItemCallBack = { [weak self] (photoModels, index) in
             guard let weakSelf = self else { return }
+            if photoModels.count == 0 {
+                Toast.showText("NO Image!!!")
+                return
+            }
             let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: weakSelf.classForCoder))
             vc.photoModels = photoModels
             vc.currentIndex = IndexPath(item: index, section: 0)
