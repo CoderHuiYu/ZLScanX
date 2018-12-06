@@ -44,7 +44,7 @@ class EditPDFViewController: UIViewController ,Convertable{
                 group.enter()
                 let dict = ZLPhotoManager.getRectDict(Quadrilateral(topLeft: CGPoint.zero, topRight: CGPoint.zero, bottomRight: CGPoint.zero, bottomLeft: CGPoint.zero))
                 ZLPhotoManager.saveImage(image, image, image, handle: { (oriPath, scanPath, enhanPath) in
-                    if let tempOriPath = oriPath, let tempScanPath = scanPath, let tempEnhanPath = scanPath {
+                    if let tempOriPath = oriPath, let tempScanPath = scanPath, let tempEnhanPath = enhanPath {
                         let model = ZLPhotoModel(tempOriPath, tempScanPath, tempEnhanPath, false, dict)
                         model.save(handle: { (isSuccess) in
                             array.append(model)

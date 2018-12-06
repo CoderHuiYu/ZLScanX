@@ -136,6 +136,7 @@ extension ZLPhotoEditorController {
         view.clipsToBounds = true
         
         let layout = ZLPhotoWaterFallLayout()
+        layout.isNeedScrollToMiddle = true
         layout.minimumLineSpacing = 10
         layout.sectionInset = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 40)
         layout.dataSource = self
@@ -293,6 +294,9 @@ extension ZLPhotoEditorController: ZLPhotoWaterFallLayoutDataSource {
     }
     
     fileprivate func getItemHeight(_ imageSize: CGSize, _ itemWidth: CGFloat) -> CGFloat {
+        if imageSize.width <= 0 {
+            return 0
+        }
         return imageSize.height * itemWidth / imageSize.width
     }
 }
