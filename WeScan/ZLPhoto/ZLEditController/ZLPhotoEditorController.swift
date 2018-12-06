@@ -367,7 +367,12 @@ extension ZLPhotoEditorController {
             PHPhotoLibrary.shared().performChanges({
                 PHAssetCreationRequest.creationRequestForAssetFromImage(atFileURL: URL(fileURLWithPath: kPhotoFileDataPath + "/\(model.enhancedImagePath)"))
             }, completionHandler: { (isSuccess, error) in
-                print(isSuccess)
+                if let error = error {
+                    print("save failed \(error.localizedDescription)")
+                } else {
+                    print("save to library success")
+                }
+
             })
         }
         
@@ -638,10 +643,9 @@ extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewContr
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
         return URL.init(fileURLWithPath: pdfpath!) as QLPreviewItem
     }
-    
     // send action
     @IBAction func sendButtonAction(_ sender: Any) {
-        pdfpath = convertPDF(photoModels, fileName: "test.pdf")
+        pdfpath = convertPDF(photoModels, fileName: "temporary.pdf")
         let preVC = QLPreviewController()
         preVC.delegate = self
         preVC.dataSource = self
