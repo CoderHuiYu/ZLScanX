@@ -13,11 +13,6 @@ let kPhotoModelDataPath = "\(kPathDocument)/WescanData.plist"
 
 struct ZLPhotoModel {
     
-    
-    fileprivate let queue = DispatchQueue(label: "ZLPhotoSaveTheLocalQueue")
-    fileprivate let group = DispatchGroup()
-    
-    
     // local store
     var originalImagePath: String
     
@@ -151,8 +146,9 @@ extension ZLPhotoModel {
                 }
                 index += 1
             }
-           
-            saveImage(originalImage, scannedImage, enhancedImage) { (oriPath, scanPath, enhanPath) in
+            
+            
+            ZLPhotoManager.saveImage(originalImage, scannedImage, enhancedImage) { (oriPath, scanPath, enhanPath) in
                 
                 if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
                     
@@ -183,8 +179,6 @@ extension ZLPhotoModel {
                     }
                 }
             }
- 
-            
         
         } else {
             handle(false, nil)
@@ -275,42 +269,4 @@ extension ZLPhotoModel {
         }
     }
     
-    
-    private func saveImage(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, handle:@escaping ((_ oriPath: String?, _ scanPath: String?, _ enhanPath: String?)->())) {
-        
-        var tempOriPath: String?
-        var tempScanPath: String?
-        var tempEnhanPath: String?
-        
-        queue.async(group: group) {
-            self.group.enter()
-            ZLPhotoManager.saveImage(originalImage, handle: { (oriPath) in
-                tempOriPath = oriPath
-                self.group.leave()
-                
-            })
-        }
-        
-        queue.async(group: group) {
-            self.group.enter()
-            ZLPhotoManager.saveImage(scannedImage, handle: { (scanPath) in
-                tempScanPath = scanPath
-                self.group.leave()
-            })
-        }
-        
-        queue.async(group: group) {
-            self.group.enter()
-            ZLPhotoManager.saveImage(enhancedImage, handle: { (enhanPath) in
-                tempEnhanPath = enhanPath
-                self.group.leave()
-            })
-        }
-        
-        group.notify(queue: queue) {
-            DispatchQueue.main.async {
-                handle(tempOriPath,tempScanPath,tempEnhanPath)
-            }
-        }
-    }
 }

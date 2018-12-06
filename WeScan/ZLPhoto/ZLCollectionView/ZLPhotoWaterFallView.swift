@@ -64,9 +64,6 @@ class ZLPhotoWaterFallView: UIView {
         collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: kCellIdentifier)
         return collectionView
     }()
-
-    let queue = DispatchQueue(label: "SaveImageQueue")
-    let group = DispatchGroup()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -162,7 +159,7 @@ extension ZLPhotoWaterFallView {
     
     func addPhoto(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, _ isEnhanced: Bool, _ detectedRectangle: Quadrilateral) {
         
-        saveImage(originalImage, scannedImage, enhancedImage) { (oriPath, scanPath, enhanPath) in
+        ZLPhotoManager.saveImage(originalImage, scannedImage, enhancedImage) { (oriPath, scanPath, enhanPath) in
             
             if let oritempPath = oriPath, let scantempPath = scanPath, let enhantempPath = enhanPath  {
                 let photoModel = ZLPhotoModel.init(oritempPath, scantempPath, enhantempPath, isEnhanced, ZLPhotoManager.getRectDict(detectedRectangle))
@@ -188,46 +185,6 @@ extension ZLPhotoWaterFallView {
             if isSuccess {
                 photoModels.remove(at: indexPath.row)
                 collectionView.reloadData()
-            }
-        }
-    }
-    
-    
-    
-    private func saveImage(_ originalImage: UIImage, _ scannedImage: UIImage, _ enhancedImage: UIImage, handle:@escaping ((_ oriPath: String?, _ scanPath: String?, _ enhanPath: String?)->())) {
-        
-        var tempOriPath: String?
-        var tempScanPath: String?
-        var tempEnhanPath: String?
-        
-        queue.async(group: group) {
-            self.group.enter()
-            ZLPhotoManager.saveImage(originalImage, handle: { (oriPath) in
-                tempOriPath = oriPath
-                self.group.leave()
-                
-            })
-        }
-        
-        queue.async(group: group) {
-            self.group.enter()
-            ZLPhotoManager.saveImage(scannedImage, handle: { (scanPath) in
-                tempScanPath = scanPath
-                self.group.leave()
-            })
-        }
-        
-        queue.async(group: group) {
-            self.group.enter()
-            ZLPhotoManager.saveImage(enhancedImage, handle: { (enhanPath) in
-                tempEnhanPath = enhanPath
-                self.group.leave()
-            })
-        }
-        
-        group.notify(queue: queue) {
-            DispatchQueue.main.async {
-                handle(tempOriPath,tempScanPath,tempEnhanPath)
             }
         }
     }

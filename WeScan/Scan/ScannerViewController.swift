@@ -457,4 +457,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         return quad
     }
     
+    func captureSessionManager(_ captureSessionManager: CaptureSessionManager, brightValueDidChange brightValue: Double) {
+        print(brightValue)
+    }
+    
 }
