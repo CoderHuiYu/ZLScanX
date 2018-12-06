@@ -13,8 +13,8 @@ protocol Convertable {
 }
 extension Convertable {
     //MARK: -- UIImage Convert To PDF
-    func convertPDF(_ models: [ZLPhotoModel], fileName: String) -> Bool{
-        if models.count == 0 {return false}
+    func convertPDF(_ models: [ZLPhotoModel], fileName: String) -> String?{
+        if models.count == 0 {return nil}
         let pdfPath = saveDirectory(fileName)
         print(pdfPath)
         
@@ -45,7 +45,7 @@ extension Convertable {
             }
         }
         UIGraphicsEndPDFContext()
-        return res
+        return pdfPath
     }
     private func saveDirectory(_ fileName: String) -> String{
         creatPDFFolder()
