@@ -19,8 +19,12 @@ class EditPDFViewController: UIViewController ,Convertable{
         setupViews()
         loadPDF()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
+    }
     func setupViews(){
-        view.backgroundColor = .white
+        view.backgroundColor = .black
         let leftBtn = UIButton()
         leftBtn.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         leftBtn.setTitle("Back", for: .normal)
@@ -62,15 +66,18 @@ class EditPDFViewController: UIViewController ,Convertable{
                         print(index)
                     })
                 }
-                self.view.hideLoadingView()
-                let vc = ScannerViewController()
-                self.navigationController?.pushViewController(vc, animated: true)
+                self.perform(#selector(self.pushToScanVC), with: nil, afterDelay: TimeInterval(3.0))
             }
         }
         
     }
     @objc func leftBtnClick(){
         dismiss(animated: true, completion: nil)
+    }
+    @objc func pushToScanVC(){
+        self.view.hideLoadingView()
+        let vc = ScannerViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
