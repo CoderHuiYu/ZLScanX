@@ -327,9 +327,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         activityIndicator.stopAnimating()
         shutterButton.isUserInteractionEnabled = true
-        UIView.animate(withDuration: 0.2) {
-            self.scanningNoticeView.isHidden = false
-        }
+        scanningNoticeView.isHidden = false
+
         quadView.capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
         guard let imageScannerController = navigationController as? ImageScannerController else { return }
         imageScannerController.imageScannerDelegate?.imageScannerController(imageScannerController, didFailWithError: error)
@@ -337,9 +336,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
     
     func didStartCapturingPicture(for captureSessionManager: CaptureSessionManager) {
         scanningNoticeImageView.stopAnimating()
-        UIView.animate(withDuration: 0.2) {
-            self.scanningNoticeView.isHidden = true
-        }
+           scanningNoticeView.isHidden = true
         //        activityIndicator.startAnimating()
         shutterButton.isUserInteractionEnabled = false
     }
@@ -347,9 +344,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didCapturePicture picture: UIImage, withQuad quad: Quadrilateral?) {
 //        activityIndicator.stopAnimating()
         scanningNoticeImageView.stopAnimating()
-        UIView.animate(withDuration: 0.2) {
-            self.scanningNoticeView.isHidden = true
-        }
+        scanningNoticeView.isHidden = true
         
         let image = picture.applyingPortraitOrientation()
         
@@ -423,17 +418,13 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         guard let quad = quad else {
             // If no quad has been detected, we remove the currently displayed on on the quadView.
             quadView.removeQuadrilateral()
-            UIView.animate(withDuration: 0.2) {
-                self.scanningNoticeView.isHidden = false
-            }
+            scanningNoticeView.isHidden = false
             scanningNoticeImageView.startAnimating()
             quadView.capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
             return
         }
         
-        UIView.animate(withDuration: 0.2) {
-            self.scanningNoticeView.isHidden = true
-        }
+        scanningNoticeView.isHidden = true
         scanningNoticeImageView.stopAnimating()
 
         let portraitImageSize = CGSize(width: imageSize.height, height: imageSize.width)
