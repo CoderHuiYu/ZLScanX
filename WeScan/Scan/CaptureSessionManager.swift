@@ -28,6 +28,9 @@ protocol RectangleDetectionDelegateProtocol: NSObjectProtocol {
     func startCapturingLoading(for captureSessionManager: CaptureSessionManager, currentAutoScanPassCounts :Int)
 
     
+    /// Called when should show scanning notice
+    func startShowingScanningNotice()
+    
     /// Called when a quadrilateral has been detected.
     /// - Parameters:
     ///   - captureSessionManager: The `CaptureSessionManager` instance that has detected a quadrilateral.
@@ -77,7 +80,8 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
     /// The minimum number of time required by `noRectangleCount` to validate that no rectangles have been found.
     private let noRectangleThreshold = 3
     
-    
+    /// The minimum number of time required by `noRectangleCount` to validate that showScanningNoticeThreshold
+    private let showScanningNoticeThreshold = 20
     
     // MARK: Life Cycle
     
@@ -275,7 +279,11 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
                     // Remove the currently displayed rectangle as no rectangles are being found anymore
                     strongSelf.displayedRectangleResult = nil
                     strongSelf.delegate?.captureSessionManager(strongSelf, didDetectQuad: nil, imageSize)
+                    if strongSelf.noRectangleCount > strongSelf.showScanningNoticeThreshold {
+                        strongSelf.delegate?.startShowingScanningNotice()
+                    }
                 }
+                
             }
             return
             
