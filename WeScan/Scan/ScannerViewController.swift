@@ -208,7 +208,6 @@ final class ScannerViewController: UIViewController {
         super.viewWillAppear(animated)
         
         disappear = false
-        
         CaptureSession.current.isEditing = false
         quadView.removeQuadrilateral()
         captureSessionManager?.start()
@@ -454,19 +453,23 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         let quadRect = CGRect(x: quadView.quadLayer.path?.boundingBox.origin.x ?? 0.0, y: quadView.quadLayer.path?.boundingBox.origin.y ?? 0.0, width: quadView.quadLayer.path?.boundingBox.size.width ?? 0.0, height: quadView.quadLayer.path?.boundingBox.size.height ?? 0.0)
         previewImageView.frame = quadRect;
         
+        if let enhancedImage = uiImage.colorControImage() {
+            self.previewImageView.image = enhancedImage
+            self.photoCollectionView.addPhoto(image, uiImage, enhancedImage, true, quad)
+        } else {
+            self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
+        }
+        
         UIView.animate(withDuration: 0.5, animations: {
             self.previewImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             self.previewImageView.center = self.view.center
+            
             
         }) { (Bool) in
             UIView.animate(withDuration: 0.5, animations: {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
                 // MARK: - add photo
-                if let enhancedImage = uiImage.colorControImage() {
-                    self.photoCollectionView.addPhoto(image, uiImage, enhancedImage, true, quad)
-                } else {
-                    self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
-                }
+           
                 self.quadView.removeQuadrilateral()
             }) { (finish) in
                 // continue to capture
