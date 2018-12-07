@@ -18,6 +18,7 @@ class EditPDFViewController: UIViewController ,Convertable{
         
         setupViews()
         loadPDF()
+        self.perform(#selector(self.pushToScanVC), with: nil, afterDelay: TimeInterval(3.0))
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

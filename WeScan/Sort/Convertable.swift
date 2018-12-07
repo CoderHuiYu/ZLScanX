@@ -137,4 +137,44 @@ extension Convertable {
         pdf = nil
         return images
     }
+    //convertPDF to image and store to model
+    func loadPDF(_ handle:@escaping ((_ models: [ZLPhotoModel])->())){
+        var imageArray = [UIImage]()
+        var modelArray = [ZLPhotoModel]()
+        let path = Bundle.main.path(forResource: "testA", ofType: "pdf")
+        let url = URL.init(fileURLWithPath: path!)
+        imageArray = pdfConvertToImage(url)
+        
+        let group = DispatchGroup()
+        let queue = DispatchQueue(label: "SavePDFImageQueue")
+        
+        var sortDict = [String:ZLPhotoModel]()
+        
+        for (index,image) in imageArray.enumerated() {
+            queue.async(group: group) {
+                group.enter()
+                let dict = ZLPhotoManager.getRectDict(Quadrilateral(topLeft: CGPoint.zero, topRight: CGPoint.zero, bottomRight: CGPoint.zero, bottomLeft: CGPoint.zero))
+                ZLPhotoManager.saveImage(image, image, image, handle: { (oriPath, scanPath, enhanPath) in
+                    if let tempOriPath = oriPath, let tempScanPath = scanPath, let tempEnhanPath = enhanPath {
+                        let model = ZLPhotoModel(tempOriPath, tempScanPath, tempEnhanPath, false, dict)
+                        sortDict["\(index)"] = model
+                        group.leave()
+                    }
+                })
+            }
+        }
+        group.notify(queue: queue) {
+            DispatchQueue.main.async {
+                for index in 0..<imageArray.count {
+                    let model = sortDict["\(index)"]
+                    model?.save(handle: { (isSuccess) in
+                        print(index)
+                        modelArray.append(model!)
+                    })
+                }
+                handle(modelArray)
+            }
+        }
+    }
+    
 }

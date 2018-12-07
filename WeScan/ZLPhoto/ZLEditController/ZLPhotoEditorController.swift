@@ -26,6 +26,7 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     var currentIndex: IndexPath?
     var isFilter: Bool = false
     var pdfpath: String?
+    var isNeedLoadPDF = false
     
     var updataCallBack:(()->())?
     
@@ -117,10 +118,19 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
             titleLabel.text = "\(currentIndex.row + 1)/\(photoModels.count)"
         }
         setupUI()
+        if isNeedLoadPDF {
+            view.showLoadingView()
+            loadPDF {(models) in
+                self.photoModels = models
+                self.view.hideLoadingView()
+                self.collectionView.reloadData()
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -329,7 +339,11 @@ extension ZLPhotoEditorController {
         if isSavingStatus {
             isSavingStatus = false
         } else {
-            navigationController?.popViewController(animated: true)
+            if isNeedLoadPDF {
+                self.dismiss(animated: true, completion: nil)
+            }else{
+                navigationController?.popViewController(animated: true)
+            }
         }
     }
     
