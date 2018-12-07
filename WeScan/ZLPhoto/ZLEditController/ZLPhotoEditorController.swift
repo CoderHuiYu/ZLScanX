@@ -11,14 +11,6 @@ import CoreGraphics
 import Photos
 import QuickLook
 
-private let kCollectionCellIdentifier = "kCollectionCellIdentifier"
-private let kToolBarHeight: CGFloat = 50
-private let kSaveToolBarHeight: CGFloat = 250 // 200 -> 250 is right constraint
-private let kCollectionBottomConsValue: CGFloat = 170
-private let kCollectionBottomConsSaveValue: CGFloat = 220
-private let kRightButtonTitle = "Sort"
-private let kRightButtonTitleSelectedAll = "Select All"
-private let kRightButtonTitleCancleSelectedAll = "Cancel Select All"
 
 class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     
@@ -96,16 +88,16 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
                     return zlModel
                 })
                 
-                rightNavButton.setTitle(kRightButtonTitleCancleSelectedAll, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitleCancleSelectedAll, for: .normal)
                 setSaveToolBar(isHidden: false)
                 collectionView.reloadData()
-                collectionViewBottomCons.constant = kCollectionBottomConsSaveValue
+                collectionViewBottomCons.constant = .kCollectionBottomConsSaveValue
             } else {
                 
-                rightNavButton.setTitle(kRightButtonTitle, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitle, for: .normal)
                 setSaveToolBar(isHidden: true)
                 collectionView.reloadData()
-                collectionViewBottomCons.constant = kCollectionBottomConsValue
+                collectionViewBottomCons.constant = .kCollectionBottomConsValue
             }
         }
     }
@@ -151,7 +143,7 @@ extension ZLPhotoEditorController {
         layout.minimumLineSpacing = 10
         layout.sectionInset = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 40)
         layout.dataSource = self
-        collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: kCollectionCellIdentifier)
+        collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: .kCollectionCellIdentifier)
         collectionView.collectionViewLayout = layout
         collectionView.decelerationRate = .fast
         view.addSubview(editingView)
@@ -179,7 +171,7 @@ extension ZLPhotoEditorController {
     fileprivate func setSaveToolBar(isHidden: Bool) {
         
         if isHidden {
-            saveToolBarViewBottomCons.constant = -kSaveToolBarHeight
+            saveToolBarViewBottomCons.constant = -.kSaveToolBarHeight
         } else {
             saveToolBarViewBottomCons.constant = 0
         }
@@ -233,7 +225,7 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCollectionCellIdentifier, for: indexPath) as! ZLPhotoCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: .kCollectionCellIdentifier, for: indexPath) as! ZLPhotoCell
         cell.cellType = isSavingStatus ? .saving : .edit
         cell.photoModel = photoModels[indexPath.row]
         cell.itemDidRemove = { [weak self] (theCell) in
@@ -264,9 +256,9 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
             
             let selectedModels = photoModels.filter({return $0.isSelected == true})
             if selectedModels.count == 0 {
-                rightNavButton.setTitle(kRightButtonTitleSelectedAll, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitleSelectedAll, for: .normal)
             } else {
-                rightNavButton.setTitle(kRightButtonTitleCancleSelectedAll, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitleCancleSelectedAll, for: .normal)
             }
             
         } else {
@@ -357,8 +349,8 @@ extension ZLPhotoEditorController {
             
             let button = sender as! UIButton
             let title = button.titleLabel?.text ?? ""
-            if title == kRightButtonTitleSelectedAll {
-                rightNavButton.setTitle(kRightButtonTitleCancleSelectedAll, for: .normal)
+            if title == .kRightButtonTitleSelectedAll {
+                rightNavButton.setTitle(.kRightButtonTitleCancleSelectedAll, for: .normal)
     
                 photoModels = photoModels.map { (model) -> ZLPhotoModel in
                     var zlModel = model
@@ -368,7 +360,7 @@ extension ZLPhotoEditorController {
                 collectionView.reloadData()
                 
             } else {
-                rightNavButton.setTitle(kRightButtonTitleSelectedAll, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitleSelectedAll, for: .normal)
                 
                 photoModels = photoModels.map { (model) -> ZLPhotoModel in
                     var zlModel = model
@@ -688,4 +680,20 @@ extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewContr
             Toast.showText("save success!")
         }
     }
+}
+
+
+
+// MARK: - const property
+fileprivate extension String {
+    static let kCollectionCellIdentifier = "kCollectionCellIdentifier"
+    static let kRightButtonTitle = "Sort"
+    static let kRightButtonTitleSelectedAll = "Select All"
+    static let kRightButtonTitleCancleSelectedAll = "Cancel Select All"
+}
+
+fileprivate extension CGFloat {
+    static let kSaveToolBarHeight: CGFloat = 250 // 200 -> 250 is right constraint
+    static let kCollectionBottomConsValue: CGFloat = 170
+    static let kCollectionBottomConsSaveValue: CGFloat = 220
 }
