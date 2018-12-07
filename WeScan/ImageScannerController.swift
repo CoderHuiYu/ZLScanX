@@ -66,8 +66,10 @@ public final class ImageScannerController: UINavigationController {
 //    }
     public required init(_ isEdit: Bool){
         if isEdit {
-            let editViewController = EditPDFViewController()
-            super.init(rootViewController: editViewController)
+            let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: ZLPhotoEditorController.self))
+            vc.isNeedLoadPDF = true
+            vc.navigationController?.navigationBar.isHidden = true
+            super.init(rootViewController: vc)
         }else{
             let scannerViewController = ScannerViewController()
             super.init(rootViewController: scannerViewController)
