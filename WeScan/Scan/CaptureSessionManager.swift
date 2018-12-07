@@ -29,7 +29,7 @@ protocol RectangleDetectionDelegateProtocol: NSObjectProtocol {
 
     
     /// Called when should show scanning notice
-    func startShowingScanningNotice()
+    func startShowingScanningNotice(noRectangle: Int)
     
     /// Called when a quadrilateral has been detected.
     /// - Parameters:
@@ -280,7 +280,7 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
                     strongSelf.displayedRectangleResult = nil
                     strongSelf.delegate?.captureSessionManager(strongSelf, didDetectQuad: nil, imageSize)
                     if strongSelf.noRectangleCount > strongSelf.showScanningNoticeThreshold {
-                        strongSelf.delegate?.startShowingScanningNotice()
+                        strongSelf.delegate?.startShowingScanningNotice(noRectangle: strongSelf.noRectangleCount)
                     }
                 }
                 

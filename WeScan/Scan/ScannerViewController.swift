@@ -476,9 +476,17 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
 
     }
     
-    func startShowingScanningNotice() {
+    func startShowingScanningNotice(noRectangle: Int) {
         scanningNoticeView.isHidden = false
         scanningNoticeImageView.startAnimating()
+        if noRectangle < 100 {
+            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice", comment: "normal")
+
+        } else if noRectangle < 200 {
+            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice.move", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice.move", comment: "normal")
+        } else if noRectangle < 500 {
+            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice.long", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice.long", comment: "normal")
+        }
     }
     
     private static func defaultQuad(forImage image: UIImage) -> Quadrilateral {
