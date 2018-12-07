@@ -19,6 +19,7 @@ extension Convertable {
         print(pdfPath)
         
         let res = UIGraphicsBeginPDFContextToFile(pdfPath, .zero, nil)
+        print(res)
         let pdfbounds = UIGraphicsGetPDFContextBounds()
         let pdfW = pdfbounds.size.width
         let pdfH = pdfbounds.size.height

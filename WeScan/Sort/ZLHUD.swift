@@ -14,6 +14,7 @@ class ZLHUD: UIView {
         let name = "Movie_play_loading_"
         let image = UIImage(named: name + "01", in: Bundle.init(for: ZLHUD.classForCoder()), compatibleWith: nil)
         let imageView = UIImageView(image: image)
+        imageView.tintColor = UIColor.black
         imageView.frame = CGRect(x: 0, y: 0, width: (image?.size.width)!, height: (image?.size.height)!)
         
         let hud = ZLHUD()
