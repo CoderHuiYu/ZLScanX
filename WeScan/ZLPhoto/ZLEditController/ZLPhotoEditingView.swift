@@ -32,10 +32,10 @@ class ZLPhotoEditingView: UIView {
     var isEnhanced: Bool = false {
         didSet {
             if isEnhanced {
-                enhanceLabel.text = "deEnhanced"
+                enhanceLabel.text = "Restore"
                 enhanceButton.isSelected = true
             } else {
-                enhanceLabel.text = "enhanced"
+                enhanceLabel.text = "Enhanced"
                 enhanceButton.isSelected = false
             }
         }
@@ -71,7 +71,6 @@ class ZLPhotoEditingView: UIView {
         print(frame)
         imageView.frame = frame
         imageView.image = photoView.image
-        
     }
     
     func hide() {
