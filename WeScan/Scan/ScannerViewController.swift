@@ -440,8 +440,6 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         guard let quad = quad else {
             // If no quad has been detected, we remove the currently displayed on on the quadView.
             quadView.removeQuadrilateral()
-            scanningNoticeView.isHidden = false
-            scanningNoticeImageView.startAnimating()
             quadView.capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
             return
         }
@@ -466,6 +464,11 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         quadView.drawQuadrilateral(quad: transformedQuad, animated: true)
 
+    }
+    
+    func startShowingScanningNotice() {
+        scanningNoticeView.isHidden = false
+        scanningNoticeImageView.startAnimating()
     }
     
     private static func defaultQuad(forImage image: UIImage) -> Quadrilateral {
