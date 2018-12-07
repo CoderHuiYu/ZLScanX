@@ -96,12 +96,16 @@ final class HomeViewController: UIViewController {
     // MARK: - Actions
     
     @objc func presentScanController(_ sender: UIButton) {
-        let scannerVC = ImageScannerController.init(false)
+        let scannerVC = ImageScannerController(withOriginalPdfPath: nil) { (pdfPath) in
+            print(pdfPath)
+        }
         scannerVC.imageScannerDelegate = self
         present(scannerVC, animated: true, completion: nil)
     }
     @objc func editPDF(){
-        let scannerVC = ImageScannerController.init(true)
+        let scannerVC = ImageScannerController(withOriginalPdfPath: "11") { (pdfPath) in
+            print(pdfPath)
+        }
         scannerVC.imageScannerDelegate = self
         present(scannerVC, animated: true, completion: nil)
     }

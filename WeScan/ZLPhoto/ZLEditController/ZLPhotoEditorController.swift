@@ -17,9 +17,12 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     var photoModels = [ZLPhotoModel]()
     var currentIndex: IndexPath?
     var isFilter: Bool = false
+    
     var pdfpath: String?
     var isNeedLoadPDF: Bool = false
+    
     var updataCallBack:(()->())?
+    var dismissCallBack:((String)->())?
     
     @IBOutlet weak var customNavBar: UIView!
     
@@ -73,10 +76,12 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
         proLabel.frame = CGRect(x: 0, y: self.view.center.y-80, width: kScreenWidth, height: 22)
         return proLabel
     }()
+    
     fileprivate lazy var imageViewer: ImageViewer = {
         let imgViewer = ImageViewer.init()
         return imgViewer
     }()
+    
     fileprivate lazy var addImageBtn: UIButton = {
         let addImageBtn = UIButton()
         addImageBtn.frame = CGRect(x: kScreenWidth - 34, y: kNavHeight , width: 24, height: 24)
@@ -345,7 +350,21 @@ extension ZLPhotoEditorController {
             isSavingStatus = false
         } else {
             if isNeedLoadPDF {
-                self.dismiss(animated: true, completion: nil)
+                
+                let sure = UIAlertAction(title: "OK", style: .destructive) { _ in
+                    ZLPhotoModel.removeAllModel { (isSuccess) in
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                }
+                let cancle = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+                    
+                }
+                
+                let alert = UIAlertController(title: "The image will be deleted.", message: "Are sure?", preferredStyle: .alert)
+                
+                alert.addAction(cancle)
+                alert.addAction(sure)
+                self.present(alert, animated: true, completion: nil)
             }else{
                 navigationController?.popViewController(animated: true)
             }
@@ -680,10 +699,24 @@ extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewContr
     // send action
     @IBAction func sendButtonAction(_ sender: Any) {
         pdfpath = convertPDF(photoModels, fileName: "temporary.pdf")
-        let preVC = QLPreviewController()
-        preVC.delegate = self
-        preVC.dataSource = self
-        self.present(preVC, animated: true, completion: nil)
+        ZLPhotoModel.removeAllModel { (isSuccess) in
+            if isSuccess {
+                if let callBack = self.dismissCallBack {
+                    callBack(pdfpath
+                        ?? "")
+                }
+                if isNeedLoadPDF {
+                    self.dismiss(animated: true, completion: nil)
+                } else {
+                    
+                    navigationController?.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
+//        let preVC = QLPreviewController()
+//        preVC.delegate = self
+//        preVC.dataSource = self
+//        self.present(preVC, animated: true, completion: nil)
     }
     @objc func image(image:UIImage,didFinishSavingWithError error:NSError?,contextInfo:AnyObject) {
         if error != nil {
@@ -694,6 +727,30 @@ extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewContr
     }
     @objc func addImageBtnClick(){
         let scannerViewController = ScannerViewController()
+        scannerViewController.dismissCallBack = { index in
+            ZLPhotoModel.getAllModel(handle: { (isSuccess, models) in
+                if isSuccess {
+                    if let models = models {
+                        self.photoModels = models
+                        self.collectionView.reloadData()
+                        self.view.layoutIfNeeded()
+                        if let index = index {
+                            // click item call back
+                            self.titleLabel.text = "\(index + 1)/\(models.count)"
+                            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
+                        } else {
+                            // click cancle call back
+                            if let text = self.titleLabel.text {
+                                let str = text.components(separatedBy: "/").first ?? "1"
+                                self.titleLabel.text = "\(str)/\(models.count)"
+                            } else {
+                                self.titleLabel.text = "\(1)/\(models.count)"
+                            }
+                        }
+                    }
+                }
+            })
+        }
         scannerViewController.isFromEdit = true
         self.present(scannerViewController, animated: true, completion: nil)
     }

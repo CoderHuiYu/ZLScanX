@@ -64,14 +64,20 @@ public final class ImageScannerController: UINavigationController {
 //        self.view.addSubview(blackFlashView)
 //        setupConstraints()
 //    }
-    public required init(_ isEdit: Bool){
-        if isEdit {
+    public required init(withOriginalPdfPath pdfPath: String?, handle:@escaping (_ pdfPath: String)->()){
+        if let pdfPath = pdfPath {
             let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: ZLPhotoEditorController.self))
             vc.isNeedLoadPDF = true
+            vc.dismissCallBack = { path in
+                handle(path)
+            }
             vc.navigationController?.navigationBar.isHidden = true
             super.init(rootViewController: vc)
         }else{
             let scannerViewController = ScannerViewController()
+            scannerViewController.dismissWithPDFPath = { path in
+                handle(path)
+            }
             super.init(rootViewController: scannerViewController)
             navigationBar.tintColor = .black
             navigationBar.isTranslucent = false

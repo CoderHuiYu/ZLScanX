@@ -32,6 +32,9 @@ final class ScannerViewController: UIViewController {
     
     var isFromEdit = false
     
+    var dismissWithPDFPath:((_ pdfPath: String)->())?
+    var dismissCallBack: ((_ index: Int?)->())?
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -104,24 +107,32 @@ final class ScannerViewController: UIViewController {
         
         photoCollectionView.selectedItemCallBack = { [weak self] (photoModels, index) in
             guard let weakSelf = self else { return }
+            if  weakSelf.isFromEdit {
+                if let callBack = weakSelf.dismissCallBack {
+                    callBack(index)
+                }
+                weakSelf.dismiss(animated: true, completion: nil)
+                return
+            }
             if photoModels.count == 0 {
                 Toast.showText("NO Image!!!")
                 return
             }
-            if  (self?.isFromEdit)! {
-                self?.dismiss(animated: true, completion: nil)
-                return
-            }
+            
             let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: weakSelf.classForCoder))
             vc.photoModels = photoModels
             vc.currentIndex = IndexPath(item: index, section: 0)
             
-            vc.updataCallBack = { [weak self] in
-                self?.photoCollectionView.getData()
-                
+            vc.updataCallBack = {
+                weakSelf.photoCollectionView.getData()
             }
-            self?.captureSessionManager?.stop()
-            self?.navigationController?.pushViewController(vc, animated: true)
+            vc.dismissCallBack = { (pdfPath) in
+                if let callBack = weakSelf.dismissWithPDFPath {
+                    callBack(pdfPath)
+                }
+            }
+            weakSelf.captureSessionManager?.stop()
+            weakSelf.navigationController?.pushViewController(vc, animated: true)
         }
         return photoCollectionView
     }()
@@ -336,11 +347,28 @@ final class ScannerViewController: UIViewController {
     }
     
     @objc private func cancelImageScannerController() {
+        self.captureSessionManager?.stop()
         if isFromEdit {
+            if let callBack = dismissCallBack {
+                callBack(nil)
+            }
             self.dismiss(animated: true, completion: nil)
         }else{
-            guard let imageScannerController = navigationController as? ImageScannerController else { return }
-            imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
+            let sure = UIAlertAction(title: "OK", style: .destructive) { _ in
+                ZLPhotoModel.removeAllModel { (isSuccess) in
+                    guard let imageScannerController = self.navigationController as? ImageScannerController else { return }
+                    imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
+                }
+            }
+            let cancle = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+                
+            }
+            
+            let alert = UIAlertController(title: "The image will be deleted.", message: "Are sure?", preferredStyle: .alert)
+            
+            alert.addAction(cancle)
+            alert.addAction(sure)
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -424,7 +452,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
                 // MARK: - add photo
                 if let enhancedImage = uiImage.filter(name: "CIColorControls", parameters: ["inputContrast": 1.35]) {
-                    self.photoCollectionView.addPhoto(image, uiImage, enhancedImage, false, quad)
+                    self.photoCollectionView.addPhoto(image, uiImage, enhancedImage, true, quad)
                 } else {
                     self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
                 }
