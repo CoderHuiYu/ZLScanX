@@ -49,7 +49,12 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
         editingView.frame = view.bounds
         // hide call back
         editingView.hideCallBack = { [weak self] in
-            self?.setNavBar(isHidden: false)
+            guard let weakSelf = self else { return }
+            weakSelf.setNavBar(isHidden: false)
+            let visibleCells = weakSelf.collectionView.visibleCells
+            visibleCells.forEach { (theCell) in
+                theCell.isHidden = false
+            }
         }
         //
         editingView.toolBarItemActionCallBack = { [weak self] (index) in
@@ -138,6 +143,7 @@ extension ZLPhotoEditorController {
         layout.dataSource = self
         collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: kCollectionCellIdentifier)
         collectionView.collectionViewLayout = layout
+        collectionView.decelerationRate = .fast
         view.addSubview(editingView)
         
         guard let currentIndex = currentIndex else {
@@ -263,6 +269,15 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
                 let photoCell = cell as! ZLPhotoCell
                 currentIndex = indexPath
                 editingView.show(photoCell.imageView)
+                
+                let visibleCells = collectionView.visibleCells
+                visibleCells.forEach { (theCell) in
+                    if theCell != cell {
+                        theCell.isHidden = true
+                    } else {
+                        theCell.isHidden = false
+                    }
+                }
             }
         }
         

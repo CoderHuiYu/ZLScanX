@@ -15,6 +15,8 @@ enum FlashResult {
     case notSuccessful
 }
 
+private let kOpenFlashCD: Double = 5
+
 /// The `ScannerViewController` offers an interface to give feedback to the user regarding quadrilaterals that are detected. It also gives the user the opportunity to capture an image with a detected rectangle.
 final class ScannerViewController: UIViewController {
     
@@ -34,7 +36,7 @@ final class ScannerViewController: UIViewController {
     
     let photoCollectionViewHeight: CGFloat = 150 + 44
 
-    
+    // takePhoto
     lazy private var shutterButton: ShutterButton = {
         let button = ShutterButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -43,6 +45,7 @@ final class ScannerViewController: UIViewController {
         return button
     }()
     
+    // pop
     lazy private var cancelButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("wescan.scanning.cancel", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Cancel", comment: "The cancel button"), for: .normal)
@@ -52,16 +55,27 @@ final class ScannerViewController: UIViewController {
         return button
     }()
     
+    lazy private var popButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 12, y: kNavHeight - 44, width: 100, height: 44))
+        button.setTitle("Cancel", for: .normal)
+        button.addTarget(self, action: #selector(cancelImageScannerController), for: .touchUpInside)
+        button.isHidden = false
+        return button
+    }()
+    
+    // tool bar
     lazy private var toolbar: UIToolbar = {
         let toolbar = UIToolbar()
         toolbar.barStyle = .blackTranslucent
         toolbar.tintColor = .white
         toolbar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 44)
+        toolbar.isHidden = true
         return toolbar
     }()
     
     lazy private var autoScanButton: UIBarButtonItem = {
-        return UIBarButtonItem(title: NSLocalizedString("wescan.scanning.auto", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Auto", comment: "The auto button state"), style: .plain, target: self, action: #selector(toggleAutoScan))
+        let button = UIBarButtonItem(title: NSLocalizedString("wescan.scanning.auto", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Auto", comment: "The auto button state"), style: .plain, target: self, action: #selector(toggleAutoScan))
+        return button
     }()
     
     lazy private var flashButton: UIBarButtonItem = {
@@ -69,6 +83,7 @@ final class ScannerViewController: UIViewController {
         let flashButton = UIBarButtonItem(image: flashImage, style: .plain, target: self, action: #selector(toggleFlash))
         return flashButton
     }()
+    
     
     lazy private var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .gray)
@@ -105,6 +120,7 @@ final class ScannerViewController: UIViewController {
         return photoCollectionView
     }()
 
+    // Animation
     lazy var scanningNoticeImageView: UIImageView = {
         let scanningNoticeImageView = UIImageView()
         scanningNoticeImageView.frame = CGRect(x: 20, y: 7, width: 30, height: 15)
@@ -215,6 +231,8 @@ final class ScannerViewController: UIViewController {
         view.addSubview(scanningNoticeView)
         view.addSubview(photoCollectionView)
         view.addSubview(previewImageView)
+        
+        view.addSubview(popButton)
     }
     
     private func setupToolbar() {
@@ -399,8 +417,12 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         }) { (Bool) in
             UIView.animate(withDuration: 0.5, animations: {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
-                // MARK: - add photo 
-                self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
+                // MARK: - add photo
+                if let enhancedImage = uiImage.filter(name: "CIColorControls", parameters: ["inputContrast": 1.35]) {
+                    self.photoCollectionView.addPhoto(image, uiImage, enhancedImage, false, quad)
+                } else {
+                    self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
+                }
                 self.quadView.removeQuadrilateral()
             }) { (finish) in
                 // continue to capture
@@ -500,7 +522,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         banTriggerFlash = true
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
             self.banTriggerFlash = false
         }
     }
@@ -518,7 +540,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         banTriggerFlash = true
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
             self.banTriggerFlash = false
         }
         
