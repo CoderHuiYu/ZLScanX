@@ -18,8 +18,7 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     var currentIndex: IndexPath?
     var isFilter: Bool = false
     var pdfpath: String?
-    var isNeedLoadPDF = false
-    
+    var isNeedLoadPDF: Bool = false
     var updataCallBack:(()->())?
     
     @IBOutlet weak var customNavBar: UIView!
@@ -60,11 +59,12 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
         let coverView = UIView()
         coverView.backgroundColor = UIColor.white
         coverView.alpha =  0.5
-        coverView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight-160)
+        let gap: CGFloat = iPhoneX ? 34.0 : 0.0
+        coverView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight-160 - gap)
         return coverView
     }()
     
-    lazy var proLabel: UILabel = {
+    fileprivate lazy var proLabel: UILabel = {
         let proLabel = UILabel()
         proLabel.text = "Restore ..."
         proLabel.textColor = COLORFROMHEX(0x50a5c3)
@@ -73,11 +73,19 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
         proLabel.frame = CGRect(x: 0, y: self.view.center.y-80, width: kScreenWidth, height: 22)
         return proLabel
     }()
-    lazy var imageViewer: ImageViewer = {
+    fileprivate lazy var imageViewer: ImageViewer = {
         let imgViewer = ImageViewer.init()
         return imgViewer
     }()
-
+    fileprivate lazy var addImageBtn: UIButton = {
+        let addImageBtn = UIButton()
+        addImageBtn.frame = CGRect(x: kScreenWidth - 34, y: kNavHeight , width: 24, height: 24)
+        let image = UIImage(named: "jiahao", in: Bundle.init(for: self.classForCoder), compatibleWith: nil)
+        addImageBtn.setImage(image, for: .normal)
+        addImageBtn.addTarget(self, action: #selector(addImageBtnClick), for: .touchUpInside)
+        addImageBtn.isHidden = true
+        return addImageBtn
+    }()
     fileprivate var isSavingStatus = false {
         didSet {
             if isSavingStatus {
@@ -105,17 +113,14 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = UIColor.white
-        if let currentIndex = currentIndex {
-            titleLabel.text = "\(currentIndex.row + 1)/\(photoModels.count)"
-        }
+        
         setupUI()
         if isNeedLoadPDF {
-            view.showLoadingView()
+            addImageBtn.isHidden = false
             loadPDF {(models) in
                 self.photoModels = models
-                self.view.hideLoadingView()
                 self.collectionView.reloadData()
+                self.titleLabel.text = "\(1)/\(models.count)"
             }
         }
     }
@@ -136,6 +141,11 @@ extension ZLPhotoEditorController {
     
     fileprivate func setupUI() {
         
+        view.backgroundColor = UIColor.white
+        if let currentIndex = currentIndex {
+            titleLabel.text = "\(currentIndex.row + 1)/\(photoModels.count)"
+        }
+        
         view.clipsToBounds = true
         
         let layout = ZLPhotoWaterFallLayout()
@@ -147,7 +157,7 @@ extension ZLPhotoEditorController {
         collectionView.collectionViewLayout = layout
         collectionView.decelerationRate = .fast
         view.addSubview(editingView)
-        
+        view.addSubview(addImageBtn)
         guard let currentIndex = currentIndex else {
             return
         }
@@ -679,6 +689,11 @@ extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewContr
         }else{
             Toast.showText("save success!")
         }
+    }
+    @objc func addImageBtnClick(){
+        let scannerViewController = ScannerViewController()
+        scannerViewController.isFromEdit = true
+        self.present(scannerViewController, animated: true, completion: nil)
     }
 }
 

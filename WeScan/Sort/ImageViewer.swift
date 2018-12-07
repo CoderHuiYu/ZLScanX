@@ -15,7 +15,17 @@ class ImageViewer: UIView {
     
     public var selectedIndex = 0
     
-    var contentSC: UIScrollView?
+    fileprivate lazy var contentSC: UIScrollView = {
+        let contentSC = UIScrollView()
+        contentSC.backgroundColor = UIColor.white
+        contentSC.isPagingEnabled = false
+        contentSC.showsHorizontalScrollIndicator = false
+        contentSC.maximumZoomScale = 5
+        contentSC.minimumZoomScale = 1
+        contentSC.zoomScale = 1.5
+        contentSC.delegate = self
+        return contentSC
+    }()
     
     var currentZoom: CGFloat = 2.0
     
@@ -32,30 +42,21 @@ class ImageViewer: UIView {
         self.contentImages = contentImages
         self.originFrame = originFrame
     
-        contentSC = UIScrollView.init(frame: UIScreen.main.bounds)
-        contentSC?.backgroundColor = UIColor.white
-        contentSC?.isPagingEnabled = true
-        contentSC?.showsHorizontalScrollIndicator = false
-        contentSC?.maximumZoomScale = 4
-        contentSC?.minimumZoomScale = 1
-        contentSC?.zoomScale = 1.5
-        contentSC?.delegate = self
-        
-        self.addSubview(contentSC!)
+        contentSC.frame = UIScreen.main.bounds
+        self.addSubview(contentSC)
     }
     
     func show() {
-        contentSC?.contentSize = CGSize.init(width: kScreenWidth * CGFloat(self.contentImages.count) , height: kScreenHeight)
-        contentSC?.setContentOffset(CGPoint.init(x: CGFloat(selectedIndex) * kScreenWidth, y: 0), animated: false)
+        contentSC.contentSize = CGSize.init(width: kScreenWidth * CGFloat(self.contentImages.count) , height: kScreenHeight * 1.5)
         for (index, image) in zip(0..<self.contentImages.count, self.contentImages) {
-            var newImageView = contentSC?.viewWithTag(ImageViewer.kDefaultImageTag + index) as? UIImageView
+            var newImageView = contentSC.viewWithTag(ImageViewer.kDefaultImageTag + index) as? UIImageView
             if newImageView == nil {
                 newImageView = UIImageView.init(frame: CGRect.zero)
                 newImageView!.tag = ImageViewer.kDefaultImageTag + index
-                contentSC?.addSubview(newImageView!)
+                contentSC.addSubview(newImageView!)
                 newImageView?.isUserInteractionEnabled = true
-//                let tapGR = UITapGestureRecognizer.init(target: self, action: #selector(hideImage(sender:)))
-//                newImageView?.addGestureRecognizer(tapGR)
+                let tapGR = UITapGestureRecognizer.init(target: self, action: #selector(hideImage(sender:)))
+                newImageView?.addGestureRecognizer(tapGR)
             }
             newImageView?.image = image
             if index == selectedIndex {
@@ -74,13 +75,13 @@ class ImageViewer: UIView {
         
         UIView.animate(withDuration: 0.3) {
             self.alpha = 1
-            let selectedView = self.contentSC?.viewWithTag(ImageViewer.kDefaultImageTag + self.selectedIndex) as? UIImageView
+            let selectedView = self.contentSC.viewWithTag(ImageViewer.kDefaultImageTag + self.selectedIndex) as? UIImageView
             let image = selectedView?.image
             let width = kScreenWidth
             let height = width * ((image?.size.height)! / (image?.size.width)!)
             let y = (kScreenHeight - height) / 2
             let x = width * CGFloat(self.selectedIndex)
-            selectedView?.frame = CGRect.init(x: x, y: y, width: width, height: height)
+            selectedView?.frame = CGRect.init(x: x, y: y-10, width: width, height: height)
         }
 
         
@@ -157,7 +158,7 @@ extension UIImage {
 }
 extension ImageViewer: UIScrollViewDelegate{
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return contentSC?.subviews.first
+        return contentSC.subviews.first
     }
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         print(scrollView.zoomScale)

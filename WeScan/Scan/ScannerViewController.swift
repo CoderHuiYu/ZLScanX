@@ -30,6 +30,8 @@ final class ScannerViewController: UIViewController {
     private var flashEnabled = false
     private var banTriggerFlash = false
     
+    var isFromEdit = false
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -104,6 +106,10 @@ final class ScannerViewController: UIViewController {
             guard let weakSelf = self else { return }
             if photoModels.count == 0 {
                 Toast.showText("NO Image!!!")
+                return
+            }
+            if  (self?.isFromEdit)! {
+                self?.dismiss(animated: true, completion: nil)
                 return
             }
             let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: weakSelf.classForCoder))
@@ -330,8 +336,12 @@ final class ScannerViewController: UIViewController {
     }
     
     @objc private func cancelImageScannerController() {
-        guard let imageScannerController = navigationController as? ImageScannerController else { return }
-        imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
+        if isFromEdit {
+            self.dismiss(animated: true, completion: nil)
+        }else{
+            guard let imageScannerController = navigationController as? ImageScannerController else { return }
+            imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
+        }
     }
     
 }
