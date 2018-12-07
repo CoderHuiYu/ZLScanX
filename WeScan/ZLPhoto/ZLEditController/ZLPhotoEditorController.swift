@@ -360,7 +360,7 @@ extension ZLPhotoEditorController {
                     
                 }
                 
-                let alert = UIAlertController(title: "The image will be deleted.", message: "Are sure?", preferredStyle: .alert)
+                let alert = UIAlertController(title: "The image will be deleted.", message: "Are you sure?", preferredStyle: .alert)
                 
                 alert.addAction(cancle)
                 alert.addAction(sure)

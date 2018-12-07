@@ -362,9 +362,12 @@ final class ScannerViewController: UIViewController {
             }
             let cancle = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
                 
+                CaptureSession.current.isEditing = false
+                self.quadView.removeQuadrilateral()
+                self.captureSessionManager?.start()
             }
             
-            let alert = UIAlertController(title: "The image will be deleted.", message: "Are sure?", preferredStyle: .alert)
+            let alert = UIAlertController(title: "The image will be deleted.", message: "Are you sure?", preferredStyle: .alert)
             
             alert.addAction(cancle)
             alert.addAction(sure)
@@ -451,7 +454,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             UIView.animate(withDuration: 0.5, animations: {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
                 // MARK: - add photo
-                if let enhancedImage = uiImage.filter(name: "CIColorControls", parameters: ["inputContrast": 1.35]) {
+                if let enhancedImage = uiImage.colorControImage() {
                     self.photoCollectionView.addPhoto(image, uiImage, enhancedImage, true, quad)
                 } else {
                     self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
