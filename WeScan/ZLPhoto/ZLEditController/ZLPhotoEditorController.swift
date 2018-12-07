@@ -67,7 +67,7 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     fileprivate lazy var proLabel: UILabel = {
         let proLabel = UILabel()
         proLabel.text = "Restore ..."
-        proLabel.textColor = COLORFROMHEX(0x50a5c3)
+        proLabel.textColor = globalColor
         proLabel.textAlignment = .center
         proLabel.font = UIFont.boldSystemFont(ofSize: 23)
         proLabel.frame = CGRect(x: 0, y: self.view.center.y-80, width: kScreenWidth, height: 22)
@@ -569,7 +569,9 @@ extension ZLPhotoEditorController {
                 })
             } else {
                 // need review - this pic don't changed
-                let enhancedImage = lastModel.enhancedImage.filter(name: "CIColorControls", parameters: ["inputContrast":1.35]) ?? lastModel.scannedImage
+//                let enhancedImage = lastModel.enhancedImage.filter(name: "CIColorControls", parameters: ["inputContrast":1.35]) ?? lastModel.scannedImage
+                let enhancedImage = lastModel.enhancedImage.colorControImage() ?? lastModel.scannedImage
+//                enhancedImage = enhancedImage.ciConvolutionImage()
                 
                 lastModel.replace(originalImage, lastModel.scannedImage, enhancedImage, true, lastModel.detectedRectangle, handle: { (isSuccess, model) in
                     if isSuccess {

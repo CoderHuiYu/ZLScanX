@@ -107,5 +107,39 @@ extension UIImage {
         }
         return UIImage(cgImage: cgimage)
     }
-    
+    func colorControImage() -> UIImage?{
+            let context = CIContext(options: nil)
+            
+            let cgI =  CIImage(image: self)
+                
+            let filter = CIFilter(name: "CIColorControls")
+            filter?.setValue(0.5, forKey:"inputSaturation")
+            filter?.setValue(0.5, forKey:"inputBrightness")
+            filter?.setValue(3.0, forKey: "inputContrast")
+            
+            filter?.setValue(cgI, forKey: kCIInputImageKey)
+            let outputCGImage = context.createCGImage(filter!.outputImage!, from: filter!.outputImage!.extent)
+            
+            let newImage = UIImage(cgImage: outputCGImage!)
+            print(newImage)
+        
+        return newImage
+    }
+    func ciConvolutionImage() -> UIImage
+    {
+        let cgI =  CIImage(image: self)
+        let filter = CIFilter(name: "CIConvolution3X3")
+        filter?.setValue(cgI, forKey: kCIInputImageKey)
+        let weights:[CGFloat] = [0,-1,0,
+                                 -1,5,-1,
+                                 0,-1,0]
+        let inputWeights = CIVector(values: weights, count: 9)
+        filter?.setValue(inputWeights, forKey: kCIInputWeightsKey)
+        filter?.setValue(0, forKey: kCIInputBiasKey)
+        let outImage = filter?.outputImage
+        let context = CIContext(options: nil)
+        let outputCGImage = context.createCGImage(outImage!, from: outImage!.extent)
+        let newImage = UIImage(cgImage: outputCGImage!)
+        return newImage
+    }
 }

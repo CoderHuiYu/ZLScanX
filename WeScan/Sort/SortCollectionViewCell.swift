@@ -30,7 +30,7 @@ class SortCollectionViewCell: UICollectionViewCell {
     }()
     lazy var title: UILabel = {
         let title = UILabel()
-        title.textColor = RGBColor(r: 80, g: 165, b: 195)
+        title.textColor = globalColor
         title.textAlignment = .center
         title.font = UIFont.boldSystemFont(ofSize: 16)
         return title
@@ -77,9 +77,9 @@ class SortCollectionViewCell: UICollectionViewCell {
     func addImaginaryLine(_ frame: CGRect){
         imaginaryLine.layer.sublayers?.removeAll()
         let border = CAShapeLayer()
-        border.strokeColor = RGBColor(r: 80, g: 165, b: 195).cgColor
+        border.strokeColor = globalColor.cgColor
         border.fillColor = UIColor.clear.cgColor
-        border.path = UIBezierPath(rect: CGRect(x: 0.5, y: 0.5, width: frame.size.width-1, height: frame.size.height-1)).cgPath
+        border.path = UIBezierPath(rect: CGRect(x: 1, y: 1, width: frame.size.width-2, height: frame.size.height-2)).cgPath
         border.frame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height)
         border.lineWidth = 1
         border.lineCap = CAShapeLayerLineCap(rawValue: "square")

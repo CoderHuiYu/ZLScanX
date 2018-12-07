@@ -11,6 +11,7 @@ import UIKit
 
 let kScreenWidth = UIScreen.main.bounds.size.width
 let kScreenHeight = UIScreen.main.bounds.size.height
+let globalColor = GlobalColor()
 
 let iPhoneX = UIScreen.main.bounds.size.height >= 812 ? true : false
 let kNavHeight: CGFloat = iPhoneX ? 88.0 : 64.0
@@ -21,4 +22,7 @@ func RGBColor(r :CGFloat ,g:CGFloat,b:CGFloat) ->UIColor{
 }
 func COLORFROMHEX(_ h:Int) ->UIColor {
     return RGBColor(r: CGFloat(((h)>>16) & 0xFF), g: CGFloat(((h)>>8) & 0xFF), b: CGFloat((h) & 0xFF))
+}
+func GlobalColor() -> UIColor{
+    return COLORFROMHEX(0x50a5c3)
 }
