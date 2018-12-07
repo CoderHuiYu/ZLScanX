@@ -25,6 +25,22 @@ class ZLPhotoEditingView: UIView {
         return imageView
     }()
     
+    @IBOutlet weak var enhanceLabel: UILabel!
+    
+    @IBOutlet weak var enhanceButton: UIButton!
+    
+    var isEnhanced: Bool = false {
+        didSet {
+            if isEnhanced {
+                enhanceLabel.text = "deEnhanced"
+                enhanceButton.isSelected = true
+            } else {
+                enhanceLabel.text = "enhanced"
+                enhanceButton.isSelected = false
+            }
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         addSubview(imageView)

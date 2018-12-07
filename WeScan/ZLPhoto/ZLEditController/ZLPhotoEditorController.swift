@@ -219,6 +219,7 @@ extension ZLPhotoEditorController {
         }
         let photoCell = cell as! ZLPhotoCell
         self.editingView.update(photoCell.imageView)
+        self.editingView.isEnhanced = model.isEnhanced
     }
     
     
@@ -278,6 +279,8 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
                 
                 let photoCell = cell as! ZLPhotoCell
                 currentIndex = indexPath
+                let model = photoModels[indexPath.row]
+                editingView.isEnhanced = model.isEnhanced
                 editingView.show(photoCell.imageView)
                 
                 let visibleCells = collectionView.visibleCells
@@ -660,7 +663,9 @@ extension ZLPhotoEditorController {
         
     }
 }
+
 extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewControllerDelegate{
+    
     func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
         return 1
     }

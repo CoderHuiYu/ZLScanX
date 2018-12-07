@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -64,7 +65,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.46202266219999999" green="0.83828371759999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" name="zl_themeColor"/>
                     <constraints>
                         <constraint firstItem="nQq-Ps-PBC" firstAttribute="leading" secondItem="ofm-Wg-uGs" secondAttribute="leading" id="HS3-cf-WFe"/>
                         <constraint firstItem="gl1-8t-y6s" firstAttribute="leading" secondItem="nQq-Ps-PBC" secondAttribute="trailing" id="Nyq-Ls-tvX"/>
@@ -89,7 +90,9 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FRx-Dh-ghc">
                             <rect key="frame" x="333" y="7" width="30" height="30"/>
-                            <state key="normal" title="Sort"/>
+                            <state key="normal" title="Sort">
+                                <color key="titleColor" name="zl_themeColor"/>
+                            </state>
                             <connections>
                                 <action selector="rightButtonAction:" destination="-1" eventType="touchUpInside" id="6Sr-fI-oZv"/>
                             </connections>
@@ -211,7 +214,7 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" red="0.46202266219999999" green="0.83828371759999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" name="zl_themeColor"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="aVx-SN-KuI" secondAttribute="bottom" id="6U3-rf-tJ4"/>
                         <constraint firstAttribute="trailing" secondItem="wzQ-X2-rTT" secondAttribute="trailing" id="B29-TN-PDu"/>
@@ -254,5 +257,8 @@
         <image name="zl_back" width="22" height="22"/>
         <image name="zl_saveCameraRoll" width="106" height="106"/>
         <image name="zl_saveEvernote" width="106" height="106"/>
+        <namedColor name="zl_themeColor">
+            <color red="0.31372549019607843" green="0.6470588235294118" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

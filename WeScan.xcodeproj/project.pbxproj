@@ -27,6 +27,7 @@
 		74F7D03A211ACC4B0046AF7E /* UIImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F7D039211ACC4B0046AF7E /* UIImageTests.swift */; };
 		74F7D03C211ACC6B0046AF7E /* CGAffineTransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F7D03B211ACC6B0046AF7E /* CGAffineTransformTests.swift */; };
 		74F7D03E211ACC890046AF7E /* AVCaptureVideoOrientationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F7D03D211ACC890046AF7E /* AVCaptureVideoOrientationTests.swift */; };
+		93061F7021BA2FAE008A78BE /* ZLColorAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93061F6F21BA2FAE008A78BE /* ZLColorAsset.xcassets */; };
 		A11C5B9C2046A20C005075FE /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C5B9B2046A20C005075FE /* Error.swift */; };
 		A11C5CD920495EA1005075FE /* RectangleFeaturesFunnelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C5CD820495EA1005075FE /* RectangleFeaturesFunnelTests.swift */; };
 		A11C5CDB20495EC9005075FE /* AVCaptureVideoOrientation+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11C5CDA20495EC9005075FE /* AVCaptureVideoOrientation+Utils.swift */; };
@@ -189,6 +190,7 @@
 		74F7D039211ACC4B0046AF7E /* UIImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageTests.swift; sourceTree = "<group>"; };
 		74F7D03B211ACC6B0046AF7E /* CGAffineTransformTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGAffineTransformTests.swift; sourceTree = "<group>"; };
 		74F7D03D211ACC890046AF7E /* AVCaptureVideoOrientationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureVideoOrientationTests.swift; sourceTree = "<group>"; };
+		93061F6F21BA2FAE008A78BE /* ZLColorAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ZLColorAsset.xcassets; sourceTree = "<group>"; };
 		A11C5B9B2046A20C005075FE /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		A11C5CD820495EA1005075FE /* RectangleFeaturesFunnelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RectangleFeaturesFunnelTests.swift; sourceTree = "<group>"; };
 		A11C5CDA20495EC9005075FE /* AVCaptureVideoOrientation+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVCaptureVideoOrientation+Utils.swift"; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 				18EB1C5D21B0EBC5001CEA1E /* ZLPhotoCell.swift */,
 				18EB1C5E21B0EBC5001CEA1E /* ZLPhotoCell.xib */,
 				18EB1C6721B10717001CEA1E /* ZLPhotoAsset.xcassets */,
+				93061F6F21BA2FAE008A78BE /* ZLColorAsset.xcassets */,
 				18153A6621B5597600DD1889 /* ZLPhotoManager.swift */,
 				18C33F6921B640C10034C819 /* ZLPhotoModel.swift */,
 			);
@@ -746,6 +749,7 @@
 				1834C03821B141A900FF6EDB /* ZLPhotoEditorController.xib in Resources */,
 				18EB1C6821B10717001CEA1E /* ZLPhotoAsset.xcassets in Resources */,
 				B94FBBB52178653C001ED1B4 /* flashUnavailable@2x.png in Resources */,
+				93061F7021BA2FAE008A78BE /* ZLColorAsset.xcassets in Resources */,
 				18EB1C6221B0EBC5001CEA1E /* ZLPhotoCell.xib in Resources */,
 				FEECF2FF21AFE590009B7AC2 /* delete_page_x_44x44_@2x.png in Resources */,
 				B94FBBB52178653C001ED1B4 /* flashUnavailable@2x.png in Resources */,
