@@ -15,7 +15,7 @@ enum FlashResult {
     case notSuccessful
 }
 
-private let kOpenFlashCD: Double = 5
+private let kOpenFlashCD: Double = 3
 
 /// The `ScannerViewController` offers an interface to give feedback to the user regarding quadrilaterals that are detected. It also gives the user the opportunity to capture an image with a detected rectangle.
 final class ScannerViewController: UIViewController {
@@ -484,12 +484,11 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, brightValueDidChange brightValue: Double) {
         
+//        print(brightValue)
         
         if banTriggerFlash == true {
             return
         }
-        
-        print(brightValue)
         
         if brightValue < -2 {
             openFlash()
@@ -532,11 +531,11 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             }
         }
         
-        banTriggerFlash = true
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
-            self.banTriggerFlash = false
-        }
+//        banTriggerFlash = true
+//
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
+//            self.banTriggerFlash = false
+//        }
         
     }
     
