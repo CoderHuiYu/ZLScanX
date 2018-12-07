@@ -185,6 +185,7 @@ final class ScannerViewController: UIViewController {
         return previewImageView
     }()
     
+    
     fileprivate var disappear: Bool = false
     // MARK: - Life Cycle
     
@@ -301,6 +302,13 @@ final class ScannerViewController: UIViewController {
         ]
         
         NSLayoutConstraint.activate(quadViewConstraints + cancelButtonConstraints + shutterButtonConstraints + activityIndicatorConstraints)
+    }
+    
+    fileprivate func adjustScanningNoticeView() {
+        scanningNoticeLabel.sizeToFit()
+        let width = 20 + scanningNoticeImageView.bounds.width + 10 + scanningNoticeLabel.bounds.width + 20
+        scanningNoticeView.frame = CGRect(x: 0, y: 0, width: width, height: 30)
+        scanningNoticeView.center = view.center
     }
     
     // MARK: - Actions
@@ -511,10 +519,11 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice", comment: "normal")
 
         } else if noRectangle < 200 {
-            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice.move", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice.move", comment: "normal")
+            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice.move", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice.move", comment: "move")
         } else if noRectangle < 500 {
-            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice.long", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice.long", comment: "normal")
+            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice.long", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice.long", comment: "long")
         }
+        adjustScanningNoticeView()
     }
     
     private static func defaultQuad(forImage image: UIImage) -> Quadrilateral {
