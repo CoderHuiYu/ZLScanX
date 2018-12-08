@@ -58,24 +58,23 @@ final class RectangleFeaturesFunnel {
     let minNumberOfRectangles = 3
     
     /// The value in pixels used to determine if two rectangle match or not. A higher value will prevent displayed rectangles to be refreshed. On the opposite, a smaller value will make new rectangles be displayed constantly.
-    let matchingThreshold: CGFloat = 40.0
+    let matchingThreshold: CGFloat = 20.0
     
     /// The minumum number of matching rectangles (within the `rectangle` queue), to be confident enough to display a rectangle.
-    let minNumberOfMatches = 3
+    let minNumberOfMatches = 5
     
     /// The number of similar rectangles that need to be found to auto scan.
-    let autoScanThreshold = 20
+    let autoScanThreshold = 25
     
     /// The number of similar rectangles that need to be found to start shoot loading.
-    let startShootLoadingThreshold = 3
+    let startShootLoadingThreshold = 5
 
-    
     /// The number of times the rectangle has passed the threshold to be auto-scanned
     var currentAutoScanPassCount = 0
     
     /// The value in pixels used to determine if a rectangle is accurate enough to be auto scanned.
     /// A higher value means the auto scan is quicker, but the rectangle will be less accurate. On the other hand, the lower the value, the longer it'll take for the auto scan, but it'll be way more accurate
-    var autoScanMatchingThreshold: CGFloat = 8.0
+    var autoScanMatchingThreshold: CGFloat = 6.0
     
     /// Add a rectangle to the funnel, and if a new rectangle should be displayed, the completion block will be called.
     /// The algorithm works the following way:

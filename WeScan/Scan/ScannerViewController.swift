@@ -217,8 +217,9 @@ final class ScannerViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         videoPreviewlayer.frame = view.layer.bounds
+        videoPreviewlayer.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - photoCollectionViewHeight)
+        quadView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - photoCollectionViewHeight)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -300,7 +301,9 @@ final class ScannerViewController: UIViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ]
         
-        NSLayoutConstraint.activate(quadViewConstraints + cancelButtonConstraints + shutterButtonConstraints + activityIndicatorConstraints)
+//        NSLayoutConstraint.activate(quadViewConstraints + cancelButtonConstraints + shutterButtonConstraints + activityIndicatorConstraints)
+        NSLayoutConstraint.activate( cancelButtonConstraints + shutterButtonConstraints + activityIndicatorConstraints)
+
     }
     
     fileprivate func adjustScanningNoticeView() {
