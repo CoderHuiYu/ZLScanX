@@ -113,9 +113,9 @@ extension UIImage {
             let cgI =  CIImage(image: self)
                 
             let filter = CIFilter(name: "CIColorControls")
-            filter?.setValue(0.5, forKey:"inputSaturation")
-            filter?.setValue(0.5, forKey:"inputBrightness")
-            filter?.setValue(3.0, forKey: "inputContrast")
+//            filter?.setValue(0.5, forKey:"inputSaturation")
+//            filter?.setValue(0.5, forKey:"inputBrightness")
+            filter?.setValue(2.0, forKey: "inputContrast")
             
             filter?.setValue(cgI, forKey: kCIInputImageKey)
             let outputCGImage = context.createCGImage(filter!.outputImage!, from: filter!.outputImage!.extent)
