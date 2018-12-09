@@ -38,9 +38,6 @@ final class ScannerViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
-    let photoCollectionViewWithBarHeight: CGFloat = 140 + 54
-    let photoCollectionViewHeight: CGFloat = 140
 
     // takePhoto
     lazy private var shutterButton: ShutterButton = {
@@ -75,7 +72,7 @@ final class ScannerViewController: UIViewController {
         toolbar.barStyle = .blackTranslucent
         toolbar.tintColor = .white
         toolbar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 44)
-//        toolbar.isHidden = true
+        toolbar.isHidden = true
         return toolbar
     }()
     
@@ -99,7 +96,7 @@ final class ScannerViewController: UIViewController {
     }()
     
     fileprivate lazy var photoCollectionView: ZLPhotoWaterFallView = {
-        let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - photoCollectionViewWithBarHeight, width: view.frame.width, height: photoCollectionViewWithBarHeight))
+        let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - .photoCollectionViewWithBarHeight, width: view.frame.width, height: .photoCollectionViewWithBarHeight))
         photoCollectionView.backViewColor = UIColor.darkGray
         
         photoCollectionView.deleteActionCallBack = { [weak self] in
@@ -135,6 +132,22 @@ final class ScannerViewController: UIViewController {
             weakSelf.captureSessionManager?.stop()
             weakSelf.navigationController?.pushViewController(vc, animated: true)
         }
+        
+        photoCollectionView.manualActionCallBack = { [weak self] in
+            // show take pic ture button
+            
+        }
+        
+        photoCollectionView.flashActionCallBack = { [weak self](button) in
+            // flash action
+            if button.isSelected {
+                self?.openFlash()
+            } else {
+                self?.closeFlash()
+            }
+            
+        }
+        
         return photoCollectionView
     }()
 
@@ -219,8 +232,8 @@ final class ScannerViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         videoPreviewlayer.frame = view.layer.bounds
-        videoPreviewlayer.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - photoCollectionViewHeight)
-        quadView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - photoCollectionViewHeight)
+        videoPreviewlayer.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - .photoCollectionViewHeight)
+        quadView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - .photoCollectionViewHeight)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -279,7 +292,7 @@ final class ScannerViewController: UIViewController {
         
         if #available(iOS 11.0, *) {
             cancelButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: (65.0 / 2) - 10.0)
-            shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: photoCollectionViewWithBarHeight)
+            shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: .photoCollectionViewWithBarHeight)
         } else {
             cancelButtonBottomConstraint = view.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: (65.0 / 2) - 10.0)
             shutterButtonBottomConstraint = view.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: 8.0)
@@ -571,7 +584,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
     }
     
     
-    fileprivate func openFlash() {
+    fileprivate func openFlash(_ isNeedCD: Bool = true) {
         guard UIImagePickerController.isFlashAvailable(for: .rear) else { return }
         
         DispatchQueue.main.async {
@@ -583,8 +596,10 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         banTriggerFlash = true
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
-            self.banTriggerFlash = false
+        if isNeedCD {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
+                self.banTriggerFlash = false
+            }
         }
     }
     
@@ -607,4 +622,11 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
     }
     
+}
+
+
+
+fileprivate extension CGFloat {
+    static let photoCollectionViewWithBarHeight: CGFloat = 100 + 88
+    static let photoCollectionViewHeight: CGFloat = 100
 }

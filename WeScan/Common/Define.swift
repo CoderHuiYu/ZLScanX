@@ -11,6 +11,7 @@ import UIKit
 
 let kScreenWidth = UIScreen.main.bounds.size.width
 let kScreenHeight = UIScreen.main.bounds.size.height
+
 let globalColor = GlobalColor()
 
 let iPhoneX = UIScreen.main.bounds.size.height >= 812 ? true : false
