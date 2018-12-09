@@ -39,7 +39,8 @@ final class ScannerViewController: UIViewController {
         return true
     }
     
-    let photoCollectionViewHeight: CGFloat = 150 + 44
+    let photoCollectionViewWithBarHeight: CGFloat = 140 + 54
+    let photoCollectionViewHeight: CGFloat = 140
 
     // takePhoto
     lazy private var shutterButton: ShutterButton = {
@@ -74,7 +75,7 @@ final class ScannerViewController: UIViewController {
         toolbar.barStyle = .blackTranslucent
         toolbar.tintColor = .white
         toolbar.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 44)
-        toolbar.isHidden = true
+//        toolbar.isHidden = true
         return toolbar
     }()
     
@@ -98,7 +99,7 @@ final class ScannerViewController: UIViewController {
     }()
     
     fileprivate lazy var photoCollectionView: ZLPhotoWaterFallView = {
-        let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - photoCollectionViewHeight, width: view.frame.width, height: photoCollectionViewHeight))
+        let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - photoCollectionViewWithBarHeight, width: view.frame.width, height: photoCollectionViewWithBarHeight))
         photoCollectionView.backViewColor = UIColor.darkGray
         
         photoCollectionView.deleteActionCallBack = { [weak self] in
@@ -266,19 +267,19 @@ final class ScannerViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        let quadViewConstraints = [
-            quadView.topAnchor.constraint(equalTo: view.topAnchor),
-            view.bottomAnchor.constraint(equalTo: quadView.bottomAnchor),
-            view.trailingAnchor.constraint(equalTo: quadView.trailingAnchor),
-            quadView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        ]
+//        let quadViewConstraints = [
+//            quadView.topAnchor.constraint(equalTo: view.topAnchor),
+//            view.bottomAnchor.constraint(equalTo: quadView.bottomAnchor),
+//            view.trailingAnchor.constraint(equalTo: quadView.trailingAnchor),
+//            quadView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+//        ]
         
         var cancelButtonBottomConstraint: NSLayoutConstraint
         var shutterButtonBottomConstraint: NSLayoutConstraint
         
         if #available(iOS 11.0, *) {
             cancelButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: (65.0 / 2) - 10.0)
-            shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: 8.0)
+            shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: photoCollectionViewWithBarHeight)
         } else {
             cancelButtonBottomConstraint = view.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: (65.0 / 2) - 10.0)
             shutterButtonBottomConstraint = view.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: 8.0)
@@ -327,9 +328,12 @@ final class ScannerViewController: UIViewController {
         if CaptureSession.current.autoScanEnabled {
             CaptureSession.current.autoScanEnabled = false
             autoScanButton.title = NSLocalizedString("wescan.scanning.manual", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Manual", comment: "The manual button state")
+            shutterButton.isHidden = true
         } else {
             CaptureSession.current.autoScanEnabled = true
             autoScanButton.title = NSLocalizedString("wescan.scanning.auto", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Auto", comment: "The auto button state")
+            shutterButton.isHidden = false
+
         }
     }
     
