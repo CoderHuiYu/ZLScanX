@@ -113,18 +113,42 @@ extension UIImage {
             let cgI =  CIImage(image: self)
                 
             let filter = CIFilter(name: "CIColorControls")
-            filter?.setValue(0.5, forKey:"inputSaturation")
-            filter?.setValue(0.5, forKey:"inputBrightness")
-            filter?.setValue(3.0, forKey: "inputContrast")
+//            filter?.setValue(0.5, forKey:"inputSaturation")
+//            filter?.setValue(0.5, forKey:"inputBrightness")
+            filter?.setValue(2.0, forKey: "inputContrast")
             
             filter?.setValue(cgI, forKey: kCIInputImageKey)
             let outputCGImage = context.createCGImage(filter!.outputImage!, from: filter!.outputImage!.extent)
             
             let newImage = UIImage(cgImage: outputCGImage!)
+//            let resultImage = imageByRemoveWhiteBg()
             print(newImage)
-        
         return newImage
     }
+   
+    func imageByRemoveWhiteBg() -> UIImage? {
+        let colorMasking: [CGFloat] = [160, 255, 160, 255, 160, 255]
+        return transparentColor(colorMasking: colorMasking)
+    }
+    
+    func transparentColor(colorMasking:[CGFloat]) -> UIImage? {
+        if let rawImageRef = self.cgImage {
+            UIGraphicsBeginImageContext(self.size)
+            if let maskedImageRef = rawImageRef.copy(maskingColorComponents: colorMasking) {
+                let context: CGContext = UIGraphicsGetCurrentContext()!
+                context.translateBy(x: 0.0, y: self.size.height)
+                context.scaleBy(x: 1.0, y: -1.0)
+                context.draw(maskedImageRef, in: CGRect(x:0, y:0, width:self.size.width,
+                                                        height:self.size.height))
+                context.setFillColor(UIColor.white.cgColor)
+                let result = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
+                return result
+            }
+        }
+        return nil
+    }
+    
     func ciConvolutionImage() -> UIImage
     {
         let cgI =  CIImage(image: self)
