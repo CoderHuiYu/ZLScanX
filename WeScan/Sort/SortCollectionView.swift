@@ -31,7 +31,7 @@ class SortCollectionView: UICollectionView{
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
         
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = COLORFROMHEX(0xf7f7f7)
         self.showsHorizontalScrollIndicator = false
         self.register(SortCollectionViewCell.self, forCellWithReuseIdentifier: SortCollectionViewCell.SortCollectionViewCellID)
         self.delegate = self

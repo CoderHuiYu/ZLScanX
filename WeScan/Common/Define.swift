@@ -24,5 +24,5 @@ func COLORFROMHEX(_ h:Int) ->UIColor {
     return RGBColor(r: CGFloat(((h)>>16) & 0xFF), g: CGFloat(((h)>>8) & 0xFF), b: CGFloat((h) & 0xFF))
 }
 func GlobalColor() -> UIColor{
-    return COLORFROMHEX(0x50a5c3)
+    return COLORFROMHEX(0x18acf8)
 }

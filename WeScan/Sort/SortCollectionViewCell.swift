@@ -37,7 +37,7 @@ class SortCollectionViewCell: UICollectionViewCell {
     }()
     lazy var delBtn: UIButton = {
         let delBtn = UIButton()
-        let delImage = UIImage(named: "zl_cancel", in: Bundle(for: self.classForCoder), compatibleWith: nil)
+        let delImage = UIImage(named: "S_delete", in: Bundle(for: self.classForCoder), compatibleWith: nil)
         delBtn.setImage(delImage, for: .normal)
         delBtn.layer.cornerRadius = 11
         delBtn.backgroundColor = UIColor.white
@@ -70,7 +70,7 @@ class SortCollectionViewCell: UICollectionViewCell {
         iconimageView.frame = CGRect(x: 20, y: gap, width: itemWidth, height:heigh)
         iconimageView.image = iconImage
         imaginaryLine.frame = CGRect(x: 20, y: gap, width: itemWidth, height: heigh)
-        delBtn.frame = CGRect(x: 10, y: gap-10, width: 22, height: 22)
+        delBtn.frame = CGRect(x: contentView.frame.size.width-31, y: gap-9, width: 22, height: 22)
         addImaginaryLine(self.iconimageView.frame)
     }
     //MARK: -- Add ImaginaryLine

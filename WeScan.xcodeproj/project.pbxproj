@@ -92,6 +92,9 @@
 		FEE6A0F521B8EC3A00C2CEC3 /* ZLHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A0F421B8EC3A00C2CEC3 /* ZLHUD.swift */; };
 		FEE6A11721B948D500C2CEC3 /* PDFPreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEE6A11621B948D400C2CEC3 /* PDFPreViewController.swift */; };
 		FEEBFA5D21B95D77009F7128 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEBFA5C21B95D77009F7128 /* Toast.swift */; };
+		FEEBFA6421BC8E2D009F7128 /* test.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEBFA6321BC8E2D009F7128 /* test.png */; };
+		FEEBFA6721BCC4BE009F7128 /* TwinkleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEEBFA6621BCC4BE009F7128 /* TwinkleLayer.swift */; };
+		FEEBFA6921BCD122009F7128 /* TwinkleImage.png in Resources */ = {isa = PBXBuildFile; fileRef = FEEBFA6821BCD122009F7128 /* TwinkleImage.png */; };
 		FEECF2A521AFCEE2009B7AC2 /* SortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */; };
 		FEECF2A721AFCEEE009B7AC2 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2A621AFCEEE009B7AC2 /* Define.swift */; };
 		FEECF2F521AFD132009B7AC2 /* SortCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */; };
@@ -258,6 +261,9 @@
 		FEE6A0F421B8EC3A00C2CEC3 /* ZLHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZLHUD.swift; sourceTree = "<group>"; };
 		FEE6A11621B948D400C2CEC3 /* PDFPreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFPreViewController.swift; sourceTree = "<group>"; };
 		FEEBFA5C21B95D77009F7128 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
+		FEEBFA6321BC8E2D009F7128 /* test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test.png; sourceTree = "<group>"; };
+		FEEBFA6621BCC4BE009F7128 /* TwinkleLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwinkleLayer.swift; sourceTree = "<group>"; };
+		FEEBFA6821BCD122009F7128 /* TwinkleImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwinkleImage.png; sourceTree = "<group>"; };
 		FEECF2A421AFCEE2009B7AC2 /* SortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortViewController.swift; sourceTree = "<group>"; };
 		FEECF2A621AFCEEE009B7AC2 /* Define.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
 		FEECF2F421AFD132009B7AC2 /* SortCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -538,6 +544,8 @@
 		B983380121A6CA4E00AAE307 /* Enhance */ = {
 			isa = PBXGroup;
 			children = (
+				FEEBFA6821BCD122009F7128 /* TwinkleImage.png */,
+				FEEBFA6321BC8E2D009F7128 /* test.png */,
 				FEE6A0C821B1183D00C2CEC3 /* WeScan-Banner.jpg */,
 				FEE6A0C321AFF19400C2CEC3 /* Nebula.png */,
 				FEECF2FD21AFE590009B7AC2 /* delete_page_x_44x44_@2x.png */,
@@ -564,6 +572,7 @@
 				FEE6A0F421B8EC3A00C2CEC3 /* ZLHUD.swift */,
 				FEE6A11621B948D400C2CEC3 /* PDFPreViewController.swift */,
 				FEEBFA5C21B95D77009F7128 /* Toast.swift */,
+				FEEBFA6621BCC4BE009F7128 /* TwinkleLayer.swift */,
 			);
 			path = Sort;
 			sourceTree = "<group>";
@@ -742,11 +751,13 @@
 			files = (
 				FEECF2FA21AFE31E009B7AC2 /* XNormal_18x18_@3x.png in Resources */,
 				B97B49C9216C6C6800B2235B /* Localizable.strings in Resources */,
+				FEEBFA6421BC8E2D009F7128 /* test.png in Resources */,
 				0CEDD06F21B115F500F9050E /* Pill.xcassets in Resources */,
 				1834C03821B141A900FF6EDB /* ZLPhotoEditorController.xib in Resources */,
 				18EB1C6821B10717001CEA1E /* ZLPhotoAsset.xcassets in Resources */,
 				B94FBBB52178653C001ED1B4 /* flashUnavailable@2x.png in Resources */,
 				18EB1C6221B0EBC5001CEA1E /* ZLPhotoCell.xib in Resources */,
+				FEEBFA6921BCD122009F7128 /* TwinkleImage.png in Resources */,
 				FEECF2FF21AFE590009B7AC2 /* delete_page_x_44x44_@2x.png in Resources */,
 				B94FBBB52178653C001ED1B4 /* flashUnavailable@2x.png in Resources */,
 				FEE6A0C921B1183D00C2CEC3 /* WeScan-Banner.jpg in Resources */,
@@ -803,6 +814,7 @@
 				18153A6721B5597600DD1889 /* ZLPhotoManager.swift in Sources */,
 				A1D4BD0E202C57A400FCDDEC /* CaptureSessionManager.swift in Sources */,
 				FEE6A0ED21B7BD2700C2CEC3 /* SortNavView.swift in Sources */,
+				FEEBFA6721BCC4BE009F7128 /* TwinkleLayer.swift in Sources */,
 				FEEBFA5D21B95D77009F7128 /* Toast.swift in Sources */,
 				A1F22ECE2031937E001723AD /* EditScanViewController.swift in Sources */,
 				FEE6A0F521B8EC3A00C2CEC3 /* ZLHUD.swift in Sources */,
