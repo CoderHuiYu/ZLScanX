@@ -455,10 +455,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         scanningNoticeView.isHidden = true
         shutterButton.isUserInteractionEnabled = true
         let image = picture.applyingPortraitOrientation()
-        
-        
         let quad = quad ?? ScannerViewController.defaultQuad(forImage: image)
-        
         guard let ciImage = CIImage(image: image) else {
             if let imageScannerController = navigationController as? ImageScannerController {
                 let error = ImageScannerControllerError.ciImageCreation
@@ -466,12 +463,8 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             }
             return
         }
-        
-        
-        
         var cartesianScaledQuad = quad.toCartesian(withHeight: image.size.height)
         cartesianScaledQuad.reorganize()
-        
         let filteredImage = ciImage.applyingFilter("CIPerspectiveCorrection", parameters: [
             "inputTopLeft": CIVector(cgPoint: cartesianScaledQuad.bottomLeft),
             "inputTopRight": CIVector(cgPoint: cartesianScaledQuad.bottomRight),
@@ -505,18 +498,14 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         UIView.animate(withDuration: 0.5, animations: {
             self.previewImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             self.previewImageView.center = self.view.center
-            
-            
         }) { (Bool) in
             UIView.animate(withDuration: 0.5, animations: {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
                 // MARK: - add photo
-           
                 self.quadView.removeQuadrilateral()
             }) { (finish) in
                 // continue to capture
                 self.previewImageView.image = nil
-                
                 if self.disappear {
                     return
                 }
@@ -525,9 +514,6 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
                 CaptureSession.current.isPreviewing = false
             }
         }
-      
-        /*
-        */
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didDetectQuad quad: Quadrilateral?, _ imageSize: CGSize) {
@@ -542,23 +528,17 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         scanningNoticeImageView.stopAnimating()
 
         let portraitImageSize = CGSize(width: imageSize.height, height: imageSize.width)
-        
         let scaleTransform = CGAffineTransform.scaleTransform(forSize: portraitImageSize, aspectFillInSize: quadView.bounds.size)
         let scaledImageSize = imageSize.applying(scaleTransform)
-        
         let rotationTransform = CGAffineTransform(rotationAngle: CGFloat(Double.pi / 2.0))
-
         let imageBounds = CGRect(origin: .zero, size: scaledImageSize).applying(rotationTransform)
-
         let translationTransform = CGAffineTransform.translateTransform(fromCenterOfRect: imageBounds, toCenterOfRect: quadView.bounds)
-        
         let transforms = [scaleTransform, rotationTransform, translationTransform]
         
         let transformedQuad = quad.applyTransforms(transforms)
         quadView.isHidden = !isAutoCapture
         quadView.drawQuadrilateral(quad: transformedQuad, animated: true)
-        
-        
+
     }
     
     func startShowingScanningNotice(noRectangle: Int) {
@@ -582,45 +562,32 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         let topRight = CGPoint(x: 2.0 * image.size.width / 3.0, y: image.size.height / 3.0)
         let bottomRight = CGPoint(x: 2.0 * image.size.width / 3.0, y: 2.0 * image.size.height / 3.0)
         let bottomLeft = CGPoint(x: image.size.width / 3.0, y: 2.0 * image.size.height / 3.0)
-        
         let quad = Quadrilateral(topLeft: topLeft, topRight: topRight, bottomRight: bottomRight, bottomLeft: bottomLeft)
-        
         return quad
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, brightValueDidChange brightValue: Double) {
-        
 //        print(brightValue)
-        
         if banTriggerFlash == true {
             return
         }
-        
         if brightValue < -2 {
             openFlash()
         }
-        
-        
         if brightValue > 3 {
             closeFlash()
         }
-        
-        
     }
-    
     
     fileprivate func openFlash(_ isNeedCD: Bool = true) {
         guard UIImagePickerController.isFlashAvailable(for: .rear) else { return }
-        
         DispatchQueue.main.async {
             if self.flashEnabled == false && self.toggleTorch(toOn: true) == .successful {
                 self.flashEnabled = true
                 self.flashButton.tintColor = .yellow
             }
         }
-        
         banTriggerFlash = true
-        
         if isNeedCD {
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
                 self.banTriggerFlash = false
@@ -630,7 +597,6 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
     
     fileprivate func closeFlash() {
         guard UIImagePickerController.isFlashAvailable(for: .rear) else { return }
-        
         DispatchQueue.main.async {
             if self.flashEnabled == true {
                 self.flashEnabled = false
@@ -638,18 +604,13 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
                 self.toggleTorch(toOn: false)
             }
         }
-        
 //        banTriggerFlash = true
 //
 //        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
 //            self.banTriggerFlash = false
 //        }
-        
     }
-    
 }
-
-
 
 fileprivate extension CGFloat {
     static let photoCollectionViewWithBarHeight: CGFloat = 100 + 88

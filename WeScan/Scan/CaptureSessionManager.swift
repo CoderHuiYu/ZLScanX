@@ -175,15 +175,12 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
                 }
             }
         }
-        
         guard isDetecting == true else {
             return
         }
-        
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
-        
         let finalImage = CIImage(cvPixelBuffer: pixelBuffer)
         let imageSize = finalImage.extent.size
         
@@ -285,10 +282,8 @@ final class CaptureSessionManager: NSObject, AVCaptureVideoDataOutputSampleBuffe
                         strongSelf.delegate?.startShowingScanningNotice(noRectangle: strongSelf.noRectangleCount)
                     }
                 }
-                
             }
             return
-            
         }
     }
     
