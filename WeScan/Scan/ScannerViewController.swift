@@ -32,6 +32,18 @@ final class ScannerViewController: UIViewController {
     
     var isFromEdit = false
     
+    fileprivate var isAutoCapture: Bool = false {
+        didSet {
+            if isAutoCapture { // auto
+                shutterButton.isHidden = true
+                // TODO: 处理自动化拍照
+            } else { // manual
+                shutterButton.isHidden = false
+                // TODO: 处理手动拍照
+            }
+        }
+    }
+    
     var dismissWithPDFPath:((_ pdfPath: String)->())?
     var dismissCallBack: ((_ index: Int?)->())?
     
@@ -133,12 +145,16 @@ final class ScannerViewController: UIViewController {
             weakSelf.navigationController?.pushViewController(vc, animated: true)
         }
         
-        photoCollectionView.manualActionCallBack = { [weak self] in
+        photoCollectionView.manualActionCallBack = { [weak self] (button) in
             // show take pic ture button
-            
+            if button.isSelected {
+                self?.isAutoCapture = false
+            } else {
+                self?.isAutoCapture = true
+            }
         }
         
-        photoCollectionView.flashActionCallBack = { [weak self](button) in
+        photoCollectionView.flashActionCallBack = { [weak self] (button) in
             // flash action
             if button.isSelected {
                 self?.openFlash()
@@ -292,7 +308,7 @@ final class ScannerViewController: UIViewController {
         
         if #available(iOS 11.0, *) {
             cancelButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: (65.0 / 2) - 10.0)
-            shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: .photoCollectionViewWithBarHeight)
+            shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: .photoCollectionViewWithBarHeight + 30)
         } else {
             cancelButtonBottomConstraint = view.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: (65.0 / 2) - 10.0)
             shutterButtonBottomConstraint = view.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: 8.0)

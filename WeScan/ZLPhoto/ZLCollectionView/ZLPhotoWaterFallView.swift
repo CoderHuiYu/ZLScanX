@@ -16,7 +16,7 @@ private let kToolBarViewWidth: CGFloat = kScreenWidth / 4
 class ZLPhotoWaterFallView: UIView {
     
     // manual button action call back
-    var manualActionCallBack: (()->())?
+    var manualActionCallBack: ((_ button: UIButton)->())?
     // flash button action call back
     var flashActionCallBack: ((_ button: UIButton)->())?
     // remove all photo call back
@@ -224,8 +224,9 @@ extension ZLPhotoWaterFallView {
     
     // manual
     @objc fileprivate func manualButtonAction(_ button: UIButton) {
+        button.isSelected = !button.isSelected
         if let callBack = manualActionCallBack {
-            callBack()
+            callBack(button)
         }
     }
     
