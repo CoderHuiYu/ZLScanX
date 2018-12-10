@@ -32,8 +32,10 @@ final class ScannerViewController: UIViewController {
     
     var isFromEdit = false
     
-    fileprivate var isAutoCapture: Bool = false {
+    fileprivate var isAutoCapture: Bool = true {
         didSet {
+            scanningNoticeView.isHidden = !isAutoCapture
+            captureSessionManager?.autoCapture = isAutoCapture
             if isAutoCapture { // auto
                 shutterButton.isHidden = true
                 // TODO: 处理自动化拍照
@@ -229,8 +231,8 @@ final class ScannerViewController: UIViewController {
         setupViews()
         setupToolbar()
         setupConstraints()
-        
         captureSessionManager = CaptureSessionManager(videoPreviewLayer: videoPreviewlayer)
+        captureSessionManager?.autoCapture = isAutoCapture
         captureSessionManager?.delegate = self
     }
     
@@ -346,8 +348,11 @@ final class ScannerViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func captureImage(_ sender: UIButton) {
-        let vc = SortViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        captureSessionManager?.capturePhoto()
+        shutterButton.isUserInteractionEnabled = false
+
+//        let vc = SortViewController()
+//        self.navigationController?.pushViewController(vc, animated: true)
 //        (navigationController as? ImageScannerController)?.flashToBlack()
 //        shutterButton.isUserInteractionEnabled = false
 //        captureSessionManager?.capturePhoto()
@@ -362,7 +367,6 @@ final class ScannerViewController: UIViewController {
             CaptureSession.current.autoScanEnabled = true
             autoScanButton.title = NSLocalizedString("wescan.scanning.auto", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Auto", comment: "The auto button state")
             shutterButton.isHidden = false
-
         }
     }
     
@@ -422,14 +426,16 @@ final class ScannerViewController: UIViewController {
 
 extension ScannerViewController: RectangleDetectionDelegateProtocol {
     func startCapturingLoading(for captureSessionManager: CaptureSessionManager, currentAutoScanPassCounts: Int) {
-        quadView.capturingAnnularProgressView.setProgress(progress:CGFloat((currentAutoScanPassCounts - RectangleFeaturesFunnel().startShootLoadingThreshold))/CGFloat(RectangleFeaturesFunnel().autoScanThreshold - RectangleFeaturesFunnel().startShootLoadingThreshold) , time: 0.0, animate: false)
+        if isAutoCapture {
+            quadView.capturingAnnularProgressView.setProgress(progress:CGFloat((currentAutoScanPassCounts - RectangleFeaturesFunnel().startShootLoadingThreshold))/CGFloat(RectangleFeaturesFunnel().autoScanThreshold - RectangleFeaturesFunnel().startShootLoadingThreshold) , time: 0.0, animate: false)
+        }
     }
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, didFailWithError error: Error) {
         
-        activityIndicator.stopAnimating()
+//        activityIndicator.stopAnimating()
         shutterButton.isUserInteractionEnabled = true
-        scanningNoticeView.isHidden = false
+        scanningNoticeView.isHidden = !isAutoCapture
 
         quadView.capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
         guard let imageScannerController = navigationController as? ImageScannerController else { return }
@@ -447,7 +453,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
 //        activityIndicator.stopAnimating()
         scanningNoticeImageView.stopAnimating()
         scanningNoticeView.isHidden = true
-        
+        shutterButton.isUserInteractionEnabled = true
         let image = picture.applyingPortraitOrientation()
         
         
@@ -549,14 +555,17 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         let transforms = [scaleTransform, rotationTransform, translationTransform]
         
         let transformedQuad = quad.applyTransforms(transforms)
-        
+        quadView.isHidden = !isAutoCapture
         quadView.drawQuadrilateral(quad: transformedQuad, animated: true)
-
+        
+        
     }
     
     func startShowingScanningNotice(noRectangle: Int) {
-        scanningNoticeView.isHidden = false
-        scanningNoticeImageView.startAnimating()
+        if isAutoCapture {
+            scanningNoticeView.isHidden = false
+            scanningNoticeImageView.startAnimating()
+        }
         if noRectangle < 100 {
             scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice", comment: "normal")
 
