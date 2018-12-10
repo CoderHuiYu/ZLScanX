@@ -11,23 +11,18 @@ import CoreGraphics
 import Photos
 import QuickLook
 
-private let kCollectionCellIdentifier = "kCollectionCellIdentifier"
-private let kToolBarHeight: CGFloat = 50
-private let kSaveToolBarHeight: CGFloat = 250 // 200 -> 250 is right constraint
-private let kCollectionBottomConsValue: CGFloat = 170
-private let kCollectionBottomConsSaveValue: CGFloat = 220
-private let kRightButtonTitle = "Sort"
-private let kRightButtonTitleSelectedAll = "Select All"
-private let kRightButtonTitleCancleSelectedAll = "Cancel Select All"
 
 class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     
     var photoModels = [ZLPhotoModel]()
     var currentIndex: IndexPath?
     var isFilter: Bool = false
+    
     var pdfpath: String?
     var isNeedLoadPDF: Bool = false
+    
     var updataCallBack:(()->())?
+    var dismissCallBack:((String)->())?
     
     @IBOutlet weak var customNavBar: UIView!
     
@@ -81,10 +76,12 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
         proLabel.frame = CGRect(x: 0, y: self.view.center.y-80, width: kScreenWidth, height: 22)
         return proLabel
     }()
+    
     fileprivate lazy var imageViewer: ImageViewer = {
         let imgViewer = ImageViewer.init()
         return imgViewer
     }()
+    
     fileprivate lazy var addImageBtn: UIButton = {
         let addImageBtn = UIButton()
         addImageBtn.frame = CGRect(x: kScreenWidth - 34, y: kNavHeight , width: 24, height: 24)
@@ -104,16 +101,16 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
                     return zlModel
                 })
                 
-                rightNavButton.setTitle(kRightButtonTitleCancleSelectedAll, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitleCancleSelectedAll, for: .normal)
                 setSaveToolBar(isHidden: false)
                 collectionView.reloadData()
-                collectionViewBottomCons.constant = kCollectionBottomConsSaveValue
+                collectionViewBottomCons.constant = .kCollectionBottomConsSaveValue
             } else {
                 
-                rightNavButton.setTitle(kRightButtonTitle, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitle, for: .normal)
                 setSaveToolBar(isHidden: true)
                 collectionView.reloadData()
-                collectionViewBottomCons.constant = kCollectionBottomConsValue
+                collectionViewBottomCons.constant = .kCollectionBottomConsValue
             }
         }
     }
@@ -161,7 +158,7 @@ extension ZLPhotoEditorController {
         layout.minimumLineSpacing = 10
         layout.sectionInset = UIEdgeInsets(top: 0, left: 40, bottom: 0, right: 40)
         layout.dataSource = self
-        collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: kCollectionCellIdentifier)
+        collectionView.register(UINib(nibName: "ZLPhotoCell", bundle: Bundle(for: type(of: self))), forCellWithReuseIdentifier: .kCollectionCellIdentifier)
         collectionView.collectionViewLayout = layout
         collectionView.decelerationRate = .fast
         view.addSubview(editingView)
@@ -189,7 +186,7 @@ extension ZLPhotoEditorController {
     fileprivate func setSaveToolBar(isHidden: Bool) {
         
         if isHidden {
-            saveToolBarViewBottomCons.constant = -kSaveToolBarHeight
+            saveToolBarViewBottomCons.constant = -.kSaveToolBarHeight
         } else {
             saveToolBarViewBottomCons.constant = 0
         }
@@ -229,6 +226,7 @@ extension ZLPhotoEditorController {
         }
         let photoCell = cell as! ZLPhotoCell
         self.editingView.update(photoCell.imageView)
+        self.editingView.isEnhanced = model.isEnhanced
     }
     
     
@@ -242,7 +240,7 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCollectionCellIdentifier, for: indexPath) as! ZLPhotoCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: .kCollectionCellIdentifier, for: indexPath) as! ZLPhotoCell
         cell.cellType = isSavingStatus ? .saving : .edit
         cell.photoModel = photoModels[indexPath.row]
         cell.itemDidRemove = { [weak self] (theCell) in
@@ -273,9 +271,9 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
             
             let selectedModels = photoModels.filter({return $0.isSelected == true})
             if selectedModels.count == 0 {
-                rightNavButton.setTitle(kRightButtonTitleSelectedAll, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitleSelectedAll, for: .normal)
             } else {
-                rightNavButton.setTitle(kRightButtonTitleCancleSelectedAll, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitleCancleSelectedAll, for: .normal)
             }
             
         } else {
@@ -288,6 +286,8 @@ extension ZLPhotoEditorController: UICollectionViewDelegate, UICollectionViewDat
                 
                 let photoCell = cell as! ZLPhotoCell
                 currentIndex = indexPath
+                let model = photoModels[indexPath.row]
+                editingView.isEnhanced = model.isEnhanced
                 editingView.show(photoCell.imageView)
                 
                 let visibleCells = collectionView.visibleCells
@@ -350,7 +350,21 @@ extension ZLPhotoEditorController {
             isSavingStatus = false
         } else {
             if isNeedLoadPDF {
-                self.dismiss(animated: true, completion: nil)
+                
+                let sure = UIAlertAction(title: "OK", style: .destructive) { _ in
+                    ZLPhotoModel.removeAllModel { (isSuccess) in
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                }
+                let cancle = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+                    
+                }
+                
+                let alert = UIAlertController(title: "The image will be deleted.", message: "Are you sure?", preferredStyle: .alert)
+                
+                alert.addAction(cancle)
+                alert.addAction(sure)
+                self.present(alert, animated: true, completion: nil)
             }else{
                 navigationController?.popViewController(animated: true)
             }
@@ -364,8 +378,8 @@ extension ZLPhotoEditorController {
             
             let button = sender as! UIButton
             let title = button.titleLabel?.text ?? ""
-            if title == kRightButtonTitleSelectedAll {
-                rightNavButton.setTitle(kRightButtonTitleCancleSelectedAll, for: .normal)
+            if title == .kRightButtonTitleSelectedAll {
+                rightNavButton.setTitle(.kRightButtonTitleCancleSelectedAll, for: .normal)
     
                 photoModels = photoModels.map { (model) -> ZLPhotoModel in
                     var zlModel = model
@@ -375,7 +389,7 @@ extension ZLPhotoEditorController {
                 collectionView.reloadData()
                 
             } else {
-                rightNavButton.setTitle(kRightButtonTitleSelectedAll, for: .normal)
+                rightNavButton.setTitle(.kRightButtonTitleSelectedAll, for: .normal)
                 
                 photoModels = photoModels.map { (model) -> ZLPhotoModel in
                     var zlModel = model
@@ -672,7 +686,9 @@ extension ZLPhotoEditorController {
         
     }
 }
+
 extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewControllerDelegate{
+    
     func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
         return 1
     }
@@ -683,10 +699,24 @@ extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewContr
     // send action
     @IBAction func sendButtonAction(_ sender: Any) {
         pdfpath = convertPDF(photoModels, fileName: "temporary.pdf")
-        let preVC = QLPreviewController()
-        preVC.delegate = self
-        preVC.dataSource = self
-        self.present(preVC, animated: true, completion: nil)
+        ZLPhotoModel.removeAllModel { (isSuccess) in
+            if isSuccess {
+                if let callBack = self.dismissCallBack {
+                    callBack(pdfpath
+                        ?? "")
+                }
+                if isNeedLoadPDF {
+                    self.dismiss(animated: true, completion: nil)
+                } else {
+                    
+                    navigationController?.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
+//        let preVC = QLPreviewController()
+//        preVC.delegate = self
+//        preVC.dataSource = self
+//        self.present(preVC, animated: true, completion: nil)
     }
     @objc func image(image:UIImage,didFinishSavingWithError error:NSError?,contextInfo:AnyObject) {
         if error != nil {
@@ -697,7 +727,47 @@ extension ZLPhotoEditorController: QLPreviewControllerDataSource, QLPreviewContr
     }
     @objc func addImageBtnClick(){
         let scannerViewController = ScannerViewController()
+        scannerViewController.dismissCallBack = { index in
+            ZLPhotoModel.getAllModel(handle: { (isSuccess, models) in
+                if isSuccess {
+                    if let models = models {
+                        self.photoModels = models
+                        self.collectionView.reloadData()
+                        self.view.layoutIfNeeded()
+                        if let index = index {
+                            // click item call back
+                            self.titleLabel.text = "\(index + 1)/\(models.count)"
+                            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
+                        } else {
+                            // click cancle call back
+                            if let text = self.titleLabel.text {
+                                let str = text.components(separatedBy: "/").first ?? "1"
+                                self.titleLabel.text = "\(str)/\(models.count)"
+                            } else {
+                                self.titleLabel.text = "\(1)/\(models.count)"
+                            }
+                        }
+                    }
+                }
+            })
+        }
         scannerViewController.isFromEdit = true
         self.present(scannerViewController, animated: true, completion: nil)
     }
+}
+
+
+
+// MARK: - const property
+fileprivate extension String {
+    static let kCollectionCellIdentifier = "kCollectionCellIdentifier"
+    static let kRightButtonTitle = "Sort"
+    static let kRightButtonTitleSelectedAll = "Select All"
+    static let kRightButtonTitleCancleSelectedAll = "Cancel Select All"
+}
+
+fileprivate extension CGFloat {
+    static let kSaveToolBarHeight: CGFloat = 250 // 200 -> 250 is right constraint
+    static let kCollectionBottomConsValue: CGFloat = 170
+    static let kCollectionBottomConsSaveValue: CGFloat = 220
 }

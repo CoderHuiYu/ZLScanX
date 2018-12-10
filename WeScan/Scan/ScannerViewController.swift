@@ -15,7 +15,7 @@ enum FlashResult {
     case notSuccessful
 }
 
-private let kOpenFlashCD: Double = 5
+private let kOpenFlashCD: Double = 3
 
 /// The `ScannerViewController` offers an interface to give feedback to the user regarding quadrilaterals that are detected. It also gives the user the opportunity to capture an image with a detected rectangle.
 final class ScannerViewController: UIViewController {
@@ -32,11 +32,24 @@ final class ScannerViewController: UIViewController {
     
     var isFromEdit = false
     
+    fileprivate var isAutoCapture: Bool = false {
+        didSet {
+            if isAutoCapture { // auto
+                shutterButton.isHidden = true
+                // TODO: 处理自动化拍照
+            } else { // manual
+                shutterButton.isHidden = false
+                // TODO: 处理手动拍照
+            }
+        }
+    }
+    
+    var dismissWithPDFPath:((_ pdfPath: String)->())?
+    var dismissCallBack: ((_ index: Int?)->())?
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
-    let photoCollectionViewHeight: CGFloat = 150 + 44
 
     // takePhoto
     lazy private var shutterButton: ShutterButton = {
@@ -95,7 +108,7 @@ final class ScannerViewController: UIViewController {
     }()
     
     fileprivate lazy var photoCollectionView: ZLPhotoWaterFallView = {
-        let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - photoCollectionViewHeight, width: view.frame.width, height: photoCollectionViewHeight))
+        let photoCollectionView = ZLPhotoWaterFallView(frame: CGRect(x: 0, y: view.frame.height - .photoCollectionViewWithBarHeight, width: view.frame.width, height: .photoCollectionViewWithBarHeight))
         photoCollectionView.backViewColor = UIColor.darkGray
         
         photoCollectionView.deleteActionCallBack = { [weak self] in
@@ -104,25 +117,53 @@ final class ScannerViewController: UIViewController {
         
         photoCollectionView.selectedItemCallBack = { [weak self] (photoModels, index) in
             guard let weakSelf = self else { return }
+            if  weakSelf.isFromEdit {
+                if let callBack = weakSelf.dismissCallBack {
+                    callBack(index)
+                }
+                weakSelf.dismiss(animated: true, completion: nil)
+                return
+            }
             if photoModels.count == 0 {
                 Toast.showText("NO Image!!!")
                 return
             }
-            if  (self?.isFromEdit)! {
-                self?.dismiss(animated: true, completion: nil)
-                return
-            }
+            
             let vc = ZLPhotoEditorController.init(nibName: "ZLPhotoEditorController", bundle: Bundle(for: weakSelf.classForCoder))
             vc.photoModels = photoModels
             vc.currentIndex = IndexPath(item: index, section: 0)
             
-            vc.updataCallBack = { [weak self] in
-                self?.photoCollectionView.getData()
-                
+            vc.updataCallBack = {
+                weakSelf.photoCollectionView.getData()
             }
-            self?.captureSessionManager?.stop()
-            self?.navigationController?.pushViewController(vc, animated: true)
+            vc.dismissCallBack = { (pdfPath) in
+                if let callBack = weakSelf.dismissWithPDFPath {
+                    callBack(pdfPath)
+                }
+            }
+            weakSelf.captureSessionManager?.stop()
+            weakSelf.navigationController?.pushViewController(vc, animated: true)
         }
+        
+        photoCollectionView.manualActionCallBack = { [weak self] (button) in
+            // show take pic ture button
+            if button.isSelected {
+                self?.isAutoCapture = false
+            } else {
+                self?.isAutoCapture = true
+            }
+        }
+        
+        photoCollectionView.flashActionCallBack = { [weak self] (button) in
+            // flash action
+            if button.isSelected {
+                self?.openFlash()
+            } else {
+                self?.closeFlash()
+            }
+            
+        }
+        
         return photoCollectionView
     }()
 
@@ -174,6 +215,7 @@ final class ScannerViewController: UIViewController {
         return previewImageView
     }()
     
+    
     fileprivate var disappear: Bool = false
     // MARK: - Life Cycle
     
@@ -196,7 +238,6 @@ final class ScannerViewController: UIViewController {
         super.viewWillAppear(animated)
         
         disappear = false
-        
         CaptureSession.current.isEditing = false
         quadView.removeQuadrilateral()
         captureSessionManager?.start()
@@ -206,8 +247,9 @@ final class ScannerViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         videoPreviewlayer.frame = view.layer.bounds
+        videoPreviewlayer.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - .photoCollectionViewHeight)
+        quadView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - .photoCollectionViewHeight)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -254,19 +296,19 @@ final class ScannerViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        let quadViewConstraints = [
-            quadView.topAnchor.constraint(equalTo: view.topAnchor),
-            view.bottomAnchor.constraint(equalTo: quadView.bottomAnchor),
-            view.trailingAnchor.constraint(equalTo: quadView.trailingAnchor),
-            quadView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        ]
+//        let quadViewConstraints = [
+//            quadView.topAnchor.constraint(equalTo: view.topAnchor),
+//            view.bottomAnchor.constraint(equalTo: quadView.bottomAnchor),
+//            view.trailingAnchor.constraint(equalTo: quadView.trailingAnchor),
+//            quadView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+//        ]
         
         var cancelButtonBottomConstraint: NSLayoutConstraint
         var shutterButtonBottomConstraint: NSLayoutConstraint
         
         if #available(iOS 11.0, *) {
             cancelButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: (65.0 / 2) - 10.0)
-            shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: 8.0)
+            shutterButtonBottomConstraint = view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: .photoCollectionViewWithBarHeight + 30)
         } else {
             cancelButtonBottomConstraint = view.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: (65.0 / 2) - 10.0)
             shutterButtonBottomConstraint = view.bottomAnchor.constraint(equalTo: shutterButton.bottomAnchor, constant: 8.0)
@@ -289,7 +331,16 @@ final class ScannerViewController: UIViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ]
         
-        NSLayoutConstraint.activate(quadViewConstraints + cancelButtonConstraints + shutterButtonConstraints + activityIndicatorConstraints)
+//        NSLayoutConstraint.activate(quadViewConstraints + cancelButtonConstraints + shutterButtonConstraints + activityIndicatorConstraints)
+        NSLayoutConstraint.activate( cancelButtonConstraints + shutterButtonConstraints + activityIndicatorConstraints)
+
+    }
+    
+    fileprivate func adjustScanningNoticeView() {
+        scanningNoticeLabel.sizeToFit()
+        let width = 20 + scanningNoticeImageView.bounds.width + 10 + scanningNoticeLabel.bounds.width + 20
+        scanningNoticeView.frame = CGRect(x: 0, y: 0, width: width, height: 30)
+        scanningNoticeView.center = view.center
     }
     
     // MARK: - Actions
@@ -306,9 +357,12 @@ final class ScannerViewController: UIViewController {
         if CaptureSession.current.autoScanEnabled {
             CaptureSession.current.autoScanEnabled = false
             autoScanButton.title = NSLocalizedString("wescan.scanning.manual", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Manual", comment: "The manual button state")
+            shutterButton.isHidden = true
         } else {
             CaptureSession.current.autoScanEnabled = true
             autoScanButton.title = NSLocalizedString("wescan.scanning.auto", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Auto", comment: "The auto button state")
+            shutterButton.isHidden = false
+
         }
     }
     
@@ -336,11 +390,31 @@ final class ScannerViewController: UIViewController {
     }
     
     @objc private func cancelImageScannerController() {
+        self.captureSessionManager?.stop()
         if isFromEdit {
+            if let callBack = dismissCallBack {
+                callBack(nil)
+            }
             self.dismiss(animated: true, completion: nil)
         }else{
-            guard let imageScannerController = navigationController as? ImageScannerController else { return }
-            imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
+            let sure = UIAlertAction(title: "OK", style: .destructive) { _ in
+                ZLPhotoModel.removeAllModel { (isSuccess) in
+                    guard let imageScannerController = self.navigationController as? ImageScannerController else { return }
+                    imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
+                }
+            }
+            let cancle = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+                
+                CaptureSession.current.isEditing = false
+                self.quadView.removeQuadrilateral()
+                self.captureSessionManager?.start()
+            }
+            
+            let alert = UIAlertController(title: "The image will be deleted.", message: "Are you sure?", preferredStyle: .alert)
+            
+            alert.addAction(cancle)
+            alert.addAction(sure)
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -415,19 +489,23 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         let quadRect = CGRect(x: quadView.quadLayer.path?.boundingBox.origin.x ?? 0.0, y: quadView.quadLayer.path?.boundingBox.origin.y ?? 0.0, width: quadView.quadLayer.path?.boundingBox.size.width ?? 0.0, height: quadView.quadLayer.path?.boundingBox.size.height ?? 0.0)
         previewImageView.frame = quadRect;
         
+        if let enhancedImage = uiImage.colorControImage() {
+            self.previewImageView.image = enhancedImage
+            self.photoCollectionView.addPhoto(image, uiImage, enhancedImage, true, quad)
+        } else {
+            self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
+        }
+        
         UIView.animate(withDuration: 0.5, animations: {
             self.previewImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             self.previewImageView.center = self.view.center
+            
             
         }) { (Bool) in
             UIView.animate(withDuration: 0.5, animations: {
                 self.previewImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
                 // MARK: - add photo
-                if let enhancedImage = uiImage.filter(name: "CIColorControls", parameters: ["inputContrast": 1.35]) {
-                    self.photoCollectionView.addPhoto(image, uiImage, enhancedImage, false, quad)
-                } else {
-                    self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
-                }
+           
                 self.quadView.removeQuadrilateral()
             }) { (finish) in
                 // continue to capture
@@ -450,8 +528,6 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         guard let quad = quad else {
             // If no quad has been detected, we remove the currently displayed on on the quadView.
             quadView.removeQuadrilateral()
-            scanningNoticeView.isHidden = false
-            scanningNoticeImageView.startAnimating()
             quadView.capturingAnnularProgressView.setProgress(progress: 0.0, time: 0, animate: false)
             return
         }
@@ -478,6 +554,20 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
 
     }
     
+    func startShowingScanningNotice(noRectangle: Int) {
+        scanningNoticeView.isHidden = false
+        scanningNoticeImageView.startAnimating()
+        if noRectangle < 100 {
+            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice", comment: "normal")
+
+        } else if noRectangle < 200 {
+            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice.move", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice.move", comment: "move")
+        } else if noRectangle < 500 {
+            scanningNoticeLabel.text = NSLocalizedString("wescan.scanning.notice.long", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "wescan.scanning.notice.long", comment: "long")
+        }
+        adjustScanningNoticeView()
+    }
+    
     private static func defaultQuad(forImage image: UIImage) -> Quadrilateral {
         let topLeft = CGPoint(x: image.size.width / 3.0, y: image.size.height / 3.0)
         let topRight = CGPoint(x: 2.0 * image.size.width / 3.0, y: image.size.height / 3.0)
@@ -491,12 +581,11 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
     
     func captureSessionManager(_ captureSessionManager: CaptureSessionManager, brightValueDidChange brightValue: Double) {
         
+//        print(brightValue)
         
         if banTriggerFlash == true {
             return
         }
-        
-        print(brightValue)
         
         if brightValue < -2 {
             openFlash()
@@ -511,7 +600,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
     }
     
     
-    fileprivate func openFlash() {
+    fileprivate func openFlash(_ isNeedCD: Bool = true) {
         guard UIImagePickerController.isFlashAvailable(for: .rear) else { return }
         
         DispatchQueue.main.async {
@@ -523,8 +612,10 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
         
         banTriggerFlash = true
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
-            self.banTriggerFlash = false
+        if isNeedCD {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
+                self.banTriggerFlash = false
+            }
         }
     }
     
@@ -539,12 +630,19 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             }
         }
         
-        banTriggerFlash = true
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
-            self.banTriggerFlash = false
-        }
+//        banTriggerFlash = true
+//
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + kOpenFlashCD) {
+//            self.banTriggerFlash = false
+//        }
         
     }
     
+}
+
+
+
+fileprivate extension CGFloat {
+    static let photoCollectionViewWithBarHeight: CGFloat = 100 + 88
+    static let photoCollectionViewHeight: CGFloat = 100
 }

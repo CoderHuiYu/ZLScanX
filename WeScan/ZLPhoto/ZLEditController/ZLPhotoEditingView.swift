@@ -25,6 +25,22 @@ class ZLPhotoEditingView: UIView {
         return imageView
     }()
     
+    @IBOutlet weak var enhanceLabel: UILabel!
+    
+    @IBOutlet weak var enhanceButton: UIButton!
+    
+    var isEnhanced: Bool = false {
+        didSet {
+            if isEnhanced {
+                enhanceLabel.text = "Restore"
+                enhanceButton.isSelected = true
+            } else {
+                enhanceLabel.text = "Enhanced"
+                enhanceButton.isSelected = false
+            }
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         addSubview(imageView)
@@ -55,7 +71,6 @@ class ZLPhotoEditingView: UIView {
         print(frame)
         imageView.frame = frame
         imageView.image = photoView.image
-        
     }
     
     func hide() {

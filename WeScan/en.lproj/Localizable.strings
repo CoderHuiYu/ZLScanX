@@ -25,3 +25,9 @@
 
 /* The title on the notice label of the Scanning screen. */
 "wescan.scanning.notice" = "Looking for Document";
+
+/* The title on the notice label of the Scanning screen. */
+"wescan.scanning.notice.move" = "Looking for DocumentA";
+
+/* The title on the notice label of the Scanning screen. */
+"wescan.scanning.notice.long" = "Looking for DocumentAA";
