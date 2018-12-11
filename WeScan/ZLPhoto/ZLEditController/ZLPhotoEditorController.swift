@@ -25,9 +25,7 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
     var dismissCallBack:((String)->())?
     
     @IBOutlet weak var customNavBar: UIView!
-    
     @IBOutlet weak var titleLabel: UILabel!
-    
     @IBOutlet weak var toolBarView: UIView!
     
     @IBOutlet weak var toolBarViewBottomCons: NSLayoutConstraint!
@@ -106,7 +104,6 @@ class ZLPhotoEditorController: UIViewController,EmitterAnimate,Convertable {
                 collectionView.reloadData()
                 collectionViewBottomCons.constant = .kCollectionBottomConsSaveValue
             } else {
-                
                 rightNavButton.setTitle(.kRightButtonTitle, for: .normal)
                 setSaveToolBar(isHidden: true)
                 collectionView.reloadData()

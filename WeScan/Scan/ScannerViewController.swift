@@ -492,6 +492,7 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             self.previewImageView.image = enhancedImage
             self.photoCollectionView.addPhoto(image, uiImage, enhancedImage, true, quad)
         } else {
+            self.previewImageView.image = uiImage
             self.photoCollectionView.addPhoto(image, uiImage, uiImage, false, quad)
         }
         

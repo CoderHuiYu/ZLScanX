@@ -196,6 +196,7 @@ extension ZLPhotoModel {
                 handle(false, nil)
                 return
             }
+            
             guard let originalImagePath = tempDict["originalImagePath"] as? String else {
                 handle(false, nil)
                 return
