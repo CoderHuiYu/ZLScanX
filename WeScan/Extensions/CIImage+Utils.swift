@@ -36,4 +36,13 @@ extension CIImage {
             return UIImage(ciImage: enhancedCIImage, scale: 1.0, orientation: .up)
         }
     }
+    func getFilterDict(_ qua: ZLQuadrilateral) -> [String: Any]{
+        return [
+            "inputTopLeft": CIVector(cgPoint: qua.bottomLeft),
+            "inputTopRight": CIVector(cgPoint: qua.bottomRight),
+            "inputBottomLeft": CIVector(cgPoint: qua.topLeft),
+            "inputBottomRight": CIVector(cgPoint: qua.topRight)
+        ]
+    }
+
 }

@@ -74,7 +74,7 @@ extension UIImage {
         var imageAngle: Double = 0.0
         
         var shouldRotate = true
-        switch CaptureSession.current.editImageOrientation {
+        switch ZLScanCaptureSession.current.editImageOrientation {
         case .up:
             shouldRotate = false
         case .left:
@@ -108,24 +108,18 @@ extension UIImage {
         return UIImage(cgImage: cgimage)
     }
     func colorControImage() -> UIImage?{
-            let context = CIContext(options: nil)
-            
-            let cgI =  CIImage(image: self)
-                
-            let filter = CIFilter(name: "CIColorControls")
-//            filter?.setValue(0.5, forKey:"inputSaturation")
-//            filter?.setValue(0.5, forKey:"inputBrightness")
-            filter?.setValue(2.0, forKey: "inputContrast")
-            
-            filter?.setValue(cgI, forKey: kCIInputImageKey)
-            let outputCGImage = context.createCGImage(filter!.outputImage!, from: filter!.outputImage!.extent)
-            
-            let newImage = UIImage(cgImage: outputCGImage!)
-//            let resultImage = imageByRemoveWhiteBg()
-            print(newImage)
+        let context = CIContext(options: nil)
+        let cgI =  CIImage(image: self)
+        let filter = CIFilter(name: "CIColorControls")
+        //            filter?.setValue(0.5, forKey:"inputSaturation")
+        //            filter?.setValue(0.5, forKey:"inputBrightness")
+        filter?.setValue(2.0, forKey: "inputContrast")
+        filter?.setValue(cgI, forKey: kCIInputImageKey)
+        let outputCGImage = context.createCGImage(filter!.outputImage!, from: filter!.outputImage!.extent)
+        let newImage = UIImage(cgImage: outputCGImage!)
         return newImage
     }
-   
+    
     func imageByRemoveWhiteBg() -> UIImage? {
         let colorMasking: [CGFloat] = [160, 255, 160, 255, 160, 255]
         return transparentColor(colorMasking: colorMasking)

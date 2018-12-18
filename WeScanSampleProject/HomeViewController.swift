@@ -96,32 +96,16 @@ final class HomeViewController: UIViewController {
     // MARK: - Actions
     
     @objc func presentScanController(_ sender: UIButton) {
-        let scannerVC = ImageScannerController(withOriginalPdfPath: nil) { (pdfPath) in
+        let scannerVC = ZLImageScannerController(withOriginalPdfPath: nil) { (pdfPath) in
             print(pdfPath)
         }
-        scannerVC.imageScannerDelegate = self
         present(scannerVC, animated: true, completion: nil)
     }
     @objc func editPDF(){
-        let scannerVC = ImageScannerController(withOriginalPdfPath: "11") { (pdfPath) in
+        let scannerVC = ZLImageScannerController(withOriginalPdfPath: "11") { (pdfPath) in
             print(pdfPath)
         }
-        scannerVC.imageScannerDelegate = self
         present(scannerVC, animated: true, completion: nil)
     }
 }
 
-extension HomeViewController: ImageScannerControllerDelegate {
-    func imageScannerController(_ scanner: ImageScannerController, didFailWithError error: Error) {
-        print(error)
-    }
-    
-    func imageScannerController(_ scanner: ImageScannerController, didFinishScanningWithResults results: ImageScannerResults) {
-        scanner.dismiss(animated: true, completion: nil)
-    }
-    
-    func imageScannerControllerDidCancel(_ scanner: ImageScannerController) {
-        scanner.dismiss(animated: true, completion: nil)
-    }
-    
-}
